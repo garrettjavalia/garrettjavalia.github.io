@@ -4,15 +4,12 @@ title: About
 permalink: /about/
 ---
 
-This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](https://jekyllrb.com/)
+안녕하세요. Javalia입니다.
 
-You can find the source code for Minima at GitHub:
-[jekyll][jekyll-organization] /
-[minima](https://github.com/jekyll/minima)
+저는 오랫동안 프로그래밍을 하면서 살았습니다.
 
-You can find the source code for Jekyll at GitHub:
-[jekyll][jekyll-organization] /
-[jekyll](https://github.com/jekyll/jekyll)
+어릴 적에는 Sourcemod를 활용한 게임 모드 프로그래밍을 주로 했습니다.
 
+프로그래밍이 좋아서 관련 학과로 진학해 학사학위를 받았습니다.
 
-[jekyll-organization]: https://github.com/jekyll
+자기 계발 겸 취미로 javalia.dev라는 웹사이트를 만들고 있으며, 해당 웹사이트를 개발하면서 공부한 여러 가지 일들을 여기에 적어볼 생각입니다.
