@@ -1,5 +1,5 @@
 layout: page
 title: "Javalia`s github page"
-permalink: /
+permalink: /home/
 
 환영합니다.
