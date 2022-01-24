@@ -1,10 +1,10 @@
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <!-- this file will alternate theme`s default include html -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-2KWXYH38W4"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id={{ site.google_analytics }}"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
-  gtag('config', 'G-2KWXYH38W4');
+  gtag('config', '{{ site.google_analytics }}');
 </script>
