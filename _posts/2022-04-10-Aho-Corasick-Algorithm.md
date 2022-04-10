@@ -136,3 +136,8 @@ O(n)안에 트리 생성 및 초기화 연산이 끝나고, O(m+z)안에 모든 
 하나의 패턴에 대해 동작하는 Knuth-Morris-Pratt(흔히 KMP라고 불린다.) 알고리즘이 있다.
 
 위의 알고리즘들은 모두 흥미롭다. 필요하다면 찾아봐도 좋다.
+
+### 예시 코드
+
+오늘 다룬 Aho Corasick 알고리즘으로 풀 수 있는 백준 문제 하나의 [소스코드](https://github.com/garrettjavalia/algorithm/blob/master/algorithm/BOJ/BOJ9250.ts)를 제시하면서 글을 마친다.
+소스코드는 타입스크립트로 작성되었고 성능을 위한 최적화는 하지 않고 알고리즘의 범용성있는 적절한 구현만을 목표로 했다.
