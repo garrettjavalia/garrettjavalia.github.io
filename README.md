@@ -10,7 +10,7 @@ github.io page for javalia
 
 ## Gemfile이 구성된 리포지토리라면(이 글을 보고있다면 이 경우)
 
-gem install
+bundle
 
 ## 아무 것도 없는 폴더에 만든다면?
 

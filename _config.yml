@@ -18,6 +18,12 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
+markdown: kramdown
+highlighter: rouge
+lsi: false
+excerpt_separator: "\n\n"
+incremental: false
+
 title: Javalia의 개발 기록
 email: javalia.javalia@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
