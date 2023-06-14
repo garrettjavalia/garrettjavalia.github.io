@@ -72,7 +72,7 @@ $(A - B) \mathbin{mod} C = ((A \mathbin{mod} C) - (B \mathbin{mod} C)) \mathbin{
 
 $(A * B) \mathbin{mod} C = ((A \mathbin{mod} C) * (B \mathbin{mod} C)) \mathbin{mod} C$
 
-$(A \div B) \mathbin{mod} C = ((A \mathbin{mod} C) * (1 \div B \mathbin{mod} C)) \mathbin{mod} C$
+$(A \div B) \mathbin{mod} C = ((A \mathbin{mod} C) * ( \frac{1}{B} \mathbin{mod} C)) \mathbin{mod} C$
 
 위에 첫 번째로 제시된 덧셈에 대한 나머지 연산의 분배법칙을 쓰면 아래에서 윈도우에 대한 나머지 연산을 할 수 있다.
 
@@ -81,9 +81,9 @@ $(A \div B) \mathbin{mod} C = ((A \mathbin{mod} C) * (1 \div B \mathbin{mod} C))
 
 문자열 'ABCD'가 있다고 하자. 이 문자열에서 3칸을 크기의 윈도우를 계산한다고 하자.
 
-이제 'ABC'부분을 A, 'D'부분을 B, 'A'부분을 C라고 부르자. 또 나머지를 구하기 위해서 나누는 제수를 q라고 부르자.
-라빈 카프 알고리즘에서 고르는 q는 d에 비해서 훨씬 큰 소수이다. 이것은 뒤에 나오는 식을 정리할 때 중요하다.
-진법은 d라고 하고, 윈도우의 길이는 m이라고 하자.
+이제 'ABC'부분을 A, 'D'부분을 B, 'A'부분을 C라고 부르자. 이 문자열의 각 문자는 d진법으로 표현된다.
+또 나머지를 구하기 위해서 나누는 제수를 q라고 부르자. 라빈 카프 알고리즘에서 고르는 q는 진법인
+d에 비해서 훨씬 큰 소수이다. 이것은 뒤에 나오는 식을 정리할 때 중요하다. 윈도우의 길이는 m이라고 하자.
 
 앞 3글자인 'ABC'는 편의상 이미 계산된 나머지값이 있다고 하자. 즉 $A\mathbin{mod}q$는 이미 알려진 값이다.
 이 값은 $H_{i-1}$이라고 부르자.
@@ -96,8 +96,8 @@ $(dA + B - d^mC)\mathbin{mod}q = H_{i}$
 
 $$
 \begin{align}
-(dA \mathbin{mod} q + B\mathbin{mod}q - d^mC\mathbin{mod}q)\mathbin{mod}q\\
-=((d\mathbin{mod}q * A\mathbin{mod}q)\mathbin{mod}q + q + B\mathbin{mod}q - d^mC\mathbin{mod}q)\mathbin{mod}q
+&(dA \mathbin{mod} q + B\mathbin{mod}q - d^mC\mathbin{mod}q)\mathbin{mod}q\\
+&=((d\mathbin{mod}q * A\mathbin{mod}q)\mathbin{mod}q + q + B\mathbin{mod}q - d^mC\mathbin{mod}q)\mathbin{mod}q
 \end{align}
 $$
 
@@ -106,11 +106,11 @@ C도 q에 비해서 작은 값이란 사실을 활용한다.
 
 $$
 \begin{align}
-=((dH_{i-1})\mathbin{mod}q + B\mathbin{mod}q - d^mC\mathbin{mod}q)\mathbin{mod}q\\
-=((dH_{i-1})\mathbin{mod}q + B\mathbin{mod}q - (d^m\mathbin{mod}q * C\mathbin{mod}q)\mathbin{mod}q)\mathbin{mod}q\\
-=((dH_{i-1})\mathbin{mod}q + B\mathbin{mod}q - (d^m\mathbin{mod}q\ C)\mathbin{mod}q)\mathbin{mod}q\\
-=((dH_{i-1}) + B - (d^m\mathbin{mod}q \ C))\mathbin{mod}q\\
-=(d(H_{i-1} - (d^{m-1}\mathbin{mod}q) \ C) + B)\mathbin{mod}q
+&=((dH_{i-1})\mathbin{mod}q + B\mathbin{mod}q - d^mC\mathbin{mod}q)\mathbin{mod}q\\
+&=((dH_{i-1})\mathbin{mod}q + B\mathbin{mod}q - (d^m\mathbin{mod}q * C\mathbin{mod}q)\mathbin{mod}q)\mathbin{mod}q\\
+&=((dH_{i-1})\mathbin{mod}q + B\mathbin{mod}q - (d^m\mathbin{mod}q\ C)\mathbin{mod}q)\mathbin{mod}q\\
+&=((dH_{i-1}) + B - (d^m\mathbin{mod}q \ C))\mathbin{mod}q\\
+&=(d(H_{i-1} - (d^{m-1}\mathbin{mod}q) \ C) + B)\mathbin{mod}q
 \end{align}
 $$
 
