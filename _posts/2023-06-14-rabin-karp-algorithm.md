@@ -34,7 +34,7 @@ published: true
 물론 여러분은 쉽게 알 수 있을 것이다. 우선 A가 나타내는 값인 100을 123에서 뺀 후, 10을 곱한다. 그리고 4를 더한다.
 이것을 수식으로 표현하자면 이렇게 보일 것이다.
 
-$$10(123 - 100) + 4$$
+$10(123 - 100) + 4$
 
 만약 문자열 A가 있고 해당 문자열의 i번째 위치에서 구한 길이 M의 윈도우의 수치화 값을 $V_i$라고 한다면 
 $V_i$와 $V_{i-1}$의 관계는 이렇게 나타낼 수 있을 것이다. (10진수라고 가정하자.)
@@ -72,7 +72,7 @@ $(A - B) \mathbin{mod} C = ((A \mathbin{mod} C) - (B \mathbin{mod} C)) \mathbin{
 
 $(A * B) \mathbin{mod} C = ((A \mathbin{mod} C) * (B \mathbin{mod} C)) \mathbin{mod} C$
 
-$(A / B) \mathbin{mod} C = ((A \mathbin{mod} C) * (1/B \mathbin{mod} C)) \mathbin{mod} C$
+$(A \div B) \mathbin{mod} C = ((A \mathbin{mod} C) * (1 \div B \mathbin{mod} C)) \mathbin{mod} C$
 
 위에 첫 번째로 제시된 덧셈에 대한 나머지 연산의 분배법칙을 쓰면 아래에서 윈도우에 대한 나머지 연산을 할 수 있다.
 
@@ -95,20 +95,23 @@ $(dA + B - d^mC)\mathbin{mod}q = H_{i}$
 나머지 연산의 분배법칙을 써서 다시 적으면 이렇다.
 
 $$
-(dA \mathbin{mod} q + B\mathbin{mod}q - d^mC\mathbin{mod}q)\mathbin{mod}q
-\\
+\begin{align}
+(dA \mathbin{mod} q + B\mathbin{mod}q - d^mC\mathbin{mod}q)\mathbin{mod}q\\
 =((d\mathbin{mod}q * A\mathbin{mod}q)\mathbin{mod}q + q + B\mathbin{mod}q - d^mC\mathbin{mod}q)\mathbin{mod}q
+\end{align}
 $$
 
 $d\mathbin{mod}q$는 d가 q보다 작으므로 그냥 d가 되며, $A\mathbin{mod}q$는 $H_{i-1}$ 으로 우리가 이미 알고 있는 값이다. 이후 수식 전개에서
 C도 q에 비해서 작은 값이란 사실을 활용한다.
 
 $$
+\begin{align}
 =((dH_{i-1})\mathbin{mod}q + B\mathbin{mod}q - d^mC\mathbin{mod}q)\mathbin{mod}q\\
 =((dH_{i-1})\mathbin{mod}q + B\mathbin{mod}q - (d^m\mathbin{mod}q * C\mathbin{mod}q)\mathbin{mod}q)\mathbin{mod}q\\
 =((dH_{i-1})\mathbin{mod}q + B\mathbin{mod}q - (d^m\mathbin{mod}q\ C)\mathbin{mod}q)\mathbin{mod}q\\
 =((dH_{i-1}) + B - (d^m\mathbin{mod}q \ C))\mathbin{mod}q\\
-=(d(H_{i-1} - (d^{m-1}\mathbin{mod}q) \ C) + B)\mathbin{mod}q\\
+=(d(H_{i-1} - (d^{m-1}\mathbin{mod}q) \ C) + B)\mathbin{mod}q
+\end{align}
 $$
 
 이렇게 정리하면 "쉽게 배우는 알고리즘(문병로 저)"의 403쪽에 나오는 식 12.4가 된다. 
