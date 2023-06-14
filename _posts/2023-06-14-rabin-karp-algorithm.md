@@ -103,13 +103,13 @@ $$
 $d\mathbin{mod}q$는 d가 q보다 작으므로 그냥 d가 되며, $A\mathbin{mod}q$는 $H_{i-1}$ 으로 우리가 이미 알고 있는 값이다. 이후 수식 전개에서
 C도 q에 비해서 작은 값이란 사실을 활용한다.
 
-\\[
-=((dH_{i-1})\mathbin{mod}q + B\mathbin{mod}q - d^mC\mathbin{mod}q)\mathbin{mod}q\\\\
-=((dH_{i-1})\mathbin{mod}q + B\mathbin{mod}q - (d^m\mathbin{mod}q * C\mathbin{mod}q)\mathbin{mod}q)\mathbin{mod}q
-=((dH_{i-1})\mathbin{mod}q + B\mathbin{mod}q - (d^m\mathbin{mod}q\ C)\mathbin{mod}q)\mathbin{mod}q
-=((dH_{i-1}) + B - (d^m\mathbin{mod}q \ C))\mathbin{mod}q
-=(d(H_{i-1} - (d^{m-1}\mathbin{mod}q) \ C) + B)\mathbin{mod}q
-\\]
+$$
+=((dH_{i-1})\mathbin{mod}q + B\mathbin{mod}q - d^mC\mathbin{mod}q)\mathbin{mod}q\\
+=((dH_{i-1})\mathbin{mod}q + B\mathbin{mod}q - (d^m\mathbin{mod}q * C\mathbin{mod}q)\mathbin{mod}q)\mathbin{mod}q\\
+=((dH_{i-1})\mathbin{mod}q + B\mathbin{mod}q - (d^m\mathbin{mod}q\ C)\mathbin{mod}q)\mathbin{mod}q\\
+=((dH_{i-1}) + B - (d^m\mathbin{mod}q \ C))\mathbin{mod}q\\
+=(d(H_{i-1} - (d^{m-1}\mathbin{mod}q) \ C) + B)\mathbin{mod}q\\
+$$
 
 이렇게 정리하면 "쉽게 배우는 알고리즘(문병로 저)"의 403쪽에 나오는 식 12.4가 된다. 
 
