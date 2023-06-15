@@ -98,7 +98,7 @@ $(dA + B - d^mC)\mathbin{mod}q = H_{i}$
 $$
 \begin{align}
 &(dA \mathbin{mod} q + B\mathbin{mod}q - d^mC\mathbin{mod}q)\mathbin{mod}q\\
-&=((d\mathbin{mod}q * A\mathbin{mod}q)\mathbin{mod}q + q + B\mathbin{mod}q - d^mC\mathbin{mod}q)\mathbin{mod}q
+&=((d\mathbin{mod}q * A\mathbin{mod}q)\mathbin{mod}q + B\mathbin{mod}q - d^mC\mathbin{mod}q)\mathbin{mod}q
 \end{align}
 $$
 
