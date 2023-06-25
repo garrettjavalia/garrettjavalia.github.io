@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Beej의 소켓 프로그래밍 한국어판"
+title:  "Beej의 네트워크 프로그래밍 가이드 한국어판"
 date:   2023-06-26 00:00:00 +0900
 categories: translation
 tags: Unix Linux Socket Translation Beej
