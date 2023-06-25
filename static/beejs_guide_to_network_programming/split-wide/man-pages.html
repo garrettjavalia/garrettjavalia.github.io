@@ -126,7 +126,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   
   body {
       font-size: 12pt;
-      max-width: 43em;
+      box-sizing: border-box;
+      margin: 0;
+      padding: 1em;
+      max-width: min(43em, 100vw);
   }
   
   html {
@@ -137,6 +140,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   
   figure {
       text-align: center;
+  }
+  </style>
+  <!-- BG custom styling for the wide body variant -->
+  <!-- Gets appended after bg-css.html -->
+  
+  <style type="text/css">
+  body {
+      max-width: inherit;
   }
   </style>
 </head>
