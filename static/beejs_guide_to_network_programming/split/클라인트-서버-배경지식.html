@@ -145,7 +145,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </head>
 <body>
 <div style="text-align:center"><span><a href="시스템-콜이-아니면-죽음을.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="slightly-advanced-techniques.html">Next</a></span></div><hr>
-<h1 id="client-server-background"><span class="header-section-number">6</span> Client-Server Background</h1><p></p><p>It’s a client-server world, baby. Just about everything on the network deals with client processes talking to server processes and vice-versa. Take <code>telnet</code>, for instance. When you connect to a remote host on port 23 with telnet (the client), a program on that host (called <code>telnetd</code>, the server) springs to life. It handles the incoming telnet connection, sets you up with a login prompt, etc.</p><figure><embed src="cs.svg" title="[Client-Server Interaction Diagram]" /><figcaption>Client-Server Interaction.</figcaption></figure><p>The exchange of information between client and server is summarized in the above diagram.</p><p>Note that the client-server pair can speak <code>SOCK_STREAM</code>, <code>SOCK_DGRAM</code>, or anything else (as long as they’re speaking the same thing). Some good examples of client-server pairs are <code>telnet</code>/<code>telnetd</code>, <code>ftp</code>/<code>ftpd</code>, or <code>Firefox</code>/<code>Apache</code>. Every time you use <code>ftp</code>, there’s a remote program, <code>ftpd</code>, that serves you.</p><p>Often, there will only be one server on a machine, and that server will handle multiple clients using  <code>fork()</code>. The basic routine is: server will wait for a connection, <code>accept()</code> it, and <code>fork()</code> a child process to handle it. This is what our sample server does in the next section.</p><h2 id="a-simple-stream-server"><span class="header-section-number">6.1</span> A Simple Stream Server</h2><p></p><p>All this server does is send the string “<code>Hello, world!</code>” out over a stream connection. All you need to do to test this server is run it in one window, and telnet to it from another with:</p><pre><code>$ telnet remotehostname 3490</code></pre><p>where <code>remotehostname</code> is the name of the machine you’re running it on.</p><p><a href="https://beej.us/guide/bgnet/examples/server.c">The server code</a><a href="more-references.html#fn23" class="footnote-ref" id="fnref23"><sup>23</sup></a>:</p><div class="sourceCode" id="cb47"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><a class="sourceLine" id="cb47-1" title="1"><span class="co">/*</span></a>
+<h1 id="클라인트-서버-배경지식"><span class="header-section-number">6</span> 클라인트-서버 배경지식</h1><p></p><p>클라이언트-서버에 대해 이야기할 차례이다. 통신망에 있는 거의 모든 것들은 서버 프로세스에게 이야기하는 클라이언트 프로세스를 상대하거나 그 반대이다. <code>telnet</code>을 예로 들어보자. 여러분이 텔넷(클라이언트)로 원격지 호스트의 23번 포트에 접속할 때 그 호스트의 프로그램(<code>telnetd</code>라고 불리는 서버)이 생명을 얻는다. 그것이 들어오는 텔넷 요청을 처리하고 당신에게 로그인 프롬프트를 띄워주는 등의 일을 처리한다.</p><figure><embed src="cs.svg" title="[클라이언트- 서버 상호작용 도표]" /><figcaption>클라이언트 - 서버 상호작용</figcaption></figure><p>위의 도표에 클라이언트와 서버의 정보 교환이 정리되어 있습니다.</p><p>클라이언트-서버 쌍은 <code>SOCK_STREAM</code>이나 <code>SOCK_DGRAM</code> 또는 다른 어떤 것이라도 말할 수 있음을 기억하십시오.(둘이 같은 방식으로 말하기만 한다면) 클라이언트-서버 쌍의 좋은 예시는 <code>telnet</code>/<code>telnetd</code>, <code>ftp</code>/<code>ftpd</code> 또는 <code>Firefox</code>/<code>Apache</code> 입니다. 당신이 <code>ftp</code>를 쓸 때마다 당신의 요청을 받아들이는 원격지 프로그램인 <code>ftpd</code>가 있습니다.</p><p>흔히 한 개의 장기체는 오직 하나의 서버만이 있을 것이며 그 서버는  <code>fork()</code> 를 통해서 여러 클라이언트를 처리할 것입니다. 기본적인 과정은 아래와 같습니다. 서버가 연결을 기다리고, <code>accept()</code>한 후, 요청을 처리할 자식 프로세스를 <code>fork()</code> 합니다. 이것이 다음 절에서 우리의 예제 서버가 하는 일입니다.</p><h2 id="단순한-스트림-서버"><span class="header-section-number">6.1</span> 단순한 스트림 서버</h2><p></p><p>이 서버가 하는 일은 스트림 연결에 “<code>Hello, world!</code>”을 전송하는 것 뿐입니다. 이 서버를 시험하기 위해서 할 일은 하나의 창에서 이것을 실행한 후 다른 창에서 텔넷에 아래 명령어로 접속하는 일 뿐입니다.</p><pre><code>$ telnet remotehostname 3490</code></pre><p><code>remotehostname</code>은 당신이 실행하는 장치의 아이피입니다.</p><p><a href="https://beej.us/guide/bgnet/examples/server.c">The server code</a><a href="more-references.html#fn23" class="footnote-ref" id="fnref23"><sup>23</sup></a>:</p><div class="sourceCode" id="cb47"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><a class="sourceLine" id="cb47-1" title="1"><span class="co">/*</span></a>
 <a class="sourceLine" id="cb47-2" title="2"><span class="co">** server.c -- a stream socket server demo</span></a>
 <a class="sourceLine" id="cb47-3" title="3"><span class="co">*/</span></a>
 <a class="sourceLine" id="cb47-4" title="4"></a>
@@ -162,13 +162,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb47-15" title="15"><span class="pp">#include </span><span class="im">&lt;sys/wait.h&gt;</span></a>
 <a class="sourceLine" id="cb47-16" title="16"><span class="pp">#include </span><span class="im">&lt;signal.h&gt;</span></a>
 <a class="sourceLine" id="cb47-17" title="17"></a>
-<a class="sourceLine" id="cb47-18" title="18"><span class="pp">#define PORT &quot;3490&quot;  </span><span class="co">// the port users will be connecting to</span></a>
+<a class="sourceLine" id="cb47-18" title="18"><span class="pp">#define PORT &quot;3490&quot;  </span><span class="co">// 사용자들이 접속할 포트</span></a>
 <a class="sourceLine" id="cb47-19" title="19"></a>
-<a class="sourceLine" id="cb47-20" title="20"><span class="pp">#define BACKLOG 10   </span><span class="co">// how many pending connections queue will hold</span></a>
+<a class="sourceLine" id="cb47-20" title="20"><span class="pp">#define BACKLOG 10   </span><span class="co">// 몇 개의 대기중인 연결이 유지될 것인가</span></a>
 <a class="sourceLine" id="cb47-21" title="21"></a>
 <a class="sourceLine" id="cb47-22" title="22"><span class="dt">void</span> sigchld_handler(<span class="dt">int</span> s)</a>
 <a class="sourceLine" id="cb47-23" title="23">{</a>
-<a class="sourceLine" id="cb47-24" title="24">    <span class="co">// waitpid() might overwrite errno, so we save and restore it:</span></a>
+<a class="sourceLine" id="cb47-24" title="24">    <span class="co">// waitpid()이 errno를 덮어쓸 수 있으므로 저장했다가 되살린다.</span></a>
 <a class="sourceLine" id="cb47-25" title="25">    <span class="dt">int</span> saved_errno = errno;</a>
 <a class="sourceLine" id="cb47-26" title="26"></a>
 <a class="sourceLine" id="cb47-27" title="27">    <span class="cf">while</span>(waitpid(-<span class="dv">1</span>, NULL, WNOHANG) &gt; <span class="dv">0</span>);</a>
@@ -177,7 +177,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb47-30" title="30">}</a>
 <a class="sourceLine" id="cb47-31" title="31"></a>
 <a class="sourceLine" id="cb47-32" title="32"></a>
-<a class="sourceLine" id="cb47-33" title="33"><span class="co">// get sockaddr, IPv4 or IPv6:</span></a>
+<a class="sourceLine" id="cb47-33" title="33"><span class="co">// IPv4 또는 IPv6 sockaddr을 받아온다.</span></a>
 <a class="sourceLine" id="cb47-34" title="34"><span class="dt">void</span> *get_in_addr(<span class="kw">struct</span> sockaddr *sa)</a>
 <a class="sourceLine" id="cb47-35" title="35">{</a>
 <a class="sourceLine" id="cb47-36" title="36">    <span class="cf">if</span> (sa-&gt;sa_family == AF_INET) {</a>
@@ -189,9 +189,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb47-42" title="42"></a>
 <a class="sourceLine" id="cb47-43" title="43"><span class="dt">int</span> main(<span class="dt">void</span>)</a>
 <a class="sourceLine" id="cb47-44" title="44">{</a>
-<a class="sourceLine" id="cb47-45" title="45">    <span class="dt">int</span> sockfd, new_fd;  <span class="co">// listen on sock_fd, new connection on new_fd</span></a>
+<a class="sourceLine" id="cb47-45" title="45">    <span class="dt">int</span> sockfd, new_fd;  <span class="co">// sock_fd에서 대기하고 들어오는 연결은 new_fd에 저장</span></a>
 <a class="sourceLine" id="cb47-46" title="46">    <span class="kw">struct</span> addrinfo hints, *servinfo, *p;</a>
-<a class="sourceLine" id="cb47-47" title="47">    <span class="kw">struct</span> sockaddr_storage their_addr; <span class="co">// connector&#39;s address information</span></a>
+<a class="sourceLine" id="cb47-47" title="47">    <span class="kw">struct</span> sockaddr_storage their_addr; <span class="co">// 접속자의 주소 정보</span></a>
 <a class="sourceLine" id="cb47-48" title="48">    socklen_t sin_size;</a>
 <a class="sourceLine" id="cb47-49" title="49">    <span class="kw">struct</span> sigaction sa;</a>
 <a class="sourceLine" id="cb47-50" title="50">    <span class="dt">int</span> yes=<span class="dv">1</span>;</a>
@@ -208,7 +208,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb47-61" title="61">        <span class="cf">return</span> <span class="dv">1</span>;</a>
 <a class="sourceLine" id="cb47-62" title="62">    }</a>
 <a class="sourceLine" id="cb47-63" title="63"></a>
-<a class="sourceLine" id="cb47-64" title="64">    <span class="co">// loop through all the results and bind to the first we can</span></a>
+<a class="sourceLine" id="cb47-64" title="64">    <span class="co">// 모든 결과를 조회하고 쓸 수 있는 첫 번째 것을 사용</span></a>
 <a class="sourceLine" id="cb47-65" title="65">    <span class="cf">for</span>(p = servinfo; p != NULL; p = p-&gt;ai_next) {</a>
 <a class="sourceLine" id="cb47-66" title="66">        <span class="cf">if</span> ((sockfd = socket(p-&gt;ai_family, p-&gt;ai_socktype,</a>
 <a class="sourceLine" id="cb47-67" title="67">                p-&gt;ai_protocol)) == <span class="dv">-1</span>) {</a>
@@ -231,7 +231,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb47-84" title="84">        <span class="cf">break</span>;</a>
 <a class="sourceLine" id="cb47-85" title="85">    }</a>
 <a class="sourceLine" id="cb47-86" title="86"></a>
-<a class="sourceLine" id="cb47-87" title="87">    freeaddrinfo(servinfo); <span class="co">// all done with this structure</span></a>
+<a class="sourceLine" id="cb47-87" title="87">    freeaddrinfo(servinfo); <span class="co">// 이 구조체는 더 이상 필요없음</span></a>
 <a class="sourceLine" id="cb47-88" title="88"></a>
 <a class="sourceLine" id="cb47-89" title="89">    <span class="cf">if</span> (p == NULL)  {</a>
 <a class="sourceLine" id="cb47-90" title="90">        fprintf(stderr, <span class="st">&quot;server: failed to bind</span><span class="sc">\n</span><span class="st">&quot;</span>);</a>
@@ -243,9 +243,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb47-96" title="96">        exit(<span class="dv">1</span>);</a>
 <a class="sourceLine" id="cb47-97" title="97">    }</a>
 <a class="sourceLine" id="cb47-98" title="98"></a>
-<a class="sourceLine" id="cb47-99" title="99">    sa.sa_handler = sigchld_handler; <span class="co">// reap all dead processes</span></a>
+<a class="sourceLine" id="cb47-99" title="99">    sa.sa_handler = sigchld_handler; <span class="co">// 죽은 프로세스를 다 거둬들이자</span></a>
 <a class="sourceLine" id="cb47-100" title="100">    sigemptyset(&amp;sa.sa_mask);</a>
-<a class="sourceLine" id="cb47-101" title="101">    sa.sa_flags = SA_RESTART;</a>
+<a class="sourceLine" id="cb47-101" title="101">    sa.sa_flags =   ;</a>
 <a class="sourceLine" id="cb47-102" title="102">    <span class="cf">if</span> (sigaction(SIGCHLD, &amp;sa, NULL) == <span class="dv">-1</span>) {</a>
 <a class="sourceLine" id="cb47-103" title="103">        perror(<span class="st">&quot;sigaction&quot;</span>);</a>
 <a class="sourceLine" id="cb47-104" title="104">        exit(<span class="dv">1</span>);</a>
@@ -253,7 +253,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb47-106" title="106"></a>
 <a class="sourceLine" id="cb47-107" title="107">    printf(<span class="st">&quot;server: waiting for connections...</span><span class="sc">\n</span><span class="st">&quot;</span>);</a>
 <a class="sourceLine" id="cb47-108" title="108"></a>
-<a class="sourceLine" id="cb47-109" title="109">    <span class="cf">while</span>(<span class="dv">1</span>) {  <span class="co">// main accept() loop</span></a>
+<a class="sourceLine" id="cb47-109" title="109">    <span class="cf">while</span>(<span class="dv">1</span>) {  <span class="co">// 주 accept() 루프</span></a>
 <a class="sourceLine" id="cb47-110" title="110">        sin_size = <span class="kw">sizeof</span> their_addr;</a>
 <a class="sourceLine" id="cb47-111" title="111">        new_fd = accept(sockfd, (<span class="kw">struct</span> sockaddr *)&amp;their_addr, &amp;sin_size);</a>
 <a class="sourceLine" id="cb47-112" title="112">        <span class="cf">if</span> (new_fd == <span class="dv">-1</span>) {</a>
@@ -266,18 +266,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb47-119" title="119">            s, <span class="kw">sizeof</span> s);</a>
 <a class="sourceLine" id="cb47-120" title="120">        printf(<span class="st">&quot;server: got connection from %s</span><span class="sc">\n</span><span class="st">&quot;</span>, s);</a>
 <a class="sourceLine" id="cb47-121" title="121"></a>
-<a class="sourceLine" id="cb47-122" title="122">        <span class="cf">if</span> (!fork()) { <span class="co">// this is the child process</span></a>
-<a class="sourceLine" id="cb47-123" title="123">            close(sockfd); <span class="co">// child doesn&#39;t need the listener</span></a>
+<a class="sourceLine" id="cb47-122" title="122">        <span class="cf">if</span> (!fork()) { <span class="co">// 자식 프로세스이다.</span></a>
+<a class="sourceLine" id="cb47-123" title="123">            close(sockfd); <span class="co">// 자식은 리스너가 필요없다.</span></a>
 <a class="sourceLine" id="cb47-124" title="124">            <span class="cf">if</span> (send(new_fd, <span class="st">&quot;Hello, world!&quot;</span>, <span class="dv">13</span>, <span class="dv">0</span>) == <span class="dv">-1</span>)</a>
 <a class="sourceLine" id="cb47-125" title="125">                perror(<span class="st">&quot;send&quot;</span>);</a>
 <a class="sourceLine" id="cb47-126" title="126">            close(new_fd);</a>
 <a class="sourceLine" id="cb47-127" title="127">            exit(<span class="dv">0</span>);</a>
 <a class="sourceLine" id="cb47-128" title="128">        }</a>
-<a class="sourceLine" id="cb47-129" title="129">        close(new_fd);  <span class="co">// parent doesn&#39;t need this</span></a>
+<a class="sourceLine" id="cb47-129" title="129">        close(new_fd);  <span class="co">// 부모는 이것이 필요없다.</span></a>
 <a class="sourceLine" id="cb47-130" title="130">    }</a>
 <a class="sourceLine" id="cb47-131" title="131"></a>
 <a class="sourceLine" id="cb47-132" title="132">    <span class="cf">return</span> <span class="dv">0</span>;</a>
-<a class="sourceLine" id="cb47-133" title="133">}</a></code></pre></div><p>In case you’re curious, I have the code in one big <code>main()</code> function for (I feel) syntactic clarity. Feel free to split it into smaller functions if it makes you feel better.</p><p>(Also, this whole  <code>sigaction()</code> thing might be new to you—that’s OK. The code that’s there is responsible for reaping  zombie processes that appear as the <code>fork()</code>ed child processes exit. If you make lots of zombies and don’t reap them, your system administrator will become agitated.)</p><p>You can get the data from this server by using the client listed in the next section.</p><p></p><h2 id="a-simple-stream-client"><span class="header-section-number">6.2</span> A Simple Stream Client</h2><p></p><p>This guy’s even easier than the server. All this client does is connect to the host you specify on the command line, port 3490. It gets the string that the server sends.</p><p><a href="https://beej.us/guide/bgnet/examples/client.c">The client source</a><a href="more-references.html#fn24" class="footnote-ref" id="fnref24"><sup>24</sup></a>:</p><div class="sourceCode" id="cb48"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><a class="sourceLine" id="cb48-1" title="1"><span class="co">/*</span></a>
+<a class="sourceLine" id="cb47-133" title="133">}</a></code></pre></div><p>궁금한 독자들을 위해 덧붙이자면 구문의 명료함을 위해서 하나의 큰 <code>main()</code>함수 안에 모든 코드를 다 적었습니다. 원한다면 더 작은 함수들로 나누어도 좋습니다.</p><p>(아마도 이  <code>sigaction()</code>을 처음 볼 수도 있는데 괜찮다. 이 코드는 <code>fork()</code>된 자식 프로세스가 종료되면서 생기는 좀비 프로세스를 거둬들이는 데 사용된다. 좀비 프로세스를 많이 만들고 거둬들이지 않으면 시스템 관리자가 흥분할 것이다.)</p><p>다음 절에 나오는 클라이언트를 사용해서 이 서버로부터 데이터를 얻을 수 있다.</p><p></p><h2 id="단순한-스트림-클라이언트"><span class="header-section-number">6.2</span> 단순한 스트림 클라이언트</h2><p></p><p>이 녀석은 서버보다도 더 쉽다. 이 클라이언트가 하는 일은 당신이 명령줄에 지정한 호스트의 3490번 포트로 접속하는 것이다. 이것은 서버가 보낸 문자열을 받는다.</p><p><a href="https://beej.us/guide/bgnet/examples/client.c">The client source</a><a href="more-references.html#fn24" class="footnote-ref" id="fnref24"><sup>24</sup></a>:</p><div class="sourceCode" id="cb48"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><a class="sourceLine" id="cb48-1" title="1"><span class="co">/*</span></a>
 <a class="sourceLine" id="cb48-2" title="2"><span class="co">** client.c -- a stream socket client demo</span></a>
 <a class="sourceLine" id="cb48-3" title="3"><span class="co">*/</span></a>
 <a class="sourceLine" id="cb48-4" title="4"></a>
@@ -293,9 +293,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb48-14" title="14"></a>
 <a class="sourceLine" id="cb48-15" title="15"><span class="pp">#include </span><span class="im">&lt;arpa/inet.h&gt;</span></a>
 <a class="sourceLine" id="cb48-16" title="16"></a>
-<a class="sourceLine" id="cb48-17" title="17"><span class="pp">#define PORT &quot;3490&quot; </span><span class="co">// the port client will be connecting to </span></a>
+<a class="sourceLine" id="cb48-17" title="17"><span class="pp">#define PORT &quot;3490&quot; </span><span class="co">// 클라이언트가 접속할 포트</span></a>
 <a class="sourceLine" id="cb48-18" title="18"></a>
-<a class="sourceLine" id="cb48-19" title="19"><span class="pp">#define MAXDATASIZE 100 </span><span class="co">// max number of bytes we can get at once </span></a>
+<a class="sourceLine" id="cb48-19" title="19"><span class="pp">#define MAXDATASIZE 100 </span><span class="co">// 한 번에 받을 수 있는 최대 바이트 갯수</span></a>
 <a class="sourceLine" id="cb48-20" title="20"></a>
 <a class="sourceLine" id="cb48-21" title="21"><span class="co">// get sockaddr, IPv4 or IPv6:</span></a>
 <a class="sourceLine" id="cb48-22" title="22"><span class="dt">void</span> *get_in_addr(<span class="kw">struct</span> sockaddr *sa)</a>
@@ -309,7 +309,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb48-30" title="30"></a>
 <a class="sourceLine" id="cb48-31" title="31"><span class="dt">int</span> main(<span class="dt">int</span> argc, <span class="dt">char</span> *argv[])</a>
 <a class="sourceLine" id="cb48-32" title="32">{</a>
-<a class="sourceLine" id="cb48-33" title="33">    <span class="dt">int</span> sockfd, numbytes;  </a>
+<a class="sourceLine" id="cb48-33" title="33">    <span class="dt">int</span> sockfd, numbytes;</a>
 <a class="sourceLine" id="cb48-34" title="34">    <span class="dt">char</span> buf[MAXDATASIZE];</a>
 <a class="sourceLine" id="cb48-35" title="35">    <span class="kw">struct</span> addrinfo hints, *servinfo, *p;</a>
 <a class="sourceLine" id="cb48-36" title="36">    <span class="dt">int</span> rv;</a>
@@ -329,7 +329,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb48-50" title="50">        <span class="cf">return</span> <span class="dv">1</span>;</a>
 <a class="sourceLine" id="cb48-51" title="51">    }</a>
 <a class="sourceLine" id="cb48-52" title="52"></a>
-<a class="sourceLine" id="cb48-53" title="53">    <span class="co">// loop through all the results and connect to the first we can</span></a>
+<a class="sourceLine" id="cb48-53" title="53">    <span class="co">// 모든 결과를 순회하면서 쓸 수 있는 가장 첫 번째 것을 씀</span></a>
 <a class="sourceLine" id="cb48-54" title="54">    <span class="cf">for</span>(p = servinfo; p != NULL; p = p-&gt;ai_next) {</a>
 <a class="sourceLine" id="cb48-55" title="55">        <span class="cf">if</span> ((sockfd = socket(p-&gt;ai_family, p-&gt;ai_socktype,</a>
 <a class="sourceLine" id="cb48-56" title="56">                p-&gt;ai_protocol)) == <span class="dv">-1</span>) {</a>
@@ -355,7 +355,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb48-76" title="76">            s, <span class="kw">sizeof</span> s);</a>
 <a class="sourceLine" id="cb48-77" title="77">    printf(<span class="st">&quot;client: connecting to %s</span><span class="sc">\n</span><span class="st">&quot;</span>, s);</a>
 <a class="sourceLine" id="cb48-78" title="78"></a>
-<a class="sourceLine" id="cb48-79" title="79">    freeaddrinfo(servinfo); <span class="co">// all done with this structure</span></a>
+<a class="sourceLine" id="cb48-79" title="79">    freeaddrinfo(servinfo); <span class="co">// 이 구조체는 더 이상 필요 없음</span></a>
 <a class="sourceLine" id="cb48-80" title="80"></a>
 <a class="sourceLine" id="cb48-81" title="81">    <span class="cf">if</span> ((numbytes = recv(sockfd, buf, MAXDATASIZE<span class="dv">-1</span>, <span class="dv">0</span>)) == <span class="dv">-1</span>) {</a>
 <a class="sourceLine" id="cb48-82" title="82">        perror(<span class="st">&quot;recv&quot;</span>);</a>
@@ -369,7 +369,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb48-90" title="90">    close(sockfd);</a>
 <a class="sourceLine" id="cb48-91" title="91"></a>
 <a class="sourceLine" id="cb48-92" title="92">    <span class="cf">return</span> <span class="dv">0</span>;</a>
-<a class="sourceLine" id="cb48-93" title="93">}</a></code></pre></div><p>Notice that if you don’t run the server before you run the client, <code>connect()</code> returns  “Connection refused”. Very useful.</p><p></p><h2 id="datagram"><span class="header-section-number">6.3</span> Datagram Sockets</h2><p></p><p>We’ve already covered the basics of UDP datagram sockets with our discussion of <code>sendto()</code> and <code>recvfrom()</code>, above, so I’ll just present a couple of sample programs: <code>talker.c</code> and <code>listener.c</code>.</p><p><code>listener</code> sits on a machine waiting for an incoming packet on port 4950. <code>talker</code> sends a packet to that port, on the specified machine, that contains whatever the user enters on the command line.</p><p>Because datagram sockets are connectionless and just fire packets off into the ether with callous disregard for success, we are going to tell the client and server to use specifically IPv6. This way we avoid the situation where the server is listening on IPv6 and the client sends on IPv4; the data simply would not be received. (In our connected TCP stream sockets world, we might still have the mismatch, but the error on <code>connect()</code> for one address family would cause us to retry for the other.)</p><p>Here is the <a href="https://beej.us/guide/bgnet/examples/listener.c">source for <code>listener.c</code></a><a href="more-references.html#fn25" class="footnote-ref" id="fnref25"><sup>25</sup></a>:</p><div class="sourceCode" id="cb49"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><a class="sourceLine" id="cb49-1" title="1"><span class="co">/*</span></a>
+<a class="sourceLine" id="cb48-93" title="93">}</a></code></pre></div><p>클라이언트를 실행하기 전에 서버를 실행하지 않으면 <code>connect()</code>는  “Connection refused”를 반환한다는 점을 기억하라. 아주 유용하다.</p><p></p><h2 id="datagram"><span class="header-section-number">6.3</span> 데이터그램 소켓</h2><p></p><p>위에서 <code>sendto()</code>과 <code>recvfrom()</code>에 대해 논의할 때 UDP 데이터그램 소켓의 기본에 대해서 이미 알아보았다. 그러므로 바로 2개의 예제 프로그램을 제시하겠다. <code>talker.c</code>와 <code>listener.c</code>이다.</p><p><code>listener</code>는 장치에서 포트 4950으로 들어오는 패킷을 대기한다. <code>talker</code>는 지정한 장치의 해당 포트로 사용자가 명령줄에 입력한 내용을 담은 패킷을 보낸다.</p><p>데이터그램 소켓은 연결이 없고 소켓을 이더넷에 발송한 후 성공 여부는 신경쓰지 않기 때문에 클라이언트와 서버에 IPv6을 사용하도록 명시할 것이다. 이렇게 하면 서버가 IPv6에서 듣고 클라이언트가 IPv4에서 발송해서 데이터를 받을 수 없는 상황을 피할 수 있을 것이다. (우리의 TCP 스트림 소켓 세상에서도 이런 불일치가 발생할 수 있지만 <code>connect()</code>에서 하나의 주소 체계에 대해 에러를 발생시키고 다른 주소체계를 쓰도록 해준다.)</p><p>여기에 <a href="https://beej.us/guide/bgnet/examples/listener.c"><code>listener.c</code>의 소스코드가 있다.</a><a href="more-references.html#fn25" class="footnote-ref" id="fnref25"><sup>25</sup></a>:</p><div class="sourceCode" id="cb49"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><a class="sourceLine" id="cb49-1" title="1"><span class="co">/*</span></a>
 <a class="sourceLine" id="cb49-2" title="2"><span class="co">** listener.c -- a datagram sockets &quot;server&quot; demo</span></a>
 <a class="sourceLine" id="cb49-3" title="3"><span class="co">*/</span></a>
 <a class="sourceLine" id="cb49-4" title="4"></a>
@@ -463,7 +463,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb49-92" title="92">    close(sockfd);</a>
 <a class="sourceLine" id="cb49-93" title="93"></a>
 <a class="sourceLine" id="cb49-94" title="94">    <span class="cf">return</span> <span class="dv">0</span>;</a>
-<a class="sourceLine" id="cb49-95" title="95">}</a></code></pre></div><p>Notice that in our call to <code>getaddrinfo()</code> we’re finally using <code>SOCK_DGRAM</code>. Also, note that there’s no need to <code>listen()</code> or <code>accept()</code>. This is one of the perks of using unconnected datagram sockets!</p><p></p><p></p><p>Next comes the <a href="https://beej.us/guide/bgnet/examples/talker.c">source for <code>talker.c</code></a><a href="more-references.html#fn26" class="footnote-ref" id="fnref26"><sup>26</sup></a>:</p><div class="sourceCode" id="cb50"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><a class="sourceLine" id="cb50-1" title="1"><span class="co">/*</span></a>
+<a class="sourceLine" id="cb49-95" title="95">}</a></code></pre></div><p><code>getaddrinfo()</code>에서 우리가 마침내 <code>SOCK_DGRAM</code>을 사용한다는 것에 주목하라. 또한, <code>listen()</code>와 <code>accept()</code>이 필요하지 않다는 점도 기억하라. 이것이 연결 없는 데이터그램 소켓을 사용할 때의 장점 중 하나이다. Notice that in our call to <code>getaddrinfo()</code> we’re finally using <code>SOCK_DGRAM</code>. Also, note that there’s no need to <code>listen()</code> or <code>accept()</code>. This is one of the perks of using unconnected datagram sockets!</p><p></p><p></p><p>Next comes the <a href="https://beej.us/guide/bgnet/examples/talker.c">source for <code>talker.c</code></a><a href="more-references.html#fn26" class="footnote-ref" id="fnref26"><sup>26</sup></a>:</p><div class="sourceCode" id="cb50"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><a class="sourceLine" id="cb50-1" title="1"><span class="co">/*</span></a>
 <a class="sourceLine" id="cb50-2" title="2"><span class="co">** talker.c -- a datagram &quot;client&quot; demo</span></a>
 <a class="sourceLine" id="cb50-3" title="3"><span class="co">*/</span></a>
 <a class="sourceLine" id="cb50-4" title="4"></a>
@@ -529,5 +529,5 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb50-64" title="64">    close(sockfd);</a>
 <a class="sourceLine" id="cb50-65" title="65"></a>
 <a class="sourceLine" id="cb50-66" title="66">    <span class="cf">return</span> <span class="dv">0</span>;</a>
-<a class="sourceLine" id="cb50-67" title="67">}</a></code></pre></div><p>And that’s all there is to it! Run <code>listener</code> on some machine, then run <code>talker</code> on another. Watch them communicate! Fun G-rated excitement for the entire nuclear family!</p><p>You don’t even have to run the server this time! You can run <code>talker</code> by itself, and it just happily fires packets off into the ether where they disappear if no one is ready with a <code>recvfrom()</code> on the other side. Remember: data sent using UDP datagram sockets isn’t guaranteed to arrive!</p><p></p><p>Except for one more tiny detail that I’ve mentioned many times in the past:  connected datagram sockets. I need to talk about this here, since we’re in the datagram section of the document. Let’s say that <code>talker</code> calls <code>connect()</code> and specifies the <code>listener</code>’s address. From that point on, <code>talker</code> may only send to and receive from the address specified by <code>connect()</code>. For this reason, you don’t have to use <code>sendto()</code> and <code>recvfrom()</code>; you can simply use <code>send()</code> and <code>recv()</code>.</p><p></p><hr><div style="text-align:center"><span><a href="시스템-콜이-아니면-죽음을.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="slightly-advanced-techniques.html">Next</a></span></div></body>
+<a class="sourceLine" id="cb50-67" title="67">}</a></code></pre></div><p>이것이 전부다! 하나의 장치에서 <code>listener</code>를 실행하고 <code>talker</code>를 다른 장치에서 실행하라.(역자 주 : 하나의 장치에서도 순서만 맞게 실행하면 문제는 없다. 여러 터미널을 동시에 열 수 있는 다양한 방법이 있다.) 그것들이 통신하는 것을 지켜보라. 핵가족 전체를 위한 전연령 엔터테인먼트다.</p><p>이번에는 서버르 실행할 필요도 없다! <code>talker</code>를 혼자 실행시키면 패킷을 행복하게 발송하고, 아무도 반대쪽에서 <code>recvfrom()</code>을 호출하지 않는다면 그저 패킷은 사라질 뿐이다. 기억하라 : UDP 데이터그램 소켓으로 보낸 데이터는 도착을 보장하지 않는다.!</p><p></p><p>전에 몇 번 말한 사소한 것 한 가지를 빼면 전부다:  연결된 데이터그램 소켓이 그것이다. 그것에 대해서 여기에서 말해야하는데, 이 문서의 데이터그램에 대한 부분이 바로 여기이기 때문이다. 위의 <code>talker</code> 가 <code>listener</code>의 주소를 지정하고 <code>connect()</code>를 호출한다고 하자. 그 순간부터 <code>talker</code>는 <code>connect()</code>로 지정한 주소로만 데이터를 보내고 받을 수 있다. 이런 이유로 <code>sendto()</code>와 <code>recvfrom()</code>을 쓸 필요가 없다. 단순히 <code>send()</code> 와 <code>recv()</code>를 쓰면 된다.</p><p></p><hr><div style="text-align:center"><span><a href="시스템-콜이-아니면-죽음을.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="slightly-advanced-techniques.html">Next</a></span></div></body>
 </html>
