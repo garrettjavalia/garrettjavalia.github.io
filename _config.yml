@@ -37,6 +37,7 @@ github_username:  garrettjavalia
 theme: minima
 plugins:
   - jekyll-feed
+  - jekyll-sitemap
 
 google_analytics: G-G7P8PXM5K6
 
