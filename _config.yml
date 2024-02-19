@@ -29,7 +29,7 @@ email: javalia.javalia@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
   개발한 내용을 기록하는 간소한 노트.
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site, e.g. http://example.com
+url: "https://garrettjavalia.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 #twitter_username: jekyllrb
 github_username:  garrettjavalia
 
@@ -39,12 +39,6 @@ plugins:
   - jekyll-feed
 
 google_analytics: G-G7P8PXM5K6
-
-keep_files:
-  - _keep_files/
-
-exclude:
-  - _keep_files/
 
 # Exclude from processing.
 # The following items will not be processed, by default.

@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "Beej의 네트워크 프로그래밍 가이드 한국어판"
-date:   2023-06-26 00:00:00 +0900
+title: "Beej의 네트워크 프로그래밍 가이드 한국어판"
+date: 2023-06-26 00:00:00 +0900
 categories: translation
 tags: Unix Linux Socket Translation Beej
 published: true
@@ -15,22 +15,20 @@ published: true
 
 ## 넓은 문서
 
-- [페이지 분할이 있는 버전]({{ site.baseurl }}{% link static/beejs_guide_to_network_programming/split-wide/index.html %})
-- [페이지 분할이 없는 버전]({{ site.baseurl }}{% link static/beejs_guide_to_network_programming/bgnet-wide.html %})
-
+- [페이지 분할이 있는 버전]({{ site.baseurl }}{% link static/beejs_guide_to_network_programming/html/split-wide/index.html %})
+- [페이지 분할이 없는 버전]({{ site.baseurl }}{% link static/beejs_guide_to_network_programming/html/index-wide.html %})
 
 ## 좁은 문서
 
-- [페이지 분할이 있는 버전]({{ site.baseurl }}{% link static/beejs_guide_to_network_programming/split/index.html %})
-- [페이지 분할이 없는 버전]({{ site.baseurl }}{% link static/beejs_guide_to_network_programming/bgnet.html %})
-
+- [페이지 분할이 있는 버전]({{ site.baseurl }}{% link static/beejs_guide_to_network_programming/html/split/index.html %})
+- [페이지 분할이 없는 버전]({{ site.baseurl }}{% link static/beejs_guide_to_network_programming/html/index.html %})
 
 # PDF
 
-- [컬러, A4제본, 쪽 좌우 여백 균등]({{ site.baseurl }}{% link static/beejs_guide_to_network_programming/bgnet_a4_c_1.pdf %})
-- [컬러, A4제본, 가운데 여백 큼(제본에 적합)]({{ site.baseurl }}{% link static/beejs_guide_to_network_programming/bgnet_a4_c_2.pdf %})
-- [흑백, A4제본, 쪽 좌우 여백 균등]({{ site.baseurl }}{% link static/beejs_guide_to_network_programming/bgnet_a4_bw_1.pdf %})
-- [흑백, A4제본, 가운데 여백 큼(제본에 적합)]({{ site.baseurl }}{% link static/beejs_guide_to_network_programming/bgnet_a4_bw_2.pdf %})
+- [컬러, A4제본, 쪽 좌우 여백 균등]({{ site.baseurl }}{% link static/beejs_guide_to_network_programming/pdf/bgnet_a4_c_1.pdf %})
+- [컬러, A4제본, 가운데 여백 큼(제본에 적합)]({{ site.baseurl }}{% link static/beejs_guide_to_network_programming/pdf/bgnet_a4_c_2.pdf %})
+- [흑백, A4제본, 쪽 좌우 여백 균등]({{ site.baseurl }}{% link static/beejs_guide_to_network_programming/pdf/bgnet_a4_bw_1.pdf %})
+- [흑백, A4제본, 가운데 여백 큼(제본에 적합)]({{ site.baseurl }}{% link static/beejs_guide_to_network_programming/pdf/bgnet_a4_bw_2.pdf %})
 
 # 이 문서에 대해서
 

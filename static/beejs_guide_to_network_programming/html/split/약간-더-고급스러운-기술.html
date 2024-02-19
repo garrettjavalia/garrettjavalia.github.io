@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Beej의 네트워크 프로그래밍 안내서</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono&display=swap" rel="stylesheet"> 
+  <link rel="stylesheet" as="style" crossorigin="None" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.6/dist/web/static/pretendard.css" />
+  <!-- BG custom styling -->
+  <style type="text/css">
+  /* Fix for line numbers not visible */
+  pre.numberSource code > span {
+      left: -1em;
+  }
+  pre.numberSource {
+      margin-left: initial;
+  }
+  
+  /* Put some space after the section numbers */
+  span.toc-section-number::after {
+      content: "\a0\a0\a0";  /* non-breaking whitespace */
+  }
+  
+  /* Hide underlines on code number links */
+  pre > code.sourceCode > span > a:first-child::before {
+      text-decoration: none;
+  }
+  
+  /* Color the source blocks */
+  div.sourceCode {
+      background-color: #f0f0f0;
+  }
+  
+  /* Fix iOS big text rendering issue */
+  pre > code.sourceCode > span {
+      display: initial;
+  }
+  
+  
+  /* Color the inline code */
+  code:not(.sourceCode) {
+      background: #f0f0f0;
+      padding-left: 0.2em;
+      padding-right: 0.2em;
+      border-radius: 0.2em;
+  }
+  
+  /* Keep code tags from wrapping in tables */
+  tbody code {
+      white-space: nowrap;
+  }
+  
+  td {
+      vertical-align: top;
+  }
+  
+  body {
+      font-size: 12pt;
+      box-sizing: border-box;
+      margin: 0;
+      padding: 1em;
+      max-width: min(43em, 100vw);
+  }
+  
+  html {
+      display: flex;
+      justify-content: center;
+      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard Variable", Pretendard, Roboto, "Noto Sans KR", "Segoe UI", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+  }
+  
+  figure {
+      text-align: center;
+  }
+  </style>
+</head>
+<body>
+<div style="text-align:center"><span><a href="클라인트-서버-배경지식.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="common-questions.html">Next</a></span></div><hr>
+<h1 id="약간-더-고급스러운-기술"><span class="header-section-number">7</span> 약간 더 고급스러운 기술</h1><p>이것들은 <em>진짜로</em> 고급 기술인 것은 아니지만 우리가 지금까지 다룬 기본적인 것들을 벗어나고 있다. 사실 당신이 여기까지 왔다면 스스로가 기본적인 유닉스 네트워크 프로그래밍을 꽤 잘 한다고 생각해도 된다. 축하한다.</p><p>이제 당신이 소켓에 대해서 배우고 싶어할 좀 더 비밀스러운 것들의 세상으로 용감하게 가보자. 열심히 해 보자!</p><h2 id="blocking"><span class="header-section-number">7.1</span> 블로킹</h2><p></p><p>블로킹. 그것에 대해서 이미 들어보았다. 그것은 도대체 무엇인가? 간단히 말하면 “블록”은 “잠자기”에 대한 기술적 용어이다. 위에서 <code>listener</code>를 실행하면 패킷이 도착할 때까지 그대로 기다리고 있다는 것을 눈치챘을 것이다. 내부적으로는 <code>recvfrom()</code>이 호출되고, 데이터가 없으므로 <code>recvfrom()</code>는 데이터가 도착할 때까지 “블록”된 상태인 것이다.(즉 그대로 잠들어 있게 된다.)</p><p>많은 함수들이 블록상태가 된다. <code>accept()</code>는 블로킹 함수이다. 모든 <code>recv()</code> 함수들도 블록 동작을 하는 함수이다.(역자 주 : 원문에서는 block자체를 동사로 쓴다.) 그것들이 블록동작을 할 수 있는 이유는 그렇게 할 수 있게 허락을 받았기 때문이다. <code>socket()</code>으로 소켓 설명자를 처음 만들 때 커널이 이 소켓을 블로킹 소켓으로 설정한다.  만약 소켓이 블록 동작을 하지 않길 원한다면 에 대한 호출을 해야한다. :</p><div class="sourceCode" id="cb51"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><a class="sourceLine" id="cb51-1" title="1"><span class="pp">#include </span><span class="im">&lt;unistd.h&gt;</span></a>
+<a class="sourceLine" id="cb51-2" title="2"><span class="pp">#include </span><span class="im">&lt;fcntl.h&gt;</span></a>
+<a class="sourceLine" id="cb51-3" title="3">.</a>
+<a class="sourceLine" id="cb51-4" title="4">.</a>
+<a class="sourceLine" id="cb51-5" title="5">.</a>
+<a class="sourceLine" id="cb51-6" title="6">sockfd = socket(PF_INET, SOCK_STREAM, <span class="dv">0</span>);</a>
+<a class="sourceLine" id="cb51-7" title="7">fcntl(sockfd, F_SETFL, O_NONBLOCK);</a>
+<a class="sourceLine" id="cb51-8" title="8">.</a>
+<a class="sourceLine" id="cb51-9" title="9">.</a>
+<a class="sourceLine" id="cb51-10" title="10">.</a></code></pre></div><p>소켓을 논블로킹으로 설정하면 정보를 얻기 위해서 소켓을 효과적으로 “조사(원문 : poll)” 할 수 있다. 논 블로킹 소켓을 읽으려고 할 때 정보가 없다면 그것이 블록 동작을 하는 것은 허락되지 않는다. 그것은 -1을 반환할 것이고 <code>errno</code>은  <code>EAGAIN</code> 이나  <code>EWOULDBLOCK</code>로 설정될 것이다.</p><p>(잠깐,  <code>EAGAIN</code> <em>이나</em>  <code>EWOULDBLOCK</code> 를 돌려준다니 무엇을 확인해야 한다는 말인가? 명세서에는 사실 당신의 시스템이 어떤 값을 돌려줘야 하는지가 정의되어 있지 않다. 그러므로 이식성을 위해서는 둘을 모두 확인해야 한다.)</p><p>그러나 일반적으로 말하자면 이런 방식의 조사는 좋은 생각이 아니다. 당신의 프로그램이 소켓의 자료를 기다리면서 바쁜 대기 상태가 되면 당신은 보통의 프로그램보다 훨씬 CPU시간을 많이 사용할 것이다. (역자 주 : 특별한 제한을 걸지 않으면 최대 단일 코어 하나를 100% 점유할 수 있다.) 읽기 작업을 기다리는 정보가 있는지 확인하기 위한 조금 더 우아한 해결책은  <code>poll()</code>에 대해 다루는 다음 절에 있다.</p><p></p><h2 id="poll"><span class="header-section-number">7.2</span> <code>poll()</code>—동기 입출력 다중화</h2><p></p><p>당신이 정말로 하고자 해야하는 일은 소켓 <em>한 무더기</em> 를 한 번에 감시하고 그 중에 데이터가 준비된 것을 처리하는 것이다. 이런 방식을 통해서 당신은 모든 소켓을 지속적으로 조사하지 않아도 여러 개의 소켓 중 어떤 것이 데이터가 준비되었는지 알 수 있다.</p><blockquote><p>경고 : <code>poll()</code>은 엄청나게 많은 수의 연결을 처리할 때 끔찍하게 느려진다. 이런 상황에서는 <a href="https://libevent.org/">libevent</a><a href="more-references.html#fn27" class="footnote-ref" id="fnref27"><sup>27</sup></a> 같은 이벤트 라이브러리 를 사용하면 더 좋은 성능을 얻을 수 있다. 이런 라이브러리는 당신의 운영체제에서 사용할 수 있는 가장 빠른 방법을 사용하려고 시도할 것이다.</p></blockquote><p>그래서 어떻게 조사를 피할 수 있는가? 놀랍게도 <code>poll()</code> 시스템 함수를 사용해서 조사를 피할 수 있다. (역자 주 : poll은 투표, 설문, 그러한 부류의 조사라는 뜻이다.) 간단히 말하자면 운영체제에게 모든 번거로운 작업을 우리 대신 하고 어떤 소켓에 자료가 도착하면 알려달라고 부탁하는 것이다. 그 동안 우리의 프로세스는 대기 상태가 될 수 있고 시스템 자원을 아낄 수 있다.</p><p>전체적인 계획은 우리가 감시하고 싶은 소켓 설명자와 우리가 감시하고 싶은 이벤트의 종류에 대한 정보를 담은 <code>struct pollfd</code>의 배열을 보관하는 것이다. 운영체제는 해당하는 종류의 이벤트가 발생(예를 들어 “소켓에 읽을 자료가 있다!” 같은 이벤트)하거나 사용자가 지정한 제한 시간이 지날 때까지 <code>poll()</code> 호출을 블록할 것이다.</p><p>유용하게도 <code>listen()</code> 상태인 소켓은 새로운 연결이 <code>accept()</code>될 수 있는 상태가 되었을 때 “ready to read”를 반환할 것이다.</p><p>이만하면 충분히 떠들었다. 이것을 쓰는 방법은 어떨지 보자.</p><div class="sourceCode" id="cb52"><pre class="sourceCode c"><code class="sourceCode c"><a class="sourceLine" id="cb52-1" title="1"><span class="pp">#include </span><span class="im">&lt;poll.h&gt;</span></a>
+<a class="sourceLine" id="cb52-2" title="2"></a>
+<a class="sourceLine" id="cb52-3" title="3"><span class="dt">int</span> poll(<span class="kw">struct</span> pollfd fds[], nfds_t nfds, <span class="dt">int</span> timeout);</a></code></pre></div><p><code>fds</code>는 우리의 정보(어떤 소켓을 무엇을 위해 감시할지)의 배열이다. <code>nfds</code>는 배열에 담긴 요소의 갯수이다. <code>timeout</code>은 밀리초 단위의 제한시간이다. 이것은 이벤트가 발생한 요소의 갯수를 돌려준다.</p><p>위에 등장하는 구조체는 무엇인지 살펴보자:</p><p></p><div class="sourceCode" id="cb53"><pre class="sourceCode c"><code class="sourceCode c"><a class="sourceLine" id="cb53-1" title="1"><span class="kw">struct</span> pollfd {</a>
+<a class="sourceLine" id="cb53-2" title="2">    <span class="dt">int</span> fd;         <span class="co">// 소켓 설명자</span></a>
+<a class="sourceLine" id="cb53-3" title="3">    <span class="dt">short</span> events;   <span class="co">// 우리가 관심있는 이벤트의 비트맵</span></a>
+<a class="sourceLine" id="cb53-4" title="4">    <span class="dt">short</span> revents;  <span class="co">// poll()이 반환하는 시점에 발생한 이벤트의 비트맵</span></a>
+<a class="sourceLine" id="cb53-5" title="5">};</a></code></pre></div><p>즉 이것의 배열을 하나 설정하고 각각의 <code>fd</code>필드를 우리가 관찰하고 싶은 소켓 설명자로 설정한다. 그리고 각각의 <code>events</code>필드는 우리가 관심있는 이벤트로 설정하는 것이다.</p><p><code>events</code>필드는 아래 값들을 비트단위 논리합 계산한 결과값이다.</p><table><thead><tr class="header"><th>매크로</th><th>설명</th></tr></thead><tbody><tr class="odd"><td><code>POLLIN</code></td><td>이 소켓이 데이터를 <code>recv()</code>할 준비가 되면 알려달라.</td></tr><tr class="even"><td><code>POLLOUT</code></td><td>이 소켓에 블로킹 없이 데이터를 <code>send()</code>할 수 있으면 알려달라.</td></tr></tbody></table><p><code>struct pollfd</code>의 배열을 준비하면 <code>poll()</code>에 그것을 넘길 수 있다. 배열의 크기와 밀리초 단위의 제한시간도 같이 넘겨야 한다.(영원히 기다리려면 음수를 지정하면 된다.)</p><p><code>poll()</code>이 반환하면 이벤트가 발생했음을 나타내는 <code>POLLIN</code>이나 <code>POLLOUT</code>이 설정되었는지 보기위해서 <code>revents</code> 필드를 확인할 수 있다.</p><p>(실제로는 <code>poll()</code>호출로 할 수 있는 것들이 더 있다. 자세한 내용은 <a href="man-pages.html#pollman">아래의 <code>poll()</code> 맨페이지</a>를 참고하라.)</p><p>여기 표준 입력에서 데이터를 읽어들일 수 있을 때까지(예를 들어 당신이 줄바꿈을 입력할 때까지) 2.5초를 기다리는 예제가 있다.<a href="https://beej.us/guide/bgnet/examples/poll.c">an example</a><a href="more-references.html#fn28" class="footnote-ref" id="fnref28"><sup>28</sup></a></p><div class="sourceCode" id="cb54"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><a class="sourceLine" id="cb54-1" title="1"><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></a>
+<a class="sourceLine" id="cb54-2" title="2"><span class="pp">#include </span><span class="im">&lt;poll.h&gt;</span></a>
+<a class="sourceLine" id="cb54-3" title="3"></a>
+<a class="sourceLine" id="cb54-4" title="4"><span class="dt">int</span> main(<span class="dt">void</span>)</a>
+<a class="sourceLine" id="cb54-5" title="5">{</a>
+<a class="sourceLine" id="cb54-6" title="6">    <span class="kw">struct</span> pollfd pfds[<span class="dv">1</span>]; <span class="co">// 더 많은 것들을 관찰하고 싶다면 더 크게 하라.</span></a>
+<a class="sourceLine" id="cb54-7" title="7"></a>
+<a class="sourceLine" id="cb54-8" title="8">    pfds[<span class="dv">0</span>].fd = <span class="dv">0</span>;          <span class="co">// 표준 입력</span></a>
+<a class="sourceLine" id="cb54-9" title="9">    pfds[<span class="dv">0</span>].events = POLLIN; <span class="co">// 읽을 준비가 되면 알려달라.</span></a>
+<a class="sourceLine" id="cb54-10" title="10"></a>
+<a class="sourceLine" id="cb54-11" title="11">    <span class="co">// 만약 다른 것들도 관찰하고 싶다면</span></a>
+<a class="sourceLine" id="cb54-12" title="12">    <span class="co">//pfds[1].fd = some_socket; // 임의의 소켓 설명자</span></a>
+<a class="sourceLine" id="cb54-13" title="13">    <span class="co">//pfds[1].events = POLLIN;  // 읽을 준비가 되면 알려달라.</span></a>
+<a class="sourceLine" id="cb54-14" title="14"></a>
+<a class="sourceLine" id="cb54-15" title="15">    printf(<span class="st">&quot;엔터키를 누르거나 제한시간 도달을 위해 2.5초를 기다리라</span><span class="sc">\n</span><span class="st">&quot;</span>);</a>
+<a class="sourceLine" id="cb54-16" title="16"></a>
+<a class="sourceLine" id="cb54-17" title="17">    <span class="dt">int</span> num_events = poll(pfds, <span class="dv">1</span>, <span class="dv">2500</span>); <span class="co">// 2.5초 제한 시간</span></a>
+<a class="sourceLine" id="cb54-18" title="18"></a>
+<a class="sourceLine" id="cb54-19" title="19">    <span class="cf">if</span> (num_events == <span class="dv">0</span>) {</a>
+<a class="sourceLine" id="cb54-20" title="20">        printf(<span class="st">&quot;Poll 시간 초과!</span><span class="sc">\n</span><span class="st">&quot;</span>);</a>
+<a class="sourceLine" id="cb54-21" title="21">    } <span class="cf">else</span> {</a>
+<a class="sourceLine" id="cb54-22" title="22">        <span class="dt">int</span> pollin_happened = pfds[<span class="dv">0</span>].revents &amp; POLLIN;</a>
+<a class="sourceLine" id="cb54-23" title="23"></a>
+<a class="sourceLine" id="cb54-24" title="24">        <span class="cf">if</span> (pollin_happened) {</a>
+<a class="sourceLine" id="cb54-25" title="25">            printf(<span class="st">&quot;파일 설명자 %d을 읽을 준비가 되었다</span><span class="sc">\n</span><span class="st">&quot;</span>, pfds[<span class="dv">0</span>].fd);</a>
+<a class="sourceLine" id="cb54-26" title="26">        } <span class="cf">else</span> {</a>
+<a class="sourceLine" id="cb54-27" title="27">            printf(<span class="st">&quot;예상하지 못한 이벤트가 발생했다: %d</span><span class="sc">\n</span><span class="st">&quot;</span>, pfds[<span class="dv">0</span>].revents);</a>
+<a class="sourceLine" id="cb54-28" title="28">        }</a>
+<a class="sourceLine" id="cb54-29" title="29">    }</a>
+<a class="sourceLine" id="cb54-30" title="30"></a>
+<a class="sourceLine" id="cb54-31" title="31">    <span class="cf">return</span> <span class="dv">0</span>;</a>
+<a class="sourceLine" id="cb54-32" title="32">}</a></code></pre></div><p><code>poll()</code>이 <code>pfds</code>배열에서 이벤트가 발생한 요소의 갯수를 돌려준다는 것을 다시 기억하라. 배열의 <em>어떤</em> 요소에서 이벤트가 발생했는지는 알려주지 않지만 몇 개의 <code>revents</code> 필드가 0이 아닌 값으로 설정되었는지는 알려준다. 이것을 활용해서 반환된 숫자만큼의 0이 아닌 <code>revents</code>를 읽은 후에는 스캔을 중단할 수 있다.</p><p>몇 가지 질문이 떠오를 것이다: <code>poll()</code>에 넘겨준 집합에 새 파일 설명자를 추가하려면 어떻게 해야하는가? 이를 위해서 단순히 당신의 모든 필요에 부합할 만큼 충분한 크기의 배열을 만들거나 추가적인 공간이 필요할 때 <code>realloc()</code>을 사용하라.</p><p>집합에서 요소를 제거하려면 어떻게 해야하는가? 이것을 위해서 당신은 배열의 마지막 요소를 삭제할 요소에 덮어씌우고, <code>poll()</code>의 count에 하나 더 적은 값을 전달하라. (역자 주 : 이것은 배열에서 임의의 요소 1개를 빠르게 제거하기 위해서 일반적으로 사용하는 방법이다.) 다른 한 가지 방법은 <code>fd</code>필드를 음수로 설정하는 것이며 <code>poll()</code>은 해당 요소를 무시할 것이다.</p><p>이 모든 것을 당신이 <code>telnet</code>할 수 있는 하나의 채팅 서버에 합치려면 어떻게 해야할까?</p><p>우리가 할 일은 리스너 소켓을 시작한 후에 그것을 <code>poll()</code>할 파일 설명자 집합에 추가하는 일이다. (그 파일설명자는 들어오는 연결이 있을 때 읽기 준비된 상태가 될 것이다.)</p><p>그 후에 새로운 연결을 우리의 <code>struct pollfd</code> 배열에 추가하면 된다. 만약 배열의 크기가 부족하다면 동적으로 키우면 된다.</p><p>연결이 닫힌 후에는 그것을 배열로부터 제거한다.</p><p>연결이 읽기 준비되면 우리는 그것에서 데이터를 읽어들인 후 다른 모든 연결에 전송한다. 그렇게 해서 사용자들은 서로가 입력한 내용을 볼 수 있다.</p><p>이제 <a href="https://beej.us/guide/bgnet/examples/pollserver.c">이 폴 서버</a><a href="more-references.html#fn29" class="footnote-ref" id="fnref29"><sup>29</sup></a>를 한 번 시험해보라. 이것을 하나의 창에서 실행한 후 몇 개의 다른 터미널 창에서 <code>telnet localhost 9034</code>를 실행해보라. 당신이 하나의 창에서 입력하는 것을 (당신이 엔터키를 누른 후에) 다른 창들에서 볼 수 있어야한다.</p><p>그것 뿐 아니라 당신이 <code>CTRL-]</code>를 누른 후 <code>quit</code>을 입력해서 <code>telnet</code>을 종료할 경우 서버는 연결종료를 감지하고 그 연결을 파일 설명자 배열에서 제거할 것이다.</p><div class="sourceCode" id="cb55"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><a class="sourceLine" id="cb55-1" title="1"><span class="co">/*</span></a>
+<a class="sourceLine" id="cb55-2" title="2"><span class="co">** pollserver.c -- 형편없는 다인 대화 서버</span></a>
+<a class="sourceLine" id="cb55-3" title="3"><span class="co">*/</span></a>
+<a class="sourceLine" id="cb55-4" title="4"></a>
+<a class="sourceLine" id="cb55-5" title="5"><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></a>
+<a class="sourceLine" id="cb55-6" title="6"><span class="pp">#include </span><span class="im">&lt;stdlib.h&gt;</span></a>
+<a class="sourceLine" id="cb55-7" title="7"><span class="pp">#include </span><span class="im">&lt;string.h&gt;</span></a>
+<a class="sourceLine" id="cb55-8" title="8"><span class="pp">#include </span><span class="im">&lt;unistd.h&gt;</span></a>
+<a class="sourceLine" id="cb55-9" title="9"><span class="pp">#include </span><span class="im">&lt;sys/types.h&gt;</span></a>
+<a class="sourceLine" id="cb55-10" title="10"><span class="pp">#include </span><span class="im">&lt;sys/socket.h&gt;</span></a>
+<a class="sourceLine" id="cb55-11" title="11"><span class="pp">#include </span><span class="im">&lt;netinet/in.h&gt;</span></a>
+<a class="sourceLine" id="cb55-12" title="12"><span class="pp">#include </span><span class="im">&lt;arpa/inet.h&gt;</span></a>
+<a class="sourceLine" id="cb55-13" title="13"><span class="pp">#include </span><span class="im">&lt;netdb.h&gt;</span></a>
+<a class="sourceLine" id="cb55-14" title="14"><span class="pp">#include </span><span class="im">&lt;poll.h&gt;</span></a>
+<a class="sourceLine" id="cb55-15" title="15"></a>
+<a class="sourceLine" id="cb55-16" title="16"><span class="pp">#define PORT &quot;9034&quot;   </span><span class="co">// 우리가 듣는(listening) 포트</span></a>
+<a class="sourceLine" id="cb55-17" title="17"></a>
+<a class="sourceLine" id="cb55-18" title="18"><span class="co">// Get sockaddr, IPv4 or IPv6:</span></a>
+<a class="sourceLine" id="cb55-19" title="19"><span class="dt">void</span> *get_in_addr(<span class="kw">struct</span> sockaddr *sa)</a>
+<a class="sourceLine" id="cb55-20" title="20">{</a>
+<a class="sourceLine" id="cb55-21" title="21">    <span class="cf">if</span> (sa-&gt;sa_family == AF_INET) {</a>
+<a class="sourceLine" id="cb55-22" title="22">        <span class="cf">return</span> &amp;(((<span class="kw">struct</span> sockaddr_in*)sa)-&gt;sin_addr);</a>
+<a class="sourceLine" id="cb55-23" title="23">    }</a>
+<a class="sourceLine" id="cb55-24" title="24"></a>
+<a class="sourceLine" id="cb55-25" title="25">    <span class="cf">return</span> &amp;(((<span class="kw">struct</span> sockaddr_in6*)sa)-&gt;sin6_addr);</a>
+<a class="sourceLine" id="cb55-26" title="26">}</a>
+<a class="sourceLine" id="cb55-27" title="27"></a>
+<a class="sourceLine" id="cb55-28" title="28"><span class="co">// Return a listening socket</span></a>
+<a class="sourceLine" id="cb55-29" title="29"><span class="dt">int</span> get_listener_socket(<span class="dt">void</span>)</a>
+<a class="sourceLine" id="cb55-30" title="30">{</a>
+<a class="sourceLine" id="cb55-31" title="31">    <span class="dt">int</span> listener;     <span class="co">// 듣는 소켓 설명자</span></a>
+<a class="sourceLine" id="cb55-32" title="32">    <span class="dt">int</span> yes=<span class="dv">1</span>;        <span class="co">// setsockopt() SO_REUSEADDR을 위해서는 아래를 보라</span></a>
+<a class="sourceLine" id="cb55-33" title="33">    <span class="dt">int</span> rv;</a>
+<a class="sourceLine" id="cb55-34" title="34"></a>
+<a class="sourceLine" id="cb55-35" title="35">    <span class="kw">struct</span> addrinfo hints, *ai, *p;</a>
+<a class="sourceLine" id="cb55-36" title="36"></a>
+<a class="sourceLine" id="cb55-37" title="37">    <span class="co">// 소켓을 받아서 바인드하자</span></a>
+<a class="sourceLine" id="cb55-38" title="38">    memset(&amp;hints, <span class="dv">0</span>, <span class="kw">sizeof</span> hints);</a>
+<a class="sourceLine" id="cb55-39" title="39">    hints.ai_family = AF_UNSPEC;</a>
+<a class="sourceLine" id="cb55-40" title="40">    hints.ai_socktype = SOCK_STREAM;</a>
+<a class="sourceLine" id="cb55-41" title="41">    hints.ai_flags = AI_PASSIVE;</a>
+<a class="sourceLine" id="cb55-42" title="42">    <span class="cf">if</span> ((rv = getaddrinfo(NULL, PORT, &amp;hints, &amp;ai)) != <span class="dv">0</span>) {</a>
+<a class="sourceLine" id="cb55-43" title="43">        fprintf(stderr, <span class="st">&quot;selectserver: %s</span><span class="sc">\n</span><span class="st">&quot;</span>, gai_strerror(rv));</a>
+<a class="sourceLine" id="cb55-44" title="44">        exit(<span class="dv">1</span>);</a>
+<a class="sourceLine" id="cb55-45" title="45">    }</a>
+<a class="sourceLine" id="cb55-46" title="46"></a>
+<a class="sourceLine" id="cb55-47" title="47">    <span class="cf">for</span>(p = ai; p != NULL; p = p-&gt;ai_next) {</a>
+<a class="sourceLine" id="cb55-48" title="48">        listener = socket(p-&gt;ai_family, p-&gt;ai_socktype, p-&gt;ai_protocol);</a>
+<a class="sourceLine" id="cb55-49" title="49">        <span class="cf">if</span> (listener &lt; <span class="dv">0</span>) {</a>
+<a class="sourceLine" id="cb55-50" title="50">            <span class="cf">continue</span>;</a>
+<a class="sourceLine" id="cb55-51" title="51">        }</a>
+<a class="sourceLine" id="cb55-52" title="52"></a>
+<a class="sourceLine" id="cb55-53" title="53">        <span class="co">// 귀찮은 &quot;주소가 이미 사용중입니다&quot;에러메시지를 제거한다</span></a>
+<a class="sourceLine" id="cb55-54" title="54">        setsockopt(listener, SOL_SOCKET, SO_REUSEADDR, &amp;yes, <span class="kw">sizeof</span>(<span class="dt">int</span>));</a>
+<a class="sourceLine" id="cb55-55" title="55"></a>
+<a class="sourceLine" id="cb55-56" title="56">        <span class="cf">if</span> (bind(listener, p-&gt;ai_addr, p-&gt;ai_addrlen) &lt; <span class="dv">0</span>) {</a>
+<a class="sourceLine" id="cb55-57" title="57">            close(listener);</a>
+<a class="sourceLine" id="cb55-58" title="58">            <span class="cf">continue</span>;</a>
+<a class="sourceLine" id="cb55-59" title="59">        }</a>
+<a class="sourceLine" id="cb55-60" title="60"></a>
+<a class="sourceLine" id="cb55-61" title="61">        <span class="cf">break</span>;</a>
+<a class="sourceLine" id="cb55-62" title="62">    }</a>
+<a class="sourceLine" id="cb55-63" title="63"></a>
+<a class="sourceLine" id="cb55-64" title="64">    freeaddrinfo(ai); <span class="co">// 더 이상 필요없다.</span></a>
+<a class="sourceLine" id="cb55-65" title="65"></a>
+<a class="sourceLine" id="cb55-66" title="66">    <span class="co">// 여기가 실행되면 우리가 바인드하지 못했다는 의미다</span></a>
+<a class="sourceLine" id="cb55-67" title="67">    <span class="cf">if</span> (p == NULL) {</a>
+<a class="sourceLine" id="cb55-68" title="68">        <span class="cf">return</span> <span class="dv">-1</span>;</a>
+<a class="sourceLine" id="cb55-69" title="69">    }</a>
+<a class="sourceLine" id="cb55-70" title="70"></a>
+<a class="sourceLine" id="cb55-71" title="71">    <span class="co">// 리슨</span></a>
+<a class="sourceLine" id="cb55-72" title="72">    <span class="cf">if</span> (listen(listener, <span class="dv">10</span>) == <span class="dv">-1</span>) {</a>
+<a class="sourceLine" id="cb55-73" title="73">        <span class="cf">return</span> <span class="dv">-1</span>;</a>
+<a class="sourceLine" id="cb55-74" title="74">    }</a>
+<a class="sourceLine" id="cb55-75" title="75"></a>
+<a class="sourceLine" id="cb55-76" title="76">    <span class="cf">return</span> listener;</a>
+<a class="sourceLine" id="cb55-77" title="77">}</a>
+<a class="sourceLine" id="cb55-78" title="78"></a>
+<a class="sourceLine" id="cb55-79" title="79"><span class="co">// 집합에 새 파일 설명자를 추가한다</span></a>
+<a class="sourceLine" id="cb55-80" title="80"><span class="dt">void</span> add_to_pfds(<span class="kw">struct</span> pollfd *pfds[], <span class="dt">int</span> newfd, <span class="dt">int</span> *fd_count, <span class="dt">int</span> *fd_size)</a>
+<a class="sourceLine" id="cb55-81" title="81">{</a>
+<a class="sourceLine" id="cb55-82" title="82">    <span class="co">// 공간이 부족하면 pfds 배열을 늘린다.</span></a>
+<a class="sourceLine" id="cb55-83" title="83">    <span class="cf">if</span> (*fd_count == *fd_size) {</a>
+<a class="sourceLine" id="cb55-84" title="84">        *fd_size *= <span class="dv">2</span>; <span class="co">// 두배로 한다.</span></a>
+<a class="sourceLine" id="cb55-85" title="85"></a>
+<a class="sourceLine" id="cb55-86" title="86">        *pfds = realloc(*pfds, <span class="kw">sizeof</span>(**pfds) * (*fd_size));</a>
+<a class="sourceLine" id="cb55-87" title="87">    }</a>
+<a class="sourceLine" id="cb55-88" title="88"></a>
+<a class="sourceLine" id="cb55-89" title="89">    (*pfds)[*fd_count].fd = newfd;</a>
+<a class="sourceLine" id="cb55-90" title="90">    (*pfds)[*fd_count].events = POLLIN; <span class="co">// 읽을 준비가 되었는지 확인</span></a>
+<a class="sourceLine" id="cb55-91" title="91"></a>
+<a class="sourceLine" id="cb55-92" title="92">    (*fd_count)++;</a>
+<a class="sourceLine" id="cb55-93" title="93">}</a>
+<a class="sourceLine" id="cb55-94" title="94"></a>
+<a class="sourceLine" id="cb55-95" title="95"><span class="co">// 집합에서 하나의 인덱스를 제거한다</span></a>
+<a class="sourceLine" id="cb55-96" title="96"><span class="dt">void</span> del_from_pfds(<span class="kw">struct</span> pollfd pfds[], <span class="dt">int</span> i, <span class="dt">int</span> *fd_count)</a>
+<a class="sourceLine" id="cb55-97" title="97">{</a>
+<a class="sourceLine" id="cb55-98" title="98">    <span class="co">// 마지막에서 하나를 삭제 대상 인덱스로 복사해온다</span></a>
+<a class="sourceLine" id="cb55-99" title="99">    pfds[i] = pfds[*fd_count<span class="dv">-1</span>];</a>
+<a class="sourceLine" id="cb55-100" title="100"></a>
+<a class="sourceLine" id="cb55-101" title="101">    (*fd_count)--;</a>
+<a class="sourceLine" id="cb55-102" title="102">}</a>
+<a class="sourceLine" id="cb55-103" title="103"></a>
+<a class="sourceLine" id="cb55-104" title="104"><span class="co">// 메인</span></a>
+<a class="sourceLine" id="cb55-105" title="105"><span class="dt">int</span> main(<span class="dt">void</span>)</a>
+<a class="sourceLine" id="cb55-106" title="106">{</a>
+<a class="sourceLine" id="cb55-107" title="107">    <span class="dt">int</span> listener;     <span class="co">// 리슨 소켓 설명자</span></a>
+<a class="sourceLine" id="cb55-108" title="108"></a>
+<a class="sourceLine" id="cb55-109" title="109">    <span class="dt">int</span> newfd;        <span class="co">// 새롭게 accept()한 소켓 설명자</span></a>
+<a class="sourceLine" id="cb55-110" title="110">    <span class="kw">struct</span> sockaddr_storage remoteaddr; <span class="co">// 클라이언트 주소</span></a>
+<a class="sourceLine" id="cb55-111" title="111">    socklen_t addrlen;</a>
+<a class="sourceLine" id="cb55-112" title="112"></a>
+<a class="sourceLine" id="cb55-113" title="113">    <span class="dt">char</span> buf[<span class="dv">256</span>];    <span class="co">// 클라이언트 데이터를 위한 버퍼</span></a>
+<a class="sourceLine" id="cb55-114" title="114"></a>
+<a class="sourceLine" id="cb55-115" title="115">    <span class="dt">char</span> remoteIP[INET6_ADDRSTRLEN];</a>
+<a class="sourceLine" id="cb55-116" title="116"></a>
+<a class="sourceLine" id="cb55-117" title="117">    <span class="co">// 5개의 연결을 위한 공간을 가지고 시작한다</span></a>
+<a class="sourceLine" id="cb55-118" title="118">    <span class="co">// (필요해지면 realloc할 것이다.)</span></a>
+<a class="sourceLine" id="cb55-119" title="119">    <span class="dt">int</span> fd_count = <span class="dv">0</span>;</a>
+<a class="sourceLine" id="cb55-120" title="120">    <span class="dt">int</span> fd_size = <span class="dv">5</span>;</a>
+<a class="sourceLine" id="cb55-121" title="121">    <span class="kw">struct</span> pollfd *pfds = malloc(<span class="kw">sizeof</span> *pfds * fd_size);</a>
+<a class="sourceLine" id="cb55-122" title="122"></a>
+<a class="sourceLine" id="cb55-123" title="123">    <span class="co">// 초기화 후 리스닝 소켓을 얻는다</span></a>
+<a class="sourceLine" id="cb55-124" title="124">    listener = get_listener_socket();</a>
+<a class="sourceLine" id="cb55-125" title="125"></a>
+<a class="sourceLine" id="cb55-126" title="126">    <span class="cf">if</span> (listener == <span class="dv">-1</span>) {</a>
+<a class="sourceLine" id="cb55-127" title="127">        fprintf(stderr, <span class="st">&quot;리스닝 소켓 얻기 실패</span><span class="sc">\n</span><span class="st">&quot;</span>);</a>
+<a class="sourceLine" id="cb55-128" title="128">        exit(<span class="dv">1</span>);</a>
+<a class="sourceLine" id="cb55-129" title="129">    }</a>
+<a class="sourceLine" id="cb55-130" title="130"></a>
+<a class="sourceLine" id="cb55-131" title="131">    <span class="co">// 리스너를 집합에 추가</span></a>
+<a class="sourceLine" id="cb55-132" title="132">    pfds[<span class="dv">0</span>].fd = listener;</a>
+<a class="sourceLine" id="cb55-133" title="133">    pfds[<span class="dv">0</span>].events = POLLIN; <span class="co">// 들어오는 연결을 읽을 준비가 되면 보고하라</span></a>
+<a class="sourceLine" id="cb55-134" title="134"></a>
+<a class="sourceLine" id="cb55-135" title="135">    fd_count = <span class="dv">1</span>; <span class="co">// 리스너를 위한 설정</span></a>
+<a class="sourceLine" id="cb55-136" title="136"></a>
+<a class="sourceLine" id="cb55-137" title="137">    <span class="co">// 주 반복문</span></a>
+<a class="sourceLine" id="cb55-138" title="138">    <span class="cf">for</span>(;;) {</a>
+<a class="sourceLine" id="cb55-139" title="139">        <span class="dt">int</span> poll_count = poll(pfds, fd_count, <span class="dv">-1</span>);</a>
+<a class="sourceLine" id="cb55-140" title="140"></a>
+<a class="sourceLine" id="cb55-141" title="141">        <span class="cf">if</span> (poll_count == <span class="dv">-1</span>) {</a>
+<a class="sourceLine" id="cb55-142" title="142">            perror(<span class="st">&quot;poll&quot;</span>);</a>
+<a class="sourceLine" id="cb55-143" title="143">            exit(<span class="dv">1</span>);</a>
+<a class="sourceLine" id="cb55-144" title="144">        }</a>
+<a class="sourceLine" id="cb55-145" title="145"></a>
+<a class="sourceLine" id="cb55-146" title="146">        <span class="co">// 읽어들일 데이터를 찾기 위해서 존재하는 연결을 순회</span></a>
+<a class="sourceLine" id="cb55-147" title="147">        <span class="cf">for</span>(<span class="dt">int</span> i = <span class="dv">0</span>; i &lt; fd_count; i++) {</a>
+<a class="sourceLine" id="cb55-148" title="148"></a>
+<a class="sourceLine" id="cb55-149" title="149">            <span class="co">// 무엇인가 읽을 준비가 되었는지 확인</span></a>
+<a class="sourceLine" id="cb55-150" title="150">            <span class="cf">if</span> (pfds[i].revents &amp; POLLIN) { <span class="co">// 하나를 찾았다!!</span></a>
+<a class="sourceLine" id="cb55-151" title="151"></a>
+<a class="sourceLine" id="cb55-152" title="152">                <span class="cf">if</span> (pfds[i].fd == listener) {</a>
+<a class="sourceLine" id="cb55-153" title="153">                    <span class="co">// 리스너를 읽을 준비가 되었다면 새 연결을 처리한다</span></a>
+<a class="sourceLine" id="cb55-154" title="154"></a>
+<a class="sourceLine" id="cb55-155" title="155">                    addrlen = <span class="kw">sizeof</span> remoteaddr;</a>
+<a class="sourceLine" id="cb55-156" title="156">                    newfd = accept(listener,</a>
+<a class="sourceLine" id="cb55-157" title="157">                        (<span class="kw">struct</span> sockaddr *)&amp;remoteaddr,</a>
+<a class="sourceLine" id="cb55-158" title="158">                        &amp;addrlen);</a>
+<a class="sourceLine" id="cb55-159" title="159"></a>
+<a class="sourceLine" id="cb55-160" title="160">                    <span class="cf">if</span> (newfd == <span class="dv">-1</span>) {</a>
+<a class="sourceLine" id="cb55-161" title="161">                        perror(<span class="st">&quot;accept&quot;</span>);</a>
+<a class="sourceLine" id="cb55-162" title="162">                    } <span class="cf">else</span> {</a>
+<a class="sourceLine" id="cb55-163" title="163">                        add_to_pfds(&amp;pfds, newfd, &amp;fd_count, &amp;fd_size);</a>
+<a class="sourceLine" id="cb55-164" title="164"></a>
+<a class="sourceLine" id="cb55-165" title="165">                        printf(<span class="st">&quot;폴서버: 새로운 연결 %s&quot;</span></a>
+<a class="sourceLine" id="cb55-166" title="166">                            <span class="st">&quot; 소켓 %d</span><span class="sc">\n</span><span class="st">&quot;</span>,</a>
+<a class="sourceLine" id="cb55-167" title="167">                            inet_ntop(remoteaddr.ss_family,</a>
+<a class="sourceLine" id="cb55-168" title="168">                                get_in_addr((<span class="kw">struct</span> sockaddr*)&amp;remoteaddr),</a>
+<a class="sourceLine" id="cb55-169" title="169">                                remoteIP, INET6_ADDRSTRLEN),</a>
+<a class="sourceLine" id="cb55-170" title="170">                            newfd);</a>
+<a class="sourceLine" id="cb55-171" title="171">                    }</a>
+<a class="sourceLine" id="cb55-172" title="172">                } <span class="cf">else</span> {</a>
+<a class="sourceLine" id="cb55-173" title="173">                    <span class="co">// 리스너가 아닐 경우 일반적인 클라이언트다</span></a>
+<a class="sourceLine" id="cb55-174" title="174">                    <span class="dt">int</span> nbytes = recv(pfds[i].fd, buf, <span class="kw">sizeof</span> buf, <span class="dv">0</span>);</a>
+<a class="sourceLine" id="cb55-175" title="175"></a>
+<a class="sourceLine" id="cb55-176" title="176">                    <span class="dt">int</span> sender_fd = pfds[i].fd;</a>
+<a class="sourceLine" id="cb55-177" title="177"></a>
+<a class="sourceLine" id="cb55-178" title="178">                    <span class="cf">if</span> (nbytes &lt;= <span class="dv">0</span>) {</a>
+<a class="sourceLine" id="cb55-179" title="179">                        <span class="co">// 오류가 발생했거나 연결이 클라이언트에 의해 닫혔다</span></a>
+<a class="sourceLine" id="cb55-180" title="180">                        <span class="cf">if</span> (nbytes == <span class="dv">0</span>) {</a>
+<a class="sourceLine" id="cb55-181" title="181">                            <span class="co">// 연결이 닫혔다.</span></a>
+<a class="sourceLine" id="cb55-182" title="182">                            printf(<span class="st">&quot;폴서버: 소켓 %d 이 끊어짐</span><span class="sc">\n</span><span class="st">&quot;</span>, sender_fd);</a>
+<a class="sourceLine" id="cb55-183" title="183">                        } <span class="cf">else</span> {</a>
+<a class="sourceLine" id="cb55-184" title="184">                            perror(<span class="st">&quot;recv&quot;</span>);</a>
+<a class="sourceLine" id="cb55-185" title="185">                        }</a>
+<a class="sourceLine" id="cb55-186" title="186"></a>
+<a class="sourceLine" id="cb55-187" title="187">                        close(pfds[i].fd); <span class="co">// 잘가!</span></a>
+<a class="sourceLine" id="cb55-188" title="188"></a>
+<a class="sourceLine" id="cb55-189" title="189">                        del_from_pfds(pfds, i, &amp;fd_count);</a>
+<a class="sourceLine" id="cb55-190" title="190"></a>
+<a class="sourceLine" id="cb55-191" title="191">                    } <span class="cf">else</span> {</a>
+<a class="sourceLine" id="cb55-192" title="192">                        <span class="co">// 클라이언트로부터 뭔가 좋은 데이터를 받았다</span></a>
+<a class="sourceLine" id="cb55-193" title="193"></a>
+<a class="sourceLine" id="cb55-194" title="194">                        <span class="cf">for</span>(<span class="dt">int</span> j = <span class="dv">0</span>; j &lt; fd_count; j++) {</a>
+<a class="sourceLine" id="cb55-195" title="195">                            <span class="co">// 모두에게 보내자!</span></a>
+<a class="sourceLine" id="cb55-196" title="196">                            <span class="dt">int</span> dest_fd = pfds[j].fd;</a>
+<a class="sourceLine" id="cb55-197" title="197"></a>
+<a class="sourceLine" id="cb55-198" title="198">                            <span class="co">// 리스너와 보낸 사람을 제외한다</span></a>
+<a class="sourceLine" id="cb55-199" title="199">                            <span class="cf">if</span> (dest_fd != listener &amp;&amp; dest_fd != sender_fd) {</a>
+<a class="sourceLine" id="cb55-200" title="200">                                <span class="cf">if</span> (send(dest_fd, buf, nbytes, <span class="dv">0</span>) == <span class="dv">-1</span>) {</a>
+<a class="sourceLine" id="cb55-201" title="201">                                    perror(<span class="st">&quot;send&quot;</span>);</a>
+<a class="sourceLine" id="cb55-202" title="202">                                }</a>
+<a class="sourceLine" id="cb55-203" title="203">                            }</a>
+<a class="sourceLine" id="cb55-204" title="204">                        }</a>
+<a class="sourceLine" id="cb55-205" title="205">                    }</a>
+<a class="sourceLine" id="cb55-206" title="206">                } <span class="co">// 클라이언트로부터 온 데이터를 처리하는 부분의 끝</span></a>
+<a class="sourceLine" id="cb55-207" title="207">            } <span class="co">// poll()에서 읽을 준비가 된 부분의 끝</span></a>
+<a class="sourceLine" id="cb55-208" title="208">        } <span class="co">// 파일 설명자 순회의 끝</span></a>
+<a class="sourceLine" id="cb55-209" title="209">    } <span class="co">// for(;;)의 끝--절대 안 끝나겠지만!</span></a>
+<a class="sourceLine" id="cb55-210" title="210"></a>
+<a class="sourceLine" id="cb55-211" title="211">    <span class="cf">return</span> <span class="dv">0</span>;</a>
+<a class="sourceLine" id="cb55-212" title="212">}</a></code></pre></div><p>다음 절에서는 비슷하지만 오래된 함수인 <code>select()</code>를 살펴볼 것이다. <code>select()</code>와 <code>poll()</code> 모두 비슷한 기능과 성능을 제공하고 쓰는 방식만 조금 다르다. <code>select()</code>쪽이 조금 더 이식성이 좋을지도 모르나 사용하기에는 조금 더 어색할 것이다. 당신의 시스템에서 지원되기만 한다면 더 마음에 드는 쪽을 선택하라.</p><p></p><h2 id="select"><span class="header-section-number">7.3</span> <code>select()</code>—동기화된 I/O 멀티플렉싱, 예전 방식</h2><p></p><p>이 함수는 이상하지만 아주 유용하다. 다음과 같은 상황을 생각해보라: 당신은 서버이고 들어오는 연결을 감지함과 동시에 이미 가진 연결로부터 계속 자료를 읽어들이고 싶다.</p><p>별 문제가 없다고 말할지도 모른다. 그냥 <code>accept()</code>와 몇 개의 <code>recv()</code>를 쓰면 될 뿐이다. 정말로 그럴까? <code>accept()</code>호출이 블록 상태로 들어갔다면 어떻게 하겠는가? 어떻게 <code>recv()</code>로 동시에 데이터를 받을 수 있겠는가? “논 블로킹 소켓을 써라!” 역시 안 될 말이다. CPU를 모조리 쓰고 싶지는 않을 것이다. 그럼 어떻게 해야하는가?</p><p><code>select()</code>가 여러 소켓을 동시에 관찰할 수 있는 능력을 준다. 그것이 어떤 것이 읽을 준비가 되었는지, 어떤 것이 쓸 준비가 되었는지, 그리고 정말로 관심이 있다면 어떤 것에 오류가 발생했는지까지 알려줄 것이다.</p><blockquote><p>경고 한마디: <code>select()</code>가 이식성이 아주 좋지만 연결이 아주 많은 상황에서는 끔찍하게 느려진다. 그런 상황에서는 당신의 시스템에서 쓸 수 있는 가장 빠른 방법을 시도하는 <a href="https://libevent.org/">libevent</a><a href="more-references.html#fn30" class="footnote-ref" id="fnref30"><sup>30</sup></a> 같은 이벤트 라이브러리를 쓰면 더 나은 성능을 얻을 수 있다.</p></blockquote><p>잡담은 그만하고 <code>select()</code>의 개요를 제시하겠다.</p><div class="sourceCode" id="cb56"><pre class="sourceCode c"><code class="sourceCode c"><a class="sourceLine" id="cb56-1" title="1"><span class="pp">#include </span><span class="im">&lt;sys/time.h&gt;</span></a>
+<a class="sourceLine" id="cb56-2" title="2"><span class="pp">#include </span><span class="im">&lt;sys/types.h&gt;</span></a>
+<a class="sourceLine" id="cb56-3" title="3"><span class="pp">#include </span><span class="im">&lt;unistd.h&gt;</span></a>
+<a class="sourceLine" id="cb56-4" title="4"></a>
+<a class="sourceLine" id="cb56-5" title="5"><span class="dt">int</span> select(<span class="dt">int</span> numfds, fd_set *readfds, fd_set *writefds,</a>
+<a class="sourceLine" id="cb56-6" title="6">           fd_set *exceptfds, <span class="kw">struct</span> timeval *timeout);</a></code></pre></div><p>이 함수는 특정한 <code>readfds</code>과 <code>writefds</code> 그리고 <code>exceptfds</code>로 이루어진 파일 설명자의 “집합들”을 관찰한다. 만약 당신이 표준 입력과 몇 개의 소켓 설명자로부터 읽어들일 수 있는지 확인하고 싶다면 <code>readfds</code> 집합에 0과 <code>sockfd</code>를 추가하라. <code>numfds</code>는 가장 큰 파일 설명자에 1을 더한 값으로 설정해야 한다. 이 예제에서는 <code>sockfd+1</code>이 될 것이며 이유는 당연히 그것이 표준 입력(<code>0</code>)보다 클 것이기 때문이다.</p><p><code>select()</code>가 반환할 때 <code>readfds</code>는 당신이 선택한 파일 설명자 중에서 읽기를 위해 준비된 것들을 반영하기 위해서 변해있을 것이다. 당신은 그것들을 아래에 나오는 <code>FD_ISSET()</code>매크로로 검사할 수 있다. When <code>select()</code> returns, <code>readfds</code> will be modified to reflect which of the file descriptors you selected which is ready for reading. You can test them with the macro <code>FD_ISSET()</code>, below.</p><p>더 진행하기 전에 이 집합들을 어떻게 조작하는지에 대해 이야기할 것이다. 각 집합은 <code>fd_set</code>형이다. 이 자료형에 대해서 아래의 매크로들을 쓸 수 있다.</p><table><thead><tr class="header"><th>함수</th><th>설명</th></tr></thead><tbody><tr class="odd"><td><code>FD_SET(int fd, fd_set *set);</code></td><td><code>fd</code>를 <code>set</code>에 더한다.</td></tr><tr class="even"><td><code>FD_CLR(int fd, fd_set *set);</code></td><td><code>fd</code>를 <code>set</code>에서 제거한다.</td></tr><tr class="odd"><td><code>FD_ISSET(int fd, fd_set *set);</code></td><td><code>fd</code>이 <code>set</code>에 있다면 참을 돌려준다.</td></tr><tr class="even"><td><code>FD_ZERO(fd_set *set);</code></td><td><code>set</code>의 모든 요소를 제거한다.</td></tr></tbody></table><p></p><p>마지막으로 이 이상한 <code>struct timeval</code>은 무엇일까? 누군가 당신에게 자료를 보낼 때까지 무한히 기다리고 싶지 않을 때가 있다. 아마도 매 96초마다 실제로는 아무 일도 일어나지 않았어도 “진행중…”이라고 출력하고 싶을 수도 있다. 이 시간 구조체가 제한시간을 지정할 수 있도록 해 준다. 시간이 초과하고 <code>select()</code> 가 준비된 파일 설명자를 찾지 못할 경우, 그것은 반환하고 당신은 처리를 계속할 수 있다.</p><p><code>struct timeval</code>는 아래와 같은 필드를 가지고 있다:</p><div class="sourceCode" id="cb57"><pre class="sourceCode c"><code class="sourceCode c"><a class="sourceLine" id="cb57-1" title="1"><span class="kw">struct</span> timeval {</a>
+<a class="sourceLine" id="cb57-2" title="2">    <span class="dt">int</span> tv_sec;     <span class="co">// 초</span></a>
+<a class="sourceLine" id="cb57-3" title="3">    <span class="dt">int</span> tv_usec;    <span class="co">// 마이크로초</span></a>
+<a class="sourceLine" id="cb57-4" title="4">};</a></code></pre></div><p>단순히 <code>tv_sec</code>을 기다리고 싶은 초로, <code>tv_usec</code>을 기다리고 싶은 마이크로초로 설정하라. 그렇다. <em>마이크로</em> 초다. 밀리초가 아니다. 1밀리초는 1,000마이크로초다. 그리고 1,000밀리초는 1초이다. 그러므로 1초는 1,000,000초이다. 왜 “usec”일까? “u”는 우리가 “마이크로”를 뜻하기 위해서 쓰는 그리스 문자 μ(뮤)와 닮았기 때문이다. 또 함수가 반환할 때 <code>timeout</code>은 남아있는 시간을 보여주기 위해서 업데이트 될 수도 있다. 이것은 당신이 실행중인 유닉스의 종류에 따라 다르다.</p><p>와! 우리는 마이크로초 해상도의 타이머를 가졌다! 사실 별로 기대하지 않는 것이 좋다. 당신이 <code>struct timeval</code>을 아무리 작게 설정해도 당신의 표준 유닉스 타임슬라이스 (역자 주 : 커널이 프로세스 스케쥴링의 최소 단위로 쓰는 시간)만큼은 기다려야 한다.</p><p>다른 흥미로운 것들: <code>struct timeval</code>을 <code>0</code>으로 설정하면 <code>select()</code>는 당신의 집합에 있는 모든 파일 설명자를 조사한 즉시 시간초과가 될 것이다. 매개변수 <code>timeout</code>을 NULL 로 설정하면 절대 시간초과가 되지 않으며 파일 설명자가 준비될 때까지 기다릴 것이다. 마지막으로 만약 특정 집합을 기다릴 필요가 없다면 그 집합은 <code>select()</code>를 호출할 때 NULL로 설정하면 된다.</p><p><a href="https://beej.us/guide/bgnet/examples/select.c">아래의 코드 조각</a><a href="more-references.html#fn31" class="footnote-ref" id="fnref31"><sup>31</sup></a>은 표준 입력에 뭔가 나타날 때까지 2.5초를 기다린다:</p><div class="sourceCode" id="cb58"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><a class="sourceLine" id="cb58-1" title="1"><span class="co">/*</span></a>
+<a class="sourceLine" id="cb58-2" title="2"><span class="co">** select.c -- a select() demo</span></a>
+<a class="sourceLine" id="cb58-3" title="3"><span class="co">*/</span></a>
+<a class="sourceLine" id="cb58-4" title="4"></a>
+<a class="sourceLine" id="cb58-5" title="5"><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></a>
+<a class="sourceLine" id="cb58-6" title="6"><span class="pp">#include </span><span class="im">&lt;sys/time.h&gt;</span></a>
+<a class="sourceLine" id="cb58-7" title="7"><span class="pp">#include </span><span class="im">&lt;sys/types.h&gt;</span></a>
+<a class="sourceLine" id="cb58-8" title="8"><span class="pp">#include </span><span class="im">&lt;unistd.h&gt;</span></a>
+<a class="sourceLine" id="cb58-9" title="9"></a>
+<a class="sourceLine" id="cb58-10" title="10"><span class="pp">#define STDIN 0  </span><span class="co">// 표준 입력의 파일 설명자</span></a>
+<a class="sourceLine" id="cb58-11" title="11"></a>
+<a class="sourceLine" id="cb58-12" title="12"><span class="dt">int</span> main(<span class="dt">void</span>)</a>
+<a class="sourceLine" id="cb58-13" title="13">{</a>
+<a class="sourceLine" id="cb58-14" title="14">    <span class="kw">struct</span> timeval tv;</a>
+<a class="sourceLine" id="cb58-15" title="15">    fd_set readfds;</a>
+<a class="sourceLine" id="cb58-16" title="16"></a>
+<a class="sourceLine" id="cb58-17" title="17">    tv.tv_sec = <span class="dv">2</span>;</a>
+<a class="sourceLine" id="cb58-18" title="18">    tv.tv_usec = <span class="dv">500000</span>;</a>
+<a class="sourceLine" id="cb58-19" title="19"></a>
+<a class="sourceLine" id="cb58-20" title="20">    FD_ZERO(&amp;readfds);</a>
+<a class="sourceLine" id="cb58-21" title="21">    FD_SET(STDIN, &amp;readfds);</a>
+<a class="sourceLine" id="cb58-22" title="22"></a>
+<a class="sourceLine" id="cb58-23" title="23">    <span class="co">// writefds와 exceptfds는 신경쓰지 않는다:</span></a>
+<a class="sourceLine" id="cb58-24" title="24">    select(STDIN+<span class="dv">1</span>, &amp;readfds, NULL, NULL, &amp;tv);</a>
+<a class="sourceLine" id="cb58-25" title="25"></a>
+<a class="sourceLine" id="cb58-26" title="26">    <span class="cf">if</span> (FD_ISSET(STDIN, &amp;readfds))</a>
+<a class="sourceLine" id="cb58-27" title="27">        printf(<span class="st">&quot;키가 눌렸다!</span><span class="sc">\n</span><span class="st">&quot;</span>);</a>
+<a class="sourceLine" id="cb58-28" title="28">    <span class="cf">else</span></a>
+<a class="sourceLine" id="cb58-29" title="29">        printf(<span class="st">&quot;시간이 초과되었다.</span><span class="sc">\n</span><span class="st">&quot;</span>);</a>
+<a class="sourceLine" id="cb58-30" title="30"></a>
+<a class="sourceLine" id="cb58-31" title="31">    <span class="cf">return</span> <span class="dv">0</span>;</a>
+<a class="sourceLine" id="cb58-32" title="32">}</a></code></pre></div><p>만약 당신이 줄 단위로 버퍼처리되는 터미널을 사용한다면 엔터를 누르지 않으면 제한시간이 초과될 것이다.</p><p>이제 여러분 중 일부는 이것이 데이터그램 소켓의 데이터를 기다리는 아주 훌륭한 방법이라고 생각할 것이다. 그리고 맞다. 맞을 <em>수도</em> 있다. 일부 유닉스에서는 select를 이 목적으로 쓸 수 있고, 일부에서는 그럴 수 없다. 그 방식을 시도하고 싶다면 당신의 로컬 맨페이지 내용을 참고해야 한다.</p><p>일부 유닉스는 제한시간이 초과되기까지 남은 시간을 반영하기 위해서 당신의 <code>struct timeval</code>를 업데이트한다. 그러나 다른 것들은 그렇게 하지 않는다. 만약 이식성있는 코드를 작성하고자 한다면 그것에 의존해서는 안된다. (경과한 시간을 알고싶다면<code>gettimeofday()</code> 을 사용하라. 실망스럽겠지만 그것이 올바른 방법이다.)</p><p></p><p>만약 읽기 집합에 잇는 소켓이 연결을 닫는다면 어떤 일이 생길까? 그 경우 <code>select()</code>는 그 소켓 설명자를 “읽기 준비된 상태”로 설정할 것이다. 실제로 그 소켓에 <code>recv()</code>하면 <code>recv()</code>는 <code>0</code>을 돌려줄 것이다. 그것이 클라이언트가 연결을 닫았음을 알아내는 방법이다.</p><p><code>select()</code>에 관한 흥미로운 이야기 하나 더: 만약   <code>listen()</code>작업중인 소켓을 가지고 있을 경우, 그 소켓의 파일 설명자를 <code>readfds</code> 집합에 넣어서 새로운 연결이 있는지 알 수 있다.</p><p>지금까지 전능한 <code>select()</code>함수에 대한 간략한 개관이었다.</p><p>그러나 대중적 요구가 있으므로 아래에 심도있는 예제를 첨부한다. 불행하게도 위의 아주 단순한 예제와 아래의 에제에는 상당한 차이가 있다. 그렇지만 한 번 살펴보고 뒤따르는 설명을 읽어보라.</p><p><a href="https://beej.us/guide/bgnet/examples/selectserver.c">이 프로그램</a><a href="more-references.html#fn32" class="footnote-ref" id="fnref32"><sup>32</sup></a> 은 단순한 다중 사용자 챗 서버처럼 동작한다. 하나의 창에서 이것을 실행한 후 다른 창에서 <code>telnet</code>을 통해 접속하라. (“<code>telnet hostname 9034</code>”) 하나의 <code>telnet</code>세션에서 뭔가 입력하면 나머지 모두에서 그 내용이 나타나야 한다.</p><div class="sourceCode" id="cb59"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><a class="sourceLine" id="cb59-1" title="1"><span class="co">/*</span></a>
+<a class="sourceLine" id="cb59-2" title="2"><span class="co">** selectserver.c -- 허술한 다중 사용자 대화 서버</span></a>
+<a class="sourceLine" id="cb59-3" title="3"><span class="co">*/</span></a>
+<a class="sourceLine" id="cb59-4" title="4"></a>
+<a class="sourceLine" id="cb59-5" title="5"><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></a>
+<a class="sourceLine" id="cb59-6" title="6"><span class="pp">#include </span><span class="im">&lt;stdlib.h&gt;</span></a>
+<a class="sourceLine" id="cb59-7" title="7"><span class="pp">#include </span><span class="im">&lt;string.h&gt;</span></a>
+<a class="sourceLine" id="cb59-8" title="8"><span class="pp">#include </span><span class="im">&lt;unistd.h&gt;</span></a>
+<a class="sourceLine" id="cb59-9" title="9"><span class="pp">#include </span><span class="im">&lt;sys/types.h&gt;</span></a>
+<a class="sourceLine" id="cb59-10" title="10"><span class="pp">#include </span><span class="im">&lt;sys/socket.h&gt;</span></a>
+<a class="sourceLine" id="cb59-11" title="11"><span class="pp">#include </span><span class="im">&lt;netinet/in.h&gt;</span></a>
+<a class="sourceLine" id="cb59-12" title="12"><span class="pp">#include </span><span class="im">&lt;arpa/inet.h&gt;</span></a>
+<a class="sourceLine" id="cb59-13" title="13"><span class="pp">#include </span><span class="im">&lt;netdb.h&gt;</span></a>
+<a class="sourceLine" id="cb59-14" title="14"></a>
+<a class="sourceLine" id="cb59-15" title="15"><span class="pp">#define PORT &quot;9034&quot;   </span><span class="co">// 우리가 듣는 포트</span></a>
+<a class="sourceLine" id="cb59-16" title="16"></a>
+<a class="sourceLine" id="cb59-17" title="17"><span class="co">// get sockaddr, IPv4 or IPv6:</span></a>
+<a class="sourceLine" id="cb59-18" title="18"><span class="dt">void</span> *get_in_addr(<span class="kw">struct</span> sockaddr *sa)</a>
+<a class="sourceLine" id="cb59-19" title="19">{</a>
+<a class="sourceLine" id="cb59-20" title="20">    <span class="cf">if</span> (sa-&gt;sa_family == AF_INET) {</a>
+<a class="sourceLine" id="cb59-21" title="21">        <span class="cf">return</span> &amp;(((<span class="kw">struct</span> sockaddr_in*)sa)-&gt;sin_addr);</a>
+<a class="sourceLine" id="cb59-22" title="22">    }</a>
+<a class="sourceLine" id="cb59-23" title="23"></a>
+<a class="sourceLine" id="cb59-24" title="24">    <span class="cf">return</span> &amp;(((<span class="kw">struct</span> sockaddr_in6*)sa)-&gt;sin6_addr);</a>
+<a class="sourceLine" id="cb59-25" title="25">}</a>
+<a class="sourceLine" id="cb59-26" title="26"></a>
+<a class="sourceLine" id="cb59-27" title="27"><span class="dt">int</span> main(<span class="dt">void</span>)</a>
+<a class="sourceLine" id="cb59-28" title="28">{</a>
+<a class="sourceLine" id="cb59-29" title="29">    fd_set master;    <span class="co">// 마스터 파일 설명자 리스트</span></a>
+<a class="sourceLine" id="cb59-30" title="30">    fd_set read_fds;  <span class="co">// select()를 위한 임시 파일 설명자 리스트</span></a>
+<a class="sourceLine" id="cb59-31" title="31">    <span class="dt">int</span> fdmax;        <span class="co">// 가장 큰 파일 설명자 번호</span></a>
+<a class="sourceLine" id="cb59-32" title="32"></a>
+<a class="sourceLine" id="cb59-33" title="33">    <span class="dt">int</span> listener;     <span class="co">// 듣는 소켓 설명자</span></a>
+<a class="sourceLine" id="cb59-34" title="34">    <span class="dt">int</span> newfd;        <span class="co">// 새롭게 accept() 처리한 소켓 설명자</span></a>
+<a class="sourceLine" id="cb59-35" title="35">    <span class="kw">struct</span> sockaddr_storage remoteaddr; <span class="co">// 클라이언트 주소</span></a>
+<a class="sourceLine" id="cb59-36" title="36">    socklen_t addrlen;</a>
+<a class="sourceLine" id="cb59-37" title="37"></a>
+<a class="sourceLine" id="cb59-38" title="38">    <span class="dt">char</span> buf[<span class="dv">256</span>];    <span class="co">// 클라이언트 데이터를 위한 버퍼</span></a>
+<a class="sourceLine" id="cb59-39" title="39">    <span class="dt">int</span> nbytes;</a>
+<a class="sourceLine" id="cb59-40" title="40"></a>
+<a class="sourceLine" id="cb59-41" title="41">    <span class="dt">char</span> remoteIP[INET6_ADDRSTRLEN];</a>
+<a class="sourceLine" id="cb59-42" title="42"></a>
+<a class="sourceLine" id="cb59-43" title="43">    <span class="dt">int</span> yes=<span class="dv">1</span>;        <span class="co">// setsockopt() SO_REUSEADDR를 위해서는 아래를 보라</span></a>
+<a class="sourceLine" id="cb59-44" title="44">    <span class="dt">int</span> i, j, rv;</a>
+<a class="sourceLine" id="cb59-45" title="45"></a>
+<a class="sourceLine" id="cb59-46" title="46">    <span class="kw">struct</span> addrinfo hints, *ai, *p;</a>
+<a class="sourceLine" id="cb59-47" title="47"></a>
+<a class="sourceLine" id="cb59-48" title="48">    FD_ZERO(&amp;master);    <span class="co">// 마스터와 임시 집합을 초기화</span></a>
+<a class="sourceLine" id="cb59-49" title="49">    FD_ZERO(&amp;read_fds);</a>
+<a class="sourceLine" id="cb59-50" title="50"></a>
+<a class="sourceLine" id="cb59-51" title="51">    <span class="co">// 소켓을 하나 받아와서 바인드한다.</span></a>
+<a class="sourceLine" id="cb59-52" title="52">    memset(&amp;hints, <span class="dv">0</span>, <span class="kw">sizeof</span> hints);</a>
+<a class="sourceLine" id="cb59-53" title="53">    hints.ai_family = AF_UNSPEC;</a>
+<a class="sourceLine" id="cb59-54" title="54">    hints.ai_socktype = SOCK_STREAM;</a>
+<a class="sourceLine" id="cb59-55" title="55">    hints.ai_flags = AI_PASSIVE;</a>
+<a class="sourceLine" id="cb59-56" title="56">    <span class="cf">if</span> ((rv = getaddrinfo(NULL, PORT, &amp;hints, &amp;ai)) != <span class="dv">0</span>) {</a>
+<a class="sourceLine" id="cb59-57" title="57">        fprintf(stderr, <span class="st">&quot;selectserver: %s</span><span class="sc">\n</span><span class="st">&quot;</span>, gai_strerror(rv));</a>
+<a class="sourceLine" id="cb59-58" title="58">        exit(<span class="dv">1</span>);</a>
+<a class="sourceLine" id="cb59-59" title="59">    }</a>
+<a class="sourceLine" id="cb59-60" title="60"></a>
+<a class="sourceLine" id="cb59-61" title="61">    <span class="cf">for</span>(p = ai; p != NULL; p = p-&gt;ai_next) {</a>
+<a class="sourceLine" id="cb59-62" title="62">        listener = socket(p-&gt;ai_family, p-&gt;ai_socktype, p-&gt;ai_protocol);</a>
+<a class="sourceLine" id="cb59-63" title="63">        <span class="cf">if</span> (listener &lt; <span class="dv">0</span>) {</a>
+<a class="sourceLine" id="cb59-64" title="64">            <span class="cf">continue</span>;</a>
+<a class="sourceLine" id="cb59-65" title="65">        }</a>
+<a class="sourceLine" id="cb59-66" title="66"></a>
+<a class="sourceLine" id="cb59-67" title="67">        <span class="co">// 짜증나는 &quot;address already in use&quot; 오류 메시지를 제거한다.</span></a>
+<a class="sourceLine" id="cb59-68" title="68">        setsockopt(listener, SOL_SOCKET, SO_REUSEADDR, &amp;yes, <span class="kw">sizeof</span>(<span class="dt">int</span>));</a>
+<a class="sourceLine" id="cb59-69" title="69"></a>
+<a class="sourceLine" id="cb59-70" title="70">        <span class="cf">if</span> (bind(listener, p-&gt;ai_addr, p-&gt;ai_addrlen) &lt; <span class="dv">0</span>) {</a>
+<a class="sourceLine" id="cb59-71" title="71">            close(listener);</a>
+<a class="sourceLine" id="cb59-72" title="72">            <span class="cf">continue</span>;</a>
+<a class="sourceLine" id="cb59-73" title="73">        }</a>
+<a class="sourceLine" id="cb59-74" title="74"></a>
+<a class="sourceLine" id="cb59-75" title="75">        <span class="cf">break</span>;</a>
+<a class="sourceLine" id="cb59-76" title="76">    }</a>
+<a class="sourceLine" id="cb59-77" title="77"></a>
+<a class="sourceLine" id="cb59-78" title="78">    <span class="co">// 이곳이 실행되면 바인드가 되지 않은 것이다.</span></a>
+<a class="sourceLine" id="cb59-79" title="79">    <span class="cf">if</span> (p == NULL) {</a>
+<a class="sourceLine" id="cb59-80" title="80">        fprintf(stderr, <span class="st">&quot;selectserver: failed to bind</span><span class="sc">\n</span><span class="st">&quot;</span>);</a>
+<a class="sourceLine" id="cb59-81" title="81">        exit(<span class="dv">2</span>);</a>
+<a class="sourceLine" id="cb59-82" title="82">    }</a>
+<a class="sourceLine" id="cb59-83" title="83"></a>
+<a class="sourceLine" id="cb59-84" title="84">    freeaddrinfo(ai); <span class="co">// 더 이상 필요없다.</span></a>
+<a class="sourceLine" id="cb59-85" title="85"></a>
+<a class="sourceLine" id="cb59-86" title="86">    <span class="co">// 듣는다.</span></a>
+<a class="sourceLine" id="cb59-87" title="87">    <span class="cf">if</span> (listen(listener, <span class="dv">10</span>) == <span class="dv">-1</span>) {</a>
+<a class="sourceLine" id="cb59-88" title="88">        perror(<span class="st">&quot;listen&quot;</span>);</a>
+<a class="sourceLine" id="cb59-89" title="89">        exit(<span class="dv">3</span>);</a>
+<a class="sourceLine" id="cb59-90" title="90">    }</a>
+<a class="sourceLine" id="cb59-91" title="91"></a>
+<a class="sourceLine" id="cb59-92" title="92">    <span class="co">// 리스너를 마스터 집합에 추가한다.</span></a>
+<a class="sourceLine" id="cb59-93" title="93">    FD_SET(listener, &amp;master);</a>
+<a class="sourceLine" id="cb59-94" title="94"></a>
+<a class="sourceLine" id="cb59-95" title="95">    <span class="co">// 가장 큰 파일 설명자를 기록한다.</span></a>
+<a class="sourceLine" id="cb59-96" title="96">    fdmax = listener; <span class="co">// 현재까지는 이것이다.</span></a>
+<a class="sourceLine" id="cb59-97" title="97"></a>
+<a class="sourceLine" id="cb59-98" title="98">    <span class="co">// 주 반복문</span></a>
+<a class="sourceLine" id="cb59-99" title="99">    <span class="cf">for</span>(;;) {</a>
+<a class="sourceLine" id="cb59-100" title="100">        read_fds = master; <span class="co">// 복사한다.</span></a>
+<a class="sourceLine" id="cb59-101" title="101">        <span class="cf">if</span> (select(fdmax+<span class="dv">1</span>, &amp;read_fds, NULL, NULL, NULL) == <span class="dv">-1</span>) {</a>
+<a class="sourceLine" id="cb59-102" title="102">            perror(<span class="st">&quot;select&quot;</span>);</a>
+<a class="sourceLine" id="cb59-103" title="103">            exit(<span class="dv">4</span>);</a>
+<a class="sourceLine" id="cb59-104" title="104">        }</a>
+<a class="sourceLine" id="cb59-105" title="105"></a>
+<a class="sourceLine" id="cb59-106" title="106">        <span class="co">// 존재하는 연결을 순회하며 읽을 데이터가 있는지 확인한다.</span></a>
+<a class="sourceLine" id="cb59-107" title="107">        <span class="cf">for</span>(i = <span class="dv">0</span>; i &lt;= fdmax; i++) {</a>
+<a class="sourceLine" id="cb59-108" title="108">            <span class="cf">if</span> (FD_ISSET(i, &amp;read_fds)) { <span class="co">// we got one!!</span></a>
+<a class="sourceLine" id="cb59-109" title="109">                <span class="cf">if</span> (i == listener) {</a>
+<a class="sourceLine" id="cb59-110" title="110">                    <span class="co">// 새 연결을 처리한다.</span></a>
+<a class="sourceLine" id="cb59-111" title="111">                    addrlen = <span class="kw">sizeof</span> remoteaddr;</a>
+<a class="sourceLine" id="cb59-112" title="112">                    newfd = accept(listener,</a>
+<a class="sourceLine" id="cb59-113" title="113">                        (<span class="kw">struct</span> sockaddr *)&amp;remoteaddr,</a>
+<a class="sourceLine" id="cb59-114" title="114">                        &amp;addrlen);</a>
+<a class="sourceLine" id="cb59-115" title="115"></a>
+<a class="sourceLine" id="cb59-116" title="116">                    <span class="cf">if</span> (newfd == <span class="dv">-1</span>) {</a>
+<a class="sourceLine" id="cb59-117" title="117">                        perror(<span class="st">&quot;accept&quot;</span>);</a>
+<a class="sourceLine" id="cb59-118" title="118">                    } <span class="cf">else</span> {</a>
+<a class="sourceLine" id="cb59-119" title="119">                        FD_SET(newfd, &amp;master); <span class="co">// 마스터 집합에 추가한다.</span></a>
+<a class="sourceLine" id="cb59-120" title="120">                        <span class="cf">if</span> (newfd &gt; fdmax) {    <span class="co">// 가장 큰 것을 기록한다.</span></a>
+<a class="sourceLine" id="cb59-121" title="121">                            fdmax = newfd;</a>
+<a class="sourceLine" id="cb59-122" title="122">                        }</a>
+<a class="sourceLine" id="cb59-123" title="123">                        printf(<span class="st">&quot;selectserver: new connection from %s on &quot;</span></a>
+<a class="sourceLine" id="cb59-124" title="124">                            <span class="st">&quot;socket %d</span><span class="sc">\n</span><span class="st">&quot;</span>,</a>
+<a class="sourceLine" id="cb59-125" title="125">                            inet_ntop(remoteaddr.ss_family,</a>
+<a class="sourceLine" id="cb59-126" title="126">                                get_in_addr((<span class="kw">struct</span> sockaddr*)&amp;remoteaddr),</a>
+<a class="sourceLine" id="cb59-127" title="127">                                remoteIP, INET6_ADDRSTRLEN),</a>
+<a class="sourceLine" id="cb59-128" title="128">                            newfd);</a>
+<a class="sourceLine" id="cb59-129" title="129">                    }</a>
+<a class="sourceLine" id="cb59-130" title="130">                } <span class="cf">else</span> {</a>
+<a class="sourceLine" id="cb59-131" title="131">                    <span class="co">// 클라이언트에서 온 자료를 처리한다.</span></a>
+<a class="sourceLine" id="cb59-132" title="132">                    <span class="cf">if</span> ((nbytes = recv(i, buf, <span class="kw">sizeof</span> buf, <span class="dv">0</span>)) &lt;= <span class="dv">0</span>) {</a>
+<a class="sourceLine" id="cb59-133" title="133">                        <span class="co">// 오류가 발생했거나 클라이언트에 의해 연결이 종료되었다.</span></a>
+<a class="sourceLine" id="cb59-134" title="134">                        <span class="cf">if</span> (nbytes == <span class="dv">0</span>) {</a>
+<a class="sourceLine" id="cb59-135" title="135">                            <span class="co">// 연결이 종료되었다.</span></a>
+<a class="sourceLine" id="cb59-136" title="136">                            printf(<span class="st">&quot;selectserver: socket %d hung up</span><span class="sc">\n</span><span class="st">&quot;</span>, i);</a>
+<a class="sourceLine" id="cb59-137" title="137">                        } <span class="cf">else</span> {</a>
+<a class="sourceLine" id="cb59-138" title="138">                            perror(<span class="st">&quot;recv&quot;</span>);</a>
+<a class="sourceLine" id="cb59-139" title="139">                        }</a>
+<a class="sourceLine" id="cb59-140" title="140">                        close(i); <span class="co">// 잘가!</span></a>
+<a class="sourceLine" id="cb59-141" title="141">                        FD_CLR(i, &amp;master); <span class="co">// 마스터 집합에서 삭제</span></a>
+<a class="sourceLine" id="cb59-142" title="142">                    } <span class="cf">else</span> {</a>
+<a class="sourceLine" id="cb59-143" title="143">                        <span class="co">// 클라이언트로부터 데이터가 들어왔다.</span></a>
+<a class="sourceLine" id="cb59-144" title="144">                        <span class="cf">for</span>(j = <span class="dv">0</span>; j &lt;= fdmax; j++) {</a>
+<a class="sourceLine" id="cb59-145" title="145">                            <span class="co">// 모두에게 보낸다!</span></a>
+<a class="sourceLine" id="cb59-146" title="146">                            <span class="cf">if</span> (FD_ISSET(j, &amp;master)) {</a>
+<a class="sourceLine" id="cb59-147" title="147">                                <span class="co">// 리스너와 그 자신을 제외</span></a>
+<a class="sourceLine" id="cb59-148" title="148">                                <span class="cf">if</span> (j != listener &amp;&amp; j != i) {</a>
+<a class="sourceLine" id="cb59-149" title="149">                                    <span class="cf">if</span> (send(j, buf, nbytes, <span class="dv">0</span>) == <span class="dv">-1</span>) {</a>
+<a class="sourceLine" id="cb59-150" title="150">                                        perror(<span class="st">&quot;send&quot;</span>);</a>
+<a class="sourceLine" id="cb59-151" title="151">                                    }</a>
+<a class="sourceLine" id="cb59-152" title="152">                                }</a>
+<a class="sourceLine" id="cb59-153" title="153">                            }</a>
+<a class="sourceLine" id="cb59-154" title="154">                        }</a>
+<a class="sourceLine" id="cb59-155" title="155">                    }</a>
+<a class="sourceLine" id="cb59-156" title="156">                } <span class="co">// 클라이언트로부터 온 데이터를 다루는 부분의 끝</span></a>
+<a class="sourceLine" id="cb59-157" title="157">            } <span class="co">// 새 연결을 얻는 부분의 끝</span></a>
+<a class="sourceLine" id="cb59-158" title="158">        } <span class="co">// 파일 설명자 순회 코드의 끝</span></a>
+<a class="sourceLine" id="cb59-159" title="159">    } <span class="co">// 무한루프의 끝. 절대 끝나지 않는다고 생각할 것이다!</span></a>
+<a class="sourceLine" id="cb59-160" title="160"></a>
+<a class="sourceLine" id="cb59-161" title="161">    <span class="cf">return</span> <span class="dv">0</span>;</a>
+<a class="sourceLine" id="cb59-162" title="162">}</a></code></pre></div><p>코드에 <code>master</code>와 <code>read_fds</code> 두 개의 파일 설명자 집합이 있음에 주목하라. 전자인 <code>master</code>는 새 연결을 듣는 소켓 설명자와 현재 연결된 모든 소켓의 설명자를 가진다.</p><p><code>master</code>를 가지는 이유는 <code>select()</code>가 사실 당신이 넘기는 집합을 <em>변형해서</em> 읽기 준비된 소켓을 반영하기 때문이다. 우리는 하나의 <code>select()</code>호출과 다음 호출 사이에서 연결들을 계속 기억해야 하므로 이것들은 다른 곳에 안전하게 보관해야 하는 것이다. 그래서 우리는 실제로 쓰기 전에 <code>master</code>를 <code>read_fds</code>에 복사하고 <code>select()</code>를 호출하는 것이다.</p><p>하지만 그것은 우리가 새로운 연결을 받을 때마다 그것을 <code>master</code>집합에 추가해야 한다는 의미가 아닌가? 맞다! 그리고 연결이 닫힐 때마다 <code>master</code>집합에서 제거해야 하지않은가? 맞다, 그렇게 해야한다.</p><p><code>listener</code>소켓이 읽을 준비가 되었는지 확인한다는 사실에 주목하라. 준비가 되어있다면 대기중인 새로운 연결이 있다는 의미이고, <code>accept()</code>한 후에 <code>master</code>집합에 추가한다. 비슷하게 클라이언트 연결을 읽을 준비가 되고 <code>recv()</code>가 <code>0</code>을 돌려준다면 클라이언트가 연결을 닫았다는 사실을 알 수 있고, 우리는 그 연결을 <code>master</code> 집합에서 제거해야 한다.</p><p>클라이언트에 대한 <code>recv()</code>가 0이 아닌 값을 돌려준다면 우리는 어떤 데이터가 도착했다는 것을 알 수 있다. 그러므로 자료를 받은 후에 <code>master</code>목록을 순회하면서 모든 나머지 연결된 클라이언트들에게 그 자료를 보낸다.</p><p>지금까지 전능한 <code>select()</code>함수에 대한 별로 단순하지 않은 개관이었다.</p><p>모든 리눅스 팬들을 위한 짧은 이야기: 드문 몇몇 상황에서 때때로 리눅스의 <code>select()</code> 는 실제로는 읽을 준비가 되어있지 않음에도 “읽을 준비가 되었다”고 하면서 반환한다. 이것은 <code>select()</code>가 읽기 동작에 대한 블로킹이 없을 것이라고 말함에도 <code>read()</code> 가 블록될 것임을 의미한다. 아무튼 해결책은 읽을 소켓에  <code>O_NONBLOCK</code> 플래그를 설정해서 <code>EWOULDBLOCK</code>오류가 발생하도록 하는 것이다. (이 오류가 생겨도 무시해도 된다.) 소켓을 논블로킹 모드로 설정하는 방법에 대해서는 <a href="man-pages.html#fcntlman"><code>fcntl()</code> 참조 페이지`</a>를 참고하라.</p><p>추가로 약간의 여담을 하자면 <code>select()</code>와 상당히 비슷한 일을 하지만 파일 설명자 집합을 다른 방식으로 처리하는  <code>poll()</code>이라는 다른 함수가 있다. <a href="man-pages.html#pollman">한 번 확인해 보라!</a></p><p></p><h2 id="sendall"><span class="header-section-number">7.4</span> 부분적인 <code>send()</code> 처리하기</h2><p>위에서 다룬 <a href="시스템-콜이-아니면-죽음을.html#sendrecv"><code>send()</code>에 대한 절</a>에서 <code>send()</code>가 당신이 전송 요청한 바이트들을 모두 보내지는 않을 수도 있다고 말한 것을 기억하는가? 당신은 512바이트를 보내길 원해도 복귀값은 412일 수 있다는 의미이다. 남은 100바이트에는 무슨 일이 생긴 것인가?</p><p>음, 그것들은 여전히 당신의 작은 버퍼에 남아서 보내지길 기다리고 있다. 당신의 통제 밖에 있는 상황때문에 커널이 데이터를 한 덩어리로 전부 보내지는 않기로 결정한 것이다. 그리고 친구여, 이제 남은 데이터를 보내는 일은 당신에게 달려있는 것이다.</p><p> 그 일을 하는 함수를 만드는 한 가지 방법은 이렇다:</p><div class="sourceCode" id="cb60"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><a class="sourceLine" id="cb60-1" title="1"><span class="pp">#include </span><span class="im">&lt;sys/types.h&gt;</span></a>
+<a class="sourceLine" id="cb60-2" title="2"><span class="pp">#include </span><span class="im">&lt;sys/socket.h&gt;</span></a>
+<a class="sourceLine" id="cb60-3" title="3"></a>
+<a class="sourceLine" id="cb60-4" title="4"><span class="dt">int</span> sendall(<span class="dt">int</span> s, <span class="dt">char</span> *buf, <span class="dt">int</span> *len)</a>
+<a class="sourceLine" id="cb60-5" title="5">{</a>
+<a class="sourceLine" id="cb60-6" title="6">    <span class="dt">int</span> total = <span class="dv">0</span>;        <span class="co">// 몇 바이트를 보냈는가</span></a>
+<a class="sourceLine" id="cb60-7" title="7">    <span class="dt">int</span> bytesleft = *len; <span class="co">// 보내야하는 데이터는 얼마나 남아있는가</span></a>
+<a class="sourceLine" id="cb60-8" title="8">    <span class="dt">int</span> n;</a>
+<a class="sourceLine" id="cb60-9" title="9"></a>
+<a class="sourceLine" id="cb60-10" title="10">    <span class="cf">while</span>(total &lt; *len) {</a>
+<a class="sourceLine" id="cb60-11" title="11">        n = send(s, buf+total, bytesleft, <span class="dv">0</span>);</a>
+<a class="sourceLine" id="cb60-12" title="12">        <span class="cf">if</span> (n == <span class="dv">-1</span>) { <span class="cf">break</span>; }</a>
+<a class="sourceLine" id="cb60-13" title="13">        total += n;</a>
+<a class="sourceLine" id="cb60-14" title="14">        bytesleft -= n;</a>
+<a class="sourceLine" id="cb60-15" title="15">    }</a>
+<a class="sourceLine" id="cb60-16" title="16"></a>
+<a class="sourceLine" id="cb60-17" title="17">    *len = total; <span class="co">// 실제로 보낸 바이트 수를 기록해서 돌려준다.</span></a>
+<a class="sourceLine" id="cb60-18" title="18"></a>
+<a class="sourceLine" id="cb60-19" title="19">    <span class="cf">return</span> n==-<span class="dv">1</span>?-<span class="dv">1</span>:<span class="dv">0</span>; <span class="co">// 실패시에는 -1을, 성공시에는 0을 돌려준다.</span></a>
+<a class="sourceLine" id="cb60-20" title="20">}</a></code></pre></div><p>이 예제에서 <code>s</code>는 당신이 데이터를 보내고 싶은 소켓이고 <code>buf</code>는 자료를 담은 버퍼이다. <code>len</code>은 버퍼에 담긴 바이트의 갯수를 담은 <code>int</code>에 대한 포인터이다.</p><p>함수는 오류가 발생하면 <code>-1</code>을 돌려준다(<code>errno</code>는 <code>send()</code>에 대한 호출로 인해 여전히 설정되어 있다). 또한 실제로 전송된 바이트의 갯수가 <code>len</code>을 통해 반환된다. 이 값은 오류가 발생하지 않는 이상 당신이 전송하라고 요청한 바이트의 수와 같다. <code>sendall()</code>은 데이터를 전송하기 위해서 최선을 다하지만 오류가 발생하면 바로 당신에게 알려줄 것이다.</p><p>완결성을 위해 이 함수에 대한 호출 예제가 여기 있다:</p><div class="sourceCode" id="cb61"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><a class="sourceLine" id="cb61-1" title="1"><span class="dt">char</span> buf[<span class="dv">10</span>] = <span class="st">&quot;Beej!&quot;</span>;</a>
+<a class="sourceLine" id="cb61-2" title="2"><span class="dt">int</span> len;</a>
+<a class="sourceLine" id="cb61-3" title="3"></a>
+<a class="sourceLine" id="cb61-4" title="4">len = strlen(buf);</a>
+<a class="sourceLine" id="cb61-5" title="5"><span class="cf">if</span> (sendall(s, buf, &amp;len) == <span class="dv">-1</span>) {</a>
+<a class="sourceLine" id="cb61-6" title="6">    perror(<span class="st">&quot;sendall&quot;</span>);</a>
+<a class="sourceLine" id="cb61-7" title="7">    printf(<span class="st">&quot;오류가 발생해서 %d바이트만 전송했습니다!</span><span class="sc">\n</span><span class="st">&quot;</span>, len);</a>
+<a class="sourceLine" id="cb61-8" title="8">}</a></code></pre></div><p></p><p>수신자 측에 패킷의 일부가 도착하면 무슨 일이 벌어질까? 만약 패킷이 가변 길이일 경우 수신자는 어떻게 하나의 패킷이 끝나고 다른 하나가 시작되는 것을 알까? 그렇다. 실세계의 시나리오는  뒤지게 고통스럽다. 당신은 아마도 <em>캡슐화</em> 를 해야 할 것이다. (시작부에 있던 <a href="소켓이란-무엇인가.html#lowlevel">데이터 캡슐화 절</a>을 기억하는가?) 자세한 내용을 알고싶다면 계속 읽어보자!</p><h2 id="serialization"><span class="header-section-number">7.5</span> 직렬화—데이터를 포장하는 방법</h2><p></p><p>네트워크를 통해 문자열 데이터를 보내는 것은 꽤 쉽다는 것을 이제 알 것이다. 하지만 만약 <code>int</code>나 <code>float</code>같은 “이진” 자료를 전송하려고 하면 어떻게 해야하는가? 몇 가지 방법이 있다.</p><ol type="1"><li><p><code>sprintf()</code>같은 함수를 써서 수를 텍스트로 변환하고 텍스트를 전송한다. 수신자는 <code>strtol()</code>같은 함수를 써서 텍스트를 다시 숫자로 변환한다.</p></li><li><p><code>send()</code>에 데이터를 가리키는 포인터를 전달해서 원시 데이터를 그대로 전송한다.</p></li><li><p>데이터를 호환성 있는 바이너리 형태로 인코드한다. 수신자는 디코드한다.</p></li></ol><p>오늘밤의 특별 사시회!</p><p>[<em>커튼이 올라간다</em>]</p><p>Beej가 말합니다: “저는 위의 세 번째 방법을 좋아합니다.”</p><p>[<em>끝</em>]</p><p>(이 절을 기쁘게 시작하기에 앞서, 이 일을 하기 위한 라이브러리들이 이미 있다는 말을 미리 해야겠다. 이식성 있고 오류가 없는 당신만의 라이브러리를 만드는 작업은 꽤 어려운 일이 될 것이다. 그러므로 그런 작업을 직접 하기 전에 그것들을 살펴보고 해야하는 다른 일을 처리하는 것이 나을 것이다. 필자는 그런 것이 어떻게 동작하는지 궁금할 독자들을 위해서 관련된 내용을 여기에 담을 뿐이다.)</p><p>사실 위에 언급한 모든 방법에 각각의 장점과 단점이 있다. 그러나 위에 말한대로, 필자는 일반적으로 세 번째 방법을 선호한다. 그러나 먼저 다른 두 가지 방법의 장단점에 대해서 조금 더 알아보자.</p><p>수를 보내기 전에 텍스트로 인코딩하는 첫 번재 방법은 랜선을 타고 오는 정보를 출력하고 읽어보기가 쉽다는 장점이 있다.  <a href="https://en.wikipedia.org/wiki/Internet_Relay_Chat">Internet Relay Chat (IRC)</a><a href="more-references.html#fn33" class="footnote-ref" id="fnref33"><sup>33</sup></a> 처럼 인간이 읽을 수 있는 프로토콜은 때때로 전송 대역폭에 민감하지 않은 상황에서 사용하기에 아주 훌륭하다. 그러나 그것은 변환이 느리다는 단점이 있고, 결과물은 언제나 원본 수보다 더 많은 공간을 차지한다는 단점이 있다.</p><p>두 번째 방법: 원시 데이터(원문: raw data)를 넘기기. 이것은 꽤 간단(하고 위험)하다: 보낼 데이터에 대한 포인터를 얻은 후 그것에 send를 호출한다.</p><div class="sourceCode" id="cb62"><pre class="sourceCode c"><code class="sourceCode c"><a class="sourceLine" id="cb62-1" title="1"><span class="dt">double</span> d = <span class="fl">3490.15926535</span>;</a>
+<a class="sourceLine" id="cb62-2" title="2"></a>
+<a class="sourceLine" id="cb62-3" title="3">send(s, &amp;d, <span class="kw">sizeof</span> d, <span class="dv">0</span>);  <span class="co">/* 위험--이식성 없음!(역자 주: 이식성은 컴퓨터 프로그램이나 소스코드가 서로 다른 구조를 가진 컴퓨터에서 동작하는 특성을 의미한다.) */</span></a></code></pre></div><p>수신자는 이것을 아래와 같이 받는다:</p><div class="sourceCode" id="cb63"><pre class="sourceCode c"><code class="sourceCode c"><a class="sourceLine" id="cb63-1" title="1"><span class="dt">double</span> d;</a>
+<a class="sourceLine" id="cb63-2" title="2"></a>
+<a class="sourceLine" id="cb63-3" title="3">recv(s, &amp;d, <span class="kw">sizeof</span> d, <span class="dv">0</span>);  <span class="co">/* 위험--이식성 없음! */</span></a></code></pre></div><p>빠르고, 간단하다—문제될 것이 없지않은가? 사실, 모든 아키텍처들이 <code>double</code> (이나 다른 예로는 <code>int</code>)을 동일한 비트 표현이나 심지어 동일한 바이트 순서로 표시하는 것은 아니라는 문제가 있다! 위의 코드는 절대로 이식성이 없다. (잠깐—이식성이 필요 없는 상황도 있지 않을까? 그렇다면 이 방식은 좋고 빠른 방법이 된다.)</p><p>정수 자료형을 포장할 때  <code>htons()</code>-수를  네트워크 바이트 순서로 변환해주는 종류의 함수를 어떻게 쓰는지, 그리고 그것이 왜 필요한지 이미 살펴보았다. 불행하게도 <code>float</code>자료형에 대해서는 유사한 함수가 없다. 희망이 없는 것일까?</p><p>두려워 말라!(잠시 두려움을 느꼈는가? 두렵지 않았는가? 아주 조금도?) 우리에게 방법이 있다: 우리는 데이터를 원격지에서 풀어낼 수 있는 알려진 방식으로 포장(원문 : pack)(또는 “marshal” 또는 “직렬화” 그것도 아니면 그런 일에 대한 천만개의 다른 이름)을 할 수 있다.</p><p>“알려진 이진 형식”은 무엇일까? 우리는 이미 <code>htons()</code>의 예제를 보았다. 그것은 수를 호스트의 형식이 무엇이든간에 네트워크 바이트 순서로 변환(또는 “인코드”, 이것이 더 이해하기 쉽다면)한다. 수를 원래대로 돌려놓기(디코드) 위해서 수신자는 <code>ntohs()</code>를 호출해야 한다.</p><p>하지만 필자가 조금 전에 비-정수 타입에 대해서는 그런 함수가 없다고 하지 않았던가? 그렇다. 그리고 C에서 이것을 처리하는 표준 방법이 없기 때문에 이것은 조금 까다로운 일이다. (파이썬 팬들은 이런 작업을 할 필요가 없을 것이다.)</p><p>필요한 작업은 데이터를 알려진 형식으로 포장하고 유선상으로 실어보내는 것이다. 예를 들어서 <code>float</code>를 포장하는 작업을 위한 <a href="https://beej.us/guide/bgnet/examples/pack.c">간단하고 지저분하고 개선할 점이 많은 예제코드</a><a href="more-references.html#fn34" class="footnote-ref" id="fnref34"><sup>34</sup></a> 가 있다:</p><div class="sourceCode" id="cb64"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><a class="sourceLine" id="cb64-1" title="1"><span class="pp">#include </span><span class="im">&lt;stdint.h&gt;</span></a>
+<a class="sourceLine" id="cb64-2" title="2"></a>
+<a class="sourceLine" id="cb64-3" title="3"><span class="dt">uint32_t</span> htonf(<span class="dt">float</span> f)</a>
+<a class="sourceLine" id="cb64-4" title="4">{</a>
+<a class="sourceLine" id="cb64-5" title="5">    <span class="dt">uint32_t</span> p;</a>
+<a class="sourceLine" id="cb64-6" title="6">    <span class="dt">uint32_t</span> sign;</a>
+<a class="sourceLine" id="cb64-7" title="7"></a>
+<a class="sourceLine" id="cb64-8" title="8">    <span class="cf">if</span> (f &lt; <span class="dv">0</span>) { sign = <span class="dv">1</span>; f = -f; }</a>
+<a class="sourceLine" id="cb64-9" title="9">    <span class="cf">else</span> { sign = <span class="dv">0</span>; }</a>
+<a class="sourceLine" id="cb64-10" title="10"></a>
+<a class="sourceLine" id="cb64-11" title="11">    p = ((((<span class="dt">uint32_t</span>)f)&amp;<span class="bn">0x7fff</span>)&lt;&lt;<span class="dv">16</span>) | (sign&lt;&lt;<span class="dv">31</span>); <span class="co">// 전체 부분과 부호</span></a>
+<a class="sourceLine" id="cb64-12" title="12">    p |= (<span class="dt">uint32_t</span>)(((f - (<span class="dt">int</span>)f) * <span class="fl">65536.0f</span>))&amp;<span class="bn">0xffff</span>; <span class="co">// 소수점</span></a>
+<a class="sourceLine" id="cb64-13" title="13"></a>
+<a class="sourceLine" id="cb64-14" title="14">    <span class="cf">return</span> p;</a>
+<a class="sourceLine" id="cb64-15" title="15">}</a>
+<a class="sourceLine" id="cb64-16" title="16"></a>
+<a class="sourceLine" id="cb64-17" title="17"><span class="dt">float</span> ntohf(<span class="dt">uint32_t</span> p)</a>
+<a class="sourceLine" id="cb64-18" title="18">{</a>
+<a class="sourceLine" id="cb64-19" title="19">    <span class="dt">float</span> f = ((p&gt;&gt;<span class="dv">16</span>)&amp;<span class="bn">0x7fff</span>); <span class="co">// 전체</span></a>
+<a class="sourceLine" id="cb64-20" title="20">    f += (p&amp;<span class="bn">0xffff</span>) / <span class="fl">65536.0f</span>; <span class="co">// 소수점</span></a>
+<a class="sourceLine" id="cb64-21" title="21"></a>
+<a class="sourceLine" id="cb64-22" title="22">    <span class="cf">if</span> (((p&gt;&gt;<span class="dv">31</span>)&amp;<span class="bn">0x1</span>) == <span class="bn">0x1</span>) { f = -f; } <span class="co">// 부호 비트 설정</span></a>
+<a class="sourceLine" id="cb64-23" title="23"></a>
+<a class="sourceLine" id="cb64-24" title="24">    <span class="cf">return</span> f;</a>
+<a class="sourceLine" id="cb64-25" title="25">}</a></code></pre></div><p>위의 코드는 <code>float</code>를 32비트 수에 저장하기 위한 단순한 구현이다. 최상위 비트(31)가 수의 부호를 저장하기 위해 쓰인다. (“1”이 음수를 의미한다.) 다음 15비트(30-16)(역자 주: 원문에서는 7비트라고 적혀 있으나 코드의 내용상 오타로 보임)가 <code>float</code>의 전체 수 부분을 저장하기 위해서 쓰인다. 마지막으로 남은 비트들(15-0)이 수의 소수점 부분을 기록하기 위해서 쓰인다.</p><p>사용법은 꽤 직관적이다:</p><div class="sourceCode" id="cb65"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><a class="sourceLine" id="cb65-1" title="1"><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></a>
+<a class="sourceLine" id="cb65-2" title="2"></a>
+<a class="sourceLine" id="cb65-3" title="3"><span class="dt">int</span> main(<span class="dt">void</span>)</a>
+<a class="sourceLine" id="cb65-4" title="4">{</a>
+<a class="sourceLine" id="cb65-5" title="5">    <span class="dt">float</span> f = <span class="fl">3.1415926</span>, f2;</a>
+<a class="sourceLine" id="cb65-6" title="6">    <span class="dt">uint32_t</span> netf;</a>
+<a class="sourceLine" id="cb65-7" title="7"></a>
+<a class="sourceLine" id="cb65-8" title="8">    netf = htonf(f);  <span class="co">// &quot;네트워크&quot; 형식으로 변환</span></a>
+<a class="sourceLine" id="cb65-9" title="9">    f2 = ntohf(netf); <span class="co">// 시험을 위해 원래대로 변환</span></a>
+<a class="sourceLine" id="cb65-10" title="10"></a>
+<a class="sourceLine" id="cb65-11" title="11">    printf(<span class="st">&quot;Original: %f</span><span class="sc">\n</span><span class="st">&quot;</span>, f);        <span class="co">// 3.141593</span></a>
+<a class="sourceLine" id="cb65-12" title="12">    printf(<span class="st">&quot; Network: 0x%08X</span><span class="sc">\n</span><span class="st">&quot;</span>, netf); <span class="co">// 0x0003243F</span></a>
+<a class="sourceLine" id="cb65-13" title="13">    printf(<span class="st">&quot;Unpacked: %f</span><span class="sc">\n</span><span class="st">&quot;</span>, f2);       <span class="co">// 3.141586</span></a>
+<a class="sourceLine" id="cb65-14" title="14"></a>
+<a class="sourceLine" id="cb65-15" title="15">    <span class="cf">return</span> <span class="dv">0</span>;</a>
+<a class="sourceLine" id="cb65-16" title="16">}</a></code></pre></div><p>장점을 보자면, 이 코드는 작고 간단하며 빠르다. 단점을 보자면 이 방식은 공간을 효율적으로 쓰지 않으며 표현 범위가 상당히 제한되어 있다.—32767보다 큰 수를 저장하려고 하면 이 방법은 제대로 동작하지 않을 것이다! 또한 여러분은 위의 예제에서 소수점의 마지막 2자리가 제대로 보존되지 않은 것을 볼 수 있다.</p><p>이것을 해결하려면 어떻게 해야할까? 사실 부동소수점 수를 저장하기 위한 <em>표준</em> 은  <a href="https://en.wikipedia.org/wiki/IEEE_754">IEEE-754</a><a href="more-references.html#fn35" class="footnote-ref" id="fnref35"><sup>35</sup></a>로 알려져 있다. 대부분의 컴퓨터는 부동 소수점 계산을 위해서 내부적으로 이 형식을 사용한다.</p><p>What can we do instead? Well, <em>The</em> Standard for storing floating point numbers is known as  <a href="https://en.wikipedia.org/wiki/IEEE_754">IEEE-754</a><a href="more-references.html#fn36" class="footnote-ref" id="fnref36"><sup>36</sup></a>. Most computers use this format internally for doing floating point math, so in those cases, strictly speaking, conversion wouldn’t need to be done. But if you want your source code to be portable, that’s an assumption you can’t necessarily make. (On the other hand, if you want things to be fast, you should optimize this out on platforms that don’t need to do it! That’s what <code>htons()</code> and its ilk do.)</p><p><a href="https://beej.us/guide/bgnet/examples/ieee754.c">Here’s some code that encodes floats and doubles into IEEE-754 format</a><a href="more-references.html#fn37" class="footnote-ref" id="fnref37"><sup>37</sup></a>. (Mostly—it doesn’t encode NaN or Infinity, but it could be modified to do that.)</p><div class="sourceCode" id="cb66"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><a class="sourceLine" id="cb66-1" title="1"><span class="pp">#define pack754_32(f) (pack754((f), 32, 8))</span></a>
+<a class="sourceLine" id="cb66-2" title="2"><span class="pp">#define pack754_64(f) (pack754((f), 64, 11))</span></a>
+<a class="sourceLine" id="cb66-3" title="3"><span class="pp">#define unpack754_32(i) (unpack754((i), 32, 8))</span></a>
+<a class="sourceLine" id="cb66-4" title="4"><span class="pp">#define unpack754_64(i) (unpack754((i), 64, 11))</span></a>
+<a class="sourceLine" id="cb66-5" title="5"></a>
+<a class="sourceLine" id="cb66-6" title="6"><span class="dt">uint64_t</span> pack754(<span class="dt">long</span> <span class="dt">double</span> f, <span class="dt">unsigned</span> bits, <span class="dt">unsigned</span> expbits)</a>
+<a class="sourceLine" id="cb66-7" title="7">{</a>
+<a class="sourceLine" id="cb66-8" title="8">    <span class="dt">long</span> <span class="dt">double</span> fnorm;</a>
+<a class="sourceLine" id="cb66-9" title="9">    <span class="dt">int</span> shift;</a>
+<a class="sourceLine" id="cb66-10" title="10">    <span class="dt">long</span> <span class="dt">long</span> sign, exp, significand;</a>
+<a class="sourceLine" id="cb66-11" title="11">    <span class="dt">unsigned</span> significandbits = bits - expbits - <span class="dv">1</span>; <span class="co">// -1 for sign bit</span></a>
+<a class="sourceLine" id="cb66-12" title="12"></a>
+<a class="sourceLine" id="cb66-13" title="13">    <span class="cf">if</span> (f == <span class="fl">0.0</span>) <span class="cf">return</span> <span class="dv">0</span>; <span class="co">// get this special case out of the way</span></a>
+<a class="sourceLine" id="cb66-14" title="14"></a>
+<a class="sourceLine" id="cb66-15" title="15">    <span class="co">// check sign and begin normalization</span></a>
+<a class="sourceLine" id="cb66-16" title="16">    <span class="cf">if</span> (f &lt; <span class="dv">0</span>) { sign = <span class="dv">1</span>; fnorm = -f; }</a>
+<a class="sourceLine" id="cb66-17" title="17">    <span class="cf">else</span> { sign = <span class="dv">0</span>; fnorm = f; }</a>
+<a class="sourceLine" id="cb66-18" title="18"></a>
+<a class="sourceLine" id="cb66-19" title="19">    <span class="co">// get the normalized form of f and track the exponent</span></a>
+<a class="sourceLine" id="cb66-20" title="20">    shift = <span class="dv">0</span>;</a>
+<a class="sourceLine" id="cb66-21" title="21">    <span class="cf">while</span>(fnorm &gt;= <span class="fl">2.0</span>) { fnorm /= <span class="fl">2.0</span>; shift++; }</a>
+<a class="sourceLine" id="cb66-22" title="22">    <span class="cf">while</span>(fnorm &lt; <span class="fl">1.0</span>) { fnorm *= <span class="fl">2.0</span>; shift--; }</a>
+<a class="sourceLine" id="cb66-23" title="23">    fnorm = fnorm - <span class="fl">1.0</span>;</a>
+<a class="sourceLine" id="cb66-24" title="24"></a>
+<a class="sourceLine" id="cb66-25" title="25">    <span class="co">// calculate the binary form (non-float) of the significand data</span></a>
+<a class="sourceLine" id="cb66-26" title="26">    significand = fnorm * ((1LL&lt;&lt;significandbits) + <span class="fl">0.5f</span>);</a>
+<a class="sourceLine" id="cb66-27" title="27"></a>
+<a class="sourceLine" id="cb66-28" title="28">    <span class="co">// get the biased exponent</span></a>
+<a class="sourceLine" id="cb66-29" title="29">    exp = shift + ((<span class="dv">1</span>&lt;&lt;(expbits<span class="dv">-1</span>)) - <span class="dv">1</span>); <span class="co">// shift + bias</span></a>
+<a class="sourceLine" id="cb66-30" title="30"></a>
+<a class="sourceLine" id="cb66-31" title="31">    <span class="co">// return the final answer</span></a>
+<a class="sourceLine" id="cb66-32" title="32">    <span class="cf">return</span> (sign&lt;&lt;(bits<span class="dv">-1</span>)) | (exp&lt;&lt;(bits-expbits<span class="dv">-1</span>)) | significand;</a>
+<a class="sourceLine" id="cb66-33" title="33">}</a>
+<a class="sourceLine" id="cb66-34" title="34"></a>
+<a class="sourceLine" id="cb66-35" title="35"><span class="dt">long</span> <span class="dt">double</span> unpack754(<span class="dt">uint64_t</span> i, <span class="dt">unsigned</span> bits, <span class="dt">unsigned</span> expbits)</a>
+<a class="sourceLine" id="cb66-36" title="36">{</a>
+<a class="sourceLine" id="cb66-37" title="37">    <span class="dt">long</span> <span class="dt">double</span> result;</a>
+<a class="sourceLine" id="cb66-38" title="38">    <span class="dt">long</span> <span class="dt">long</span> shift;</a>
+<a class="sourceLine" id="cb66-39" title="39">    <span class="dt">unsigned</span> bias;</a>
+<a class="sourceLine" id="cb66-40" title="40">    <span class="dt">unsigned</span> significandbits = bits - expbits - <span class="dv">1</span>; <span class="co">// -1 for sign bit</span></a>
+<a class="sourceLine" id="cb66-41" title="41"></a>
+<a class="sourceLine" id="cb66-42" title="42">    <span class="cf">if</span> (i == <span class="dv">0</span>) <span class="cf">return</span> <span class="fl">0.0</span>;</a>
+<a class="sourceLine" id="cb66-43" title="43"></a>
+<a class="sourceLine" id="cb66-44" title="44">    <span class="co">// pull the significand</span></a>
+<a class="sourceLine" id="cb66-45" title="45">    result = (i&amp;((1LL&lt;&lt;significandbits)-<span class="dv">1</span>)); <span class="co">// mask</span></a>
+<a class="sourceLine" id="cb66-46" title="46">    result /= (1LL&lt;&lt;significandbits); <span class="co">// convert back to float</span></a>
+<a class="sourceLine" id="cb66-47" title="47">    result += <span class="fl">1.0f</span>; <span class="co">// add the one back on</span></a>
+<a class="sourceLine" id="cb66-48" title="48"></a>
+<a class="sourceLine" id="cb66-49" title="49">    <span class="co">// deal with the exponent</span></a>
+<a class="sourceLine" id="cb66-50" title="50">    bias = (<span class="dv">1</span>&lt;&lt;(expbits<span class="dv">-1</span>)) - <span class="dv">1</span>;</a>
+<a class="sourceLine" id="cb66-51" title="51">    shift = ((i&gt;&gt;significandbits)&amp;((1LL&lt;&lt;expbits)-<span class="dv">1</span>)) - bias;</a>
+<a class="sourceLine" id="cb66-52" title="52">    <span class="cf">while</span>(shift &gt; <span class="dv">0</span>) { result *= <span class="fl">2.0</span>; shift--; }</a>
+<a class="sourceLine" id="cb66-53" title="53">    <span class="cf">while</span>(shift &lt; <span class="dv">0</span>) { result /= <span class="fl">2.0</span>; shift++; }</a>
+<a class="sourceLine" id="cb66-54" title="54"></a>
+<a class="sourceLine" id="cb66-55" title="55">    <span class="co">// sign it</span></a>
+<a class="sourceLine" id="cb66-56" title="56">    result *= (i&gt;&gt;(bits<span class="dv">-1</span>))&amp;<span class="dv">1</span>? <span class="fl">-1.0</span>: <span class="fl">1.0</span>;</a>
+<a class="sourceLine" id="cb66-57" title="57"></a>
+<a class="sourceLine" id="cb66-58" title="58">    <span class="cf">return</span> result;</a>
+<a class="sourceLine" id="cb66-59" title="59">}</a></code></pre></div><p>I put some handy macros up there at the top for packing and unpacking 32-bit (probably a <code>float</code>) and 64-bit (probably a <code>double</code>) numbers, but the <code>pack754()</code> function could be called directly and told to encode <code>bits</code>-worth of data (<code>expbits</code> of which are reserved for the normalized number’s exponent).</p><p>Here’s sample usage:</p><div class="sourceCode" id="cb67"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><a class="sourceLine" id="cb67-1" title="1"></a>
+<a class="sourceLine" id="cb67-2" title="2"><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></a>
+<a class="sourceLine" id="cb67-3" title="3"><span class="pp">#include </span><span class="im">&lt;stdint.h&gt;</span><span class="pp"> </span><span class="co">// defines uintN_t types</span></a>
+<a class="sourceLine" id="cb67-4" title="4"><span class="pp">#include </span><span class="im">&lt;inttypes.h&gt;</span><span class="pp"> </span><span class="co">// defines PRIx macros</span></a>
+<a class="sourceLine" id="cb67-5" title="5"></a>
+<a class="sourceLine" id="cb67-6" title="6"><span class="dt">int</span> main(<span class="dt">void</span>)</a>
+<a class="sourceLine" id="cb67-7" title="7">{</a>
+<a class="sourceLine" id="cb67-8" title="8">    <span class="dt">float</span> f = <span class="fl">3.1415926</span>, f2;</a>
+<a class="sourceLine" id="cb67-9" title="9">    <span class="dt">double</span> d = <span class="fl">3.14159265358979323</span>, d2;</a>
+<a class="sourceLine" id="cb67-10" title="10">    <span class="dt">uint32_t</span> fi;</a>
+<a class="sourceLine" id="cb67-11" title="11">    <span class="dt">uint64_t</span> di;</a>
+<a class="sourceLine" id="cb67-12" title="12"></a>
+<a class="sourceLine" id="cb67-13" title="13">    fi = pack754_32(f);</a>
+<a class="sourceLine" id="cb67-14" title="14">    f2 = unpack754_32(fi);</a>
+<a class="sourceLine" id="cb67-15" title="15"></a>
+<a class="sourceLine" id="cb67-16" title="16">    di = pack754_64(d);</a>
+<a class="sourceLine" id="cb67-17" title="17">    d2 = unpack754_64(di);</a>
+<a class="sourceLine" id="cb67-18" title="18"></a>
+<a class="sourceLine" id="cb67-19" title="19">    printf(<span class="st">&quot;float before : %.7f</span><span class="sc">\n</span><span class="st">&quot;</span>, f);</a>
+<a class="sourceLine" id="cb67-20" title="20">    printf(<span class="st">&quot;float encoded: 0x%08&quot;</span> PRIx32 <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>, fi);</a>
+<a class="sourceLine" id="cb67-21" title="21">    printf(<span class="st">&quot;float after  : %.7f</span><span class="sc">\n\n</span><span class="st">&quot;</span>, f2);</a>
+<a class="sourceLine" id="cb67-22" title="22"></a>
+<a class="sourceLine" id="cb67-23" title="23">    printf(<span class="st">&quot;double before : %.20lf</span><span class="sc">\n</span><span class="st">&quot;</span>, d);</a>
+<a class="sourceLine" id="cb67-24" title="24">    printf(<span class="st">&quot;double encoded: 0x%016&quot;</span> PRIx64 <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>, di);</a>
+<a class="sourceLine" id="cb67-25" title="25">    printf(<span class="st">&quot;double after  : %.20lf</span><span class="sc">\n</span><span class="st">&quot;</span>, d2);</a>
+<a class="sourceLine" id="cb67-26" title="26"></a>
+<a class="sourceLine" id="cb67-27" title="27">    <span class="cf">return</span> <span class="dv">0</span>;</a>
+<a class="sourceLine" id="cb67-28" title="28">}</a></code></pre></div><p>The above code produces this output:</p><pre><code>float before : 3.1415925
+float encoded: 0x40490FDA
+float after  : 3.1415925
+
+double before : 3.14159265358979311600
+double encoded: 0x400921FB54442D18
+double after  : 3.14159265358979311600</code></pre><p>Another question you might have is how do you pack <code>struct</code>s? Unfortunately for you, the compiler is free to put padding all over the place in a <code>struct</code>, and that means you can’t portably send the whole thing over the wire in one chunk. (Aren’t you getting sick of hearing “can’t do this”, “can’t do that”? Sorry! To quote a friend, “Whenever anything goes wrong, I always blame Microsoft.” This one might not be Microsoft’s fault, admittedly, but my friend’s statement is completely true.)</p><p>Back to it: the best way to send the <code>struct</code> over the wire is to pack each field independently and then unpack them into the <code>struct</code> when they arrive on the other side.</p><p>That’s a lot of work, is what you’re thinking. Yes, it is. One thing you can do is write a helper function to help pack the data for you. It’ll be fun! Really!</p><p>In the book <a href="https://beej.us/guide/url/tpop"><em>The Practice of Programming</em></a><a href="more-references.html#fn38" class="footnote-ref" id="fnref38"><sup>38</sup></a> by Kernighan and Pike, they implement <code>printf()</code>-like functions called <code>pack()</code> and <code>unpack()</code> that do exactly this. I’d link to them, but apparently those functions aren’t online with the rest of the source from the book.</p><p>(The Practice of Programming is an excellent read. Zeus saves a kitten every time I recommend it.)</p><p>At this point, I’m going to drop a pointer to a <a href="https://github.com/protobuf-c/protobuf-c">Protocol Buffers implementation in C</a><a href="more-references.html#fn39" class="footnote-ref" id="fnref39"><sup>39</sup></a> which I’ve never used, but looks completely respectable. Python and Perl programmers will want to check out their language’s <code>pack()</code> and <code>unpack()</code> functions for accomplishing the same thing. And Java has a big-ol’ Serializable interface that can be used in a similar way.</p><p>But if you want to write your own packing utility in C, K&amp;P’s trick is to use variable argument lists to make <code>printf()</code>-like functions to build the packets. <a href="https://beej.us/guide/bgnet/examples/pack2.c">Here’s a version I cooked up</a><a href="more-references.html#fn40" class="footnote-ref" id="fnref40"><sup>40</sup></a> on my own based on that which hopefully will be enough to give you an idea of how such a thing can work.</p><p>(This code references the <code>pack754()</code> functions, above. The <code>packi*()</code> functions operate like the familiar <code>htons()</code> family, except they pack into a <code>char</code> array instead of another integer.)</p><div class="sourceCode" id="cb69"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><a class="sourceLine" id="cb69-1" title="1"><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></a>
+<a class="sourceLine" id="cb69-2" title="2"><span class="pp">#include </span><span class="im">&lt;ctype.h&gt;</span></a>
+<a class="sourceLine" id="cb69-3" title="3"><span class="pp">#include </span><span class="im">&lt;stdarg.h&gt;</span></a>
+<a class="sourceLine" id="cb69-4" title="4"><span class="pp">#include </span><span class="im">&lt;string.h&gt;</span></a>
+<a class="sourceLine" id="cb69-5" title="5"></a>
+<a class="sourceLine" id="cb69-6" title="6"><span class="co">/*</span></a>
+<a class="sourceLine" id="cb69-7" title="7"><span class="co">** packi16() -- store a 16-bit int into a char buffer (like htons())</span></a>
+<a class="sourceLine" id="cb69-8" title="8"><span class="co">*/</span></a>
+<a class="sourceLine" id="cb69-9" title="9"><span class="dt">void</span> packi16(<span class="dt">unsigned</span> <span class="dt">char</span> *buf, <span class="dt">unsigned</span> <span class="dt">int</span> i)</a>
+<a class="sourceLine" id="cb69-10" title="10">{</a>
+<a class="sourceLine" id="cb69-11" title="11">    *buf++ = i&gt;&gt;<span class="dv">8</span>; *buf++ = i;</a>
+<a class="sourceLine" id="cb69-12" title="12">}</a>
+<a class="sourceLine" id="cb69-13" title="13"></a>
+<a class="sourceLine" id="cb69-14" title="14"><span class="co">/*</span></a>
+<a class="sourceLine" id="cb69-15" title="15"><span class="co">** packi32() -- store a 32-bit int into a char buffer (like htonl())</span></a>
+<a class="sourceLine" id="cb69-16" title="16"><span class="co">*/</span></a>
+<a class="sourceLine" id="cb69-17" title="17"><span class="dt">void</span> packi32(<span class="dt">unsigned</span> <span class="dt">char</span> *buf, <span class="dt">unsigned</span> <span class="dt">long</span> <span class="dt">int</span> i)</a>
+<a class="sourceLine" id="cb69-18" title="18">{</a>
+<a class="sourceLine" id="cb69-19" title="19">    *buf++ = i&gt;&gt;<span class="dv">24</span>; *buf++ = i&gt;&gt;<span class="dv">16</span>;</a>
+<a class="sourceLine" id="cb69-20" title="20">    *buf++ = i&gt;&gt;<span class="dv">8</span>;  *buf++ = i;</a>
+<a class="sourceLine" id="cb69-21" title="21">}</a>
+<a class="sourceLine" id="cb69-22" title="22"></a>
+<a class="sourceLine" id="cb69-23" title="23"><span class="co">/*</span></a>
+<a class="sourceLine" id="cb69-24" title="24"><span class="co">** packi64() -- store a 64-bit int into a char buffer (like htonl())</span></a>
+<a class="sourceLine" id="cb69-25" title="25"><span class="co">*/</span></a>
+<a class="sourceLine" id="cb69-26" title="26"><span class="dt">void</span> packi64(<span class="dt">unsigned</span> <span class="dt">char</span> *buf, <span class="dt">unsigned</span> <span class="dt">long</span> <span class="dt">long</span> <span class="dt">int</span> i)</a>
+<a class="sourceLine" id="cb69-27" title="27">{</a>
+<a class="sourceLine" id="cb69-28" title="28">    *buf++ = i&gt;&gt;<span class="dv">56</span>; *buf++ = i&gt;&gt;<span class="dv">48</span>;</a>
+<a class="sourceLine" id="cb69-29" title="29">    *buf++ = i&gt;&gt;<span class="dv">40</span>; *buf++ = i&gt;&gt;<span class="dv">32</span>;</a>
+<a class="sourceLine" id="cb69-30" title="30">    *buf++ = i&gt;&gt;<span class="dv">24</span>; *buf++ = i&gt;&gt;<span class="dv">16</span>;</a>
+<a class="sourceLine" id="cb69-31" title="31">    *buf++ = i&gt;&gt;<span class="dv">8</span>;  *buf++ = i;</a>
+<a class="sourceLine" id="cb69-32" title="32">}</a>
+<a class="sourceLine" id="cb69-33" title="33"></a>
+<a class="sourceLine" id="cb69-34" title="34"><span class="co">/*</span></a>
+<a class="sourceLine" id="cb69-35" title="35"><span class="co">** unpacki16() -- unpack a 16-bit int from a char buffer (like ntohs())</span></a>
+<a class="sourceLine" id="cb69-36" title="36"><span class="co">*/</span></a>
+<a class="sourceLine" id="cb69-37" title="37"><span class="dt">int</span> unpacki16(<span class="dt">unsigned</span> <span class="dt">char</span> *buf)</a>
+<a class="sourceLine" id="cb69-38" title="38">{</a>
+<a class="sourceLine" id="cb69-39" title="39">    <span class="dt">unsigned</span> <span class="dt">int</span> i2 = ((<span class="dt">unsigned</span> <span class="dt">int</span>)buf[<span class="dv">0</span>]&lt;&lt;<span class="dv">8</span>) | buf[<span class="dv">1</span>];</a>
+<a class="sourceLine" id="cb69-40" title="40">    <span class="dt">int</span> i;</a>
+<a class="sourceLine" id="cb69-41" title="41"></a>
+<a class="sourceLine" id="cb69-42" title="42">    <span class="co">// change unsigned numbers to signed</span></a>
+<a class="sourceLine" id="cb69-43" title="43">    <span class="cf">if</span> (i2 &lt;= 0x7fffu) { i = i2; }</a>
+<a class="sourceLine" id="cb69-44" title="44">    <span class="cf">else</span> { i = <span class="dv">-1</span> - (<span class="dt">unsigned</span> <span class="dt">int</span>)(0xffffu - i2); }</a>
+<a class="sourceLine" id="cb69-45" title="45"></a>
+<a class="sourceLine" id="cb69-46" title="46">    <span class="cf">return</span> i;</a>
+<a class="sourceLine" id="cb69-47" title="47">}</a>
+<a class="sourceLine" id="cb69-48" title="48"></a>
+<a class="sourceLine" id="cb69-49" title="49"><span class="co">/*</span></a>
+<a class="sourceLine" id="cb69-50" title="50"><span class="co">** unpacku16() -- unpack a 16-bit unsigned from a char buffer (like ntohs())</span></a>
+<a class="sourceLine" id="cb69-51" title="51"><span class="co">*/</span></a>
+<a class="sourceLine" id="cb69-52" title="52"><span class="dt">unsigned</span> <span class="dt">int</span> unpacku16(<span class="dt">unsigned</span> <span class="dt">char</span> *buf)</a>
+<a class="sourceLine" id="cb69-53" title="53">{</a>
+<a class="sourceLine" id="cb69-54" title="54">    <span class="cf">return</span> ((<span class="dt">unsigned</span> <span class="dt">int</span>)buf[<span class="dv">0</span>]&lt;&lt;<span class="dv">8</span>) | buf[<span class="dv">1</span>];</a>
+<a class="sourceLine" id="cb69-55" title="55">}</a>
+<a class="sourceLine" id="cb69-56" title="56"></a>
+<a class="sourceLine" id="cb69-57" title="57"><span class="co">/*</span></a>
+<a class="sourceLine" id="cb69-58" title="58"><span class="co">** unpacki32() -- unpack a 32-bit int from a char buffer (like ntohl())</span></a>
+<a class="sourceLine" id="cb69-59" title="59"><span class="co">*/</span></a>
+<a class="sourceLine" id="cb69-60" title="60"><span class="dt">long</span> <span class="dt">int</span> unpacki32(<span class="dt">unsigned</span> <span class="dt">char</span> *buf)</a>
+<a class="sourceLine" id="cb69-61" title="61">{</a>
+<a class="sourceLine" id="cb69-62" title="62">    <span class="dt">unsigned</span> <span class="dt">long</span> <span class="dt">int</span> i2 = ((<span class="dt">unsigned</span> <span class="dt">long</span> <span class="dt">int</span>)buf[<span class="dv">0</span>]&lt;&lt;<span class="dv">24</span>) |</a>
+<a class="sourceLine" id="cb69-63" title="63">                           ((<span class="dt">unsigned</span> <span class="dt">long</span> <span class="dt">int</span>)buf[<span class="dv">1</span>]&lt;&lt;<span class="dv">16</span>) |</a>
+<a class="sourceLine" id="cb69-64" title="64">                           ((<span class="dt">unsigned</span> <span class="dt">long</span> <span class="dt">int</span>)buf[<span class="dv">2</span>]&lt;&lt;<span class="dv">8</span>)  |</a>
+<a class="sourceLine" id="cb69-65" title="65">                           buf[<span class="dv">3</span>];</a>
+<a class="sourceLine" id="cb69-66" title="66">    <span class="dt">long</span> <span class="dt">int</span> i;</a>
+<a class="sourceLine" id="cb69-67" title="67"></a>
+<a class="sourceLine" id="cb69-68" title="68">    <span class="co">// change unsigned numbers to signed</span></a>
+<a class="sourceLine" id="cb69-69" title="69">    <span class="cf">if</span> (i2 &lt;= 0x7fffffffu) { i = i2; }</a>
+<a class="sourceLine" id="cb69-70" title="70">    <span class="cf">else</span> { i = <span class="dv">-1</span> - (<span class="dt">long</span> <span class="dt">int</span>)(0xffffffffu - i2); }</a>
+<a class="sourceLine" id="cb69-71" title="71"></a>
+<a class="sourceLine" id="cb69-72" title="72">    <span class="cf">return</span> i;</a>
+<a class="sourceLine" id="cb69-73" title="73">}</a>
+<a class="sourceLine" id="cb69-74" title="74"></a>
+<a class="sourceLine" id="cb69-75" title="75"><span class="co">/*</span></a>
+<a class="sourceLine" id="cb69-76" title="76"><span class="co">** unpacku32() -- unpack a 32-bit unsigned from a char buffer (like ntohl())</span></a>
+<a class="sourceLine" id="cb69-77" title="77"><span class="co">*/</span></a>
+<a class="sourceLine" id="cb69-78" title="78"><span class="dt">unsigned</span> <span class="dt">long</span> <span class="dt">int</span> unpacku32(<span class="dt">unsigned</span> <span class="dt">char</span> *buf)</a>
+<a class="sourceLine" id="cb69-79" title="79">{</a>
+<a class="sourceLine" id="cb69-80" title="80">    <span class="cf">return</span> ((<span class="dt">unsigned</span> <span class="dt">long</span> <span class="dt">int</span>)buf[<span class="dv">0</span>]&lt;&lt;<span class="dv">24</span>) |</a>
+<a class="sourceLine" id="cb69-81" title="81">           ((<span class="dt">unsigned</span> <span class="dt">long</span> <span class="dt">int</span>)buf[<span class="dv">1</span>]&lt;&lt;<span class="dv">16</span>) |</a>
+<a class="sourceLine" id="cb69-82" title="82">           ((<span class="dt">unsigned</span> <span class="dt">long</span> <span class="dt">int</span>)buf[<span class="dv">2</span>]&lt;&lt;<span class="dv">8</span>)  |</a>
+<a class="sourceLine" id="cb69-83" title="83">           buf[<span class="dv">3</span>];</a>
+<a class="sourceLine" id="cb69-84" title="84">}</a>
+<a class="sourceLine" id="cb69-85" title="85"></a>
+<a class="sourceLine" id="cb69-86" title="86"><span class="co">/*</span></a>
+<a class="sourceLine" id="cb69-87" title="87"><span class="co">** unpacki64() -- unpack a 64-bit int from a char buffer (like ntohl())</span></a>
+<a class="sourceLine" id="cb69-88" title="88"><span class="co">*/</span></a>
+<a class="sourceLine" id="cb69-89" title="89"><span class="dt">long</span> <span class="dt">long</span> <span class="dt">int</span> unpacki64(<span class="dt">unsigned</span> <span class="dt">char</span> *buf)</a>
+<a class="sourceLine" id="cb69-90" title="90">{</a>
+<a class="sourceLine" id="cb69-91" title="91">    <span class="dt">unsigned</span> <span class="dt">long</span> <span class="dt">long</span> <span class="dt">int</span> i2 = ((<span class="dt">unsigned</span> <span class="dt">long</span> <span class="dt">long</span> <span class="dt">int</span>)buf[<span class="dv">0</span>]&lt;&lt;<span class="dv">56</span>) |</a>
+<a class="sourceLine" id="cb69-92" title="92">                                ((<span class="dt">unsigned</span> <span class="dt">long</span> <span class="dt">long</span> <span class="dt">int</span>)buf[<span class="dv">1</span>]&lt;&lt;<span class="dv">48</span>) |</a>
+<a class="sourceLine" id="cb69-93" title="93">                                ((<span class="dt">unsigned</span> <span class="dt">long</span> <span class="dt">long</span> <span class="dt">int</span>)buf[<span class="dv">2</span>]&lt;&lt;<span class="dv">40</span>) |</a>
+<a class="sourceLine" id="cb69-94" title="94">                                ((<span class="dt">unsigned</span> <span class="dt">long</span> <span class="dt">long</span> <span class="dt">int</span>)buf[<span class="dv">3</span>]&lt;&lt;<span class="dv">32</span>) |</a>
+<a class="sourceLine" id="cb69-95" title="95">                                ((<span class="dt">unsigned</span> <span class="dt">long</span> <span class="dt">long</span> <span class="dt">int</span>)buf[<span class="dv">4</span>]&lt;&lt;<span class="dv">24</span>) |</a>
+<a class="sourceLine" id="cb69-96" title="96">                                ((<span class="dt">unsigned</span> <span class="dt">long</span> <span class="dt">long</span> <span class="dt">int</span>)buf[<span class="dv">5</span>]&lt;&lt;<span class="dv">16</span>) |</a>
+<a class="sourceLine" id="cb69-97" title="97">                                ((<span class="dt">unsigned</span> <span class="dt">long</span> <span class="dt">long</span> <span class="dt">int</span>)buf[<span class="dv">6</span>]&lt;&lt;<span class="dv">8</span>)  |</a>
+<a class="sourceLine" id="cb69-98" title="98">                                buf[<span class="dv">7</span>];</a>
+<a class="sourceLine" id="cb69-99" title="99">    <span class="dt">long</span> <span class="dt">long</span> <span class="dt">int</span> i;</a>
+<a class="sourceLine" id="cb69-100" title="100"></a>
+<a class="sourceLine" id="cb69-101" title="101">    <span class="co">// change unsigned numbers to signed</span></a>
+<a class="sourceLine" id="cb69-102" title="102">    <span class="cf">if</span> (i2 &lt;= 0x7fffffffffffffffu) { i = i2; }</a>
+<a class="sourceLine" id="cb69-103" title="103">    <span class="cf">else</span> { i = <span class="dv">-1</span> -(<span class="dt">long</span> <span class="dt">long</span> <span class="dt">int</span>)(0xffffffffffffffffu - i2); }</a>
+<a class="sourceLine" id="cb69-104" title="104"></a>
+<a class="sourceLine" id="cb69-105" title="105">    <span class="cf">return</span> i;</a>
+<a class="sourceLine" id="cb69-106" title="106">}</a>
+<a class="sourceLine" id="cb69-107" title="107"></a>
+<a class="sourceLine" id="cb69-108" title="108"><span class="co">/*</span></a>
+<a class="sourceLine" id="cb69-109" title="109"><span class="co">** unpacku64() -- unpack a 64-bit unsigned from a char buffer (like ntohl())</span></a>
+<a class="sourceLine" id="cb69-110" title="110"><span class="co">*/</span></a>
+<a class="sourceLine" id="cb69-111" title="111"><span class="dt">unsigned</span> <span class="dt">long</span> <span class="dt">long</span> <span class="dt">int</span> unpacku64(<span class="dt">unsigned</span> <span class="dt">char</span> *buf)</a>
+<a class="sourceLine" id="cb69-112" title="112">{</a>
+<a class="sourceLine" id="cb69-113" title="113">    <span class="cf">return</span> ((<span class="dt">unsigned</span> <span class="dt">long</span> <span class="dt">long</span> <span class="dt">int</span>)buf[<span class="dv">0</span>]&lt;&lt;<span class="dv">56</span>) |</a>
+<a class="sourceLine" id="cb69-114" title="114">           ((<span class="dt">unsigned</span> <span class="dt">long</span> <span class="dt">long</span> <span class="dt">int</span>)buf[<span class="dv">1</span>]&lt;&lt;<span class="dv">48</span>) |</a>
+<a class="sourceLine" id="cb69-115" title="115">           ((<span class="dt">unsigned</span> <span class="dt">long</span> <span class="dt">long</span> <span class="dt">int</span>)buf[<span class="dv">2</span>]&lt;&lt;<span class="dv">40</span>) |</a>
+<a class="sourceLine" id="cb69-116" title="116">           ((<span class="dt">unsigned</span> <span class="dt">long</span> <span class="dt">long</span> <span class="dt">int</span>)buf[<span class="dv">3</span>]&lt;&lt;<span class="dv">32</span>) |</a>
+<a class="sourceLine" id="cb69-117" title="117">           ((<span class="dt">unsigned</span> <span class="dt">long</span> <span class="dt">long</span> <span class="dt">int</span>)buf[<span class="dv">4</span>]&lt;&lt;<span class="dv">24</span>) |</a>
+<a class="sourceLine" id="cb69-118" title="118">           ((<span class="dt">unsigned</span> <span class="dt">long</span> <span class="dt">long</span> <span class="dt">int</span>)buf[<span class="dv">5</span>]&lt;&lt;<span class="dv">16</span>) |</a>
+<a class="sourceLine" id="cb69-119" title="119">           ((<span class="dt">unsigned</span> <span class="dt">long</span> <span class="dt">long</span> <span class="dt">int</span>)buf[<span class="dv">6</span>]&lt;&lt;<span class="dv">8</span>)  |</a>
+<a class="sourceLine" id="cb69-120" title="120">           buf[<span class="dv">7</span>];</a>
+<a class="sourceLine" id="cb69-121" title="121">}</a>
+<a class="sourceLine" id="cb69-122" title="122"></a>
+<a class="sourceLine" id="cb69-123" title="123"><span class="co">/*</span></a>
+<a class="sourceLine" id="cb69-124" title="124"><span class="co">** pack() -- store data dictated by the format string in the buffer</span></a>
+<a class="sourceLine" id="cb69-125" title="125"><span class="co">**</span></a>
+<a class="sourceLine" id="cb69-126" title="126"><span class="co">**   bits |signed   unsigned   float   string</span></a>
+<a class="sourceLine" id="cb69-127" title="127"><span class="co">**   -----+----------------------------------</span></a>
+<a class="sourceLine" id="cb69-128" title="128"><span class="co">**      8 |   c        C</span></a>
+<a class="sourceLine" id="cb69-129" title="129"><span class="co">**     16 |   h        H         f</span></a>
+<a class="sourceLine" id="cb69-130" title="130"><span class="co">**     32 |   l        L         d</span></a>
+<a class="sourceLine" id="cb69-131" title="131"><span class="co">**     64 |   q        Q         g</span></a>
+<a class="sourceLine" id="cb69-132" title="132"><span class="co">**      - |                               s</span></a>
+<a class="sourceLine" id="cb69-133" title="133"><span class="co">**</span></a>
+<a class="sourceLine" id="cb69-134" title="134"><span class="co">**  (16-bit unsigned length is automatically prepended to strings)</span></a>
+<a class="sourceLine" id="cb69-135" title="135"><span class="co">*/</span></a>
+<a class="sourceLine" id="cb69-136" title="136"></a>
+<a class="sourceLine" id="cb69-137" title="137"><span class="dt">unsigned</span> <span class="dt">int</span> pack(<span class="dt">unsigned</span> <span class="dt">char</span> *buf, <span class="dt">char</span> *format, ...)</a>
+<a class="sourceLine" id="cb69-138" title="138">{</a>
+<a class="sourceLine" id="cb69-139" title="139">    <span class="dt">va_list</span> ap;</a>
+<a class="sourceLine" id="cb69-140" title="140"></a>
+<a class="sourceLine" id="cb69-141" title="141">    <span class="dt">signed</span> <span class="dt">char</span> c;              <span class="co">// 8-bit</span></a>
+<a class="sourceLine" id="cb69-142" title="142">    <span class="dt">unsigned</span> <span class="dt">char</span> C;</a>
+<a class="sourceLine" id="cb69-143" title="143"></a>
+<a class="sourceLine" id="cb69-144" title="144">    <span class="dt">int</span> h;                      <span class="co">// 16-bit</span></a>
+<a class="sourceLine" id="cb69-145" title="145">    <span class="dt">unsigned</span> <span class="dt">int</span> H;</a>
+<a class="sourceLine" id="cb69-146" title="146"></a>
+<a class="sourceLine" id="cb69-147" title="147">    <span class="dt">long</span> <span class="dt">int</span> l;                 <span class="co">// 32-bit</span></a>
+<a class="sourceLine" id="cb69-148" title="148">    <span class="dt">unsigned</span> <span class="dt">long</span> <span class="dt">int</span> L;</a>
+<a class="sourceLine" id="cb69-149" title="149"></a>
+<a class="sourceLine" id="cb69-150" title="150">    <span class="dt">long</span> <span class="dt">long</span> <span class="dt">int</span> q;            <span class="co">// 64-bit</span></a>
+<a class="sourceLine" id="cb69-151" title="151">    <span class="dt">unsigned</span> <span class="dt">long</span> <span class="dt">long</span> <span class="dt">int</span> Q;</a>
+<a class="sourceLine" id="cb69-152" title="152"></a>
+<a class="sourceLine" id="cb69-153" title="153">    <span class="dt">float</span> f;                    <span class="co">// floats</span></a>
+<a class="sourceLine" id="cb69-154" title="154">    <span class="dt">double</span> d;</a>
+<a class="sourceLine" id="cb69-155" title="155">    <span class="dt">long</span> <span class="dt">double</span> g;</a>
+<a class="sourceLine" id="cb69-156" title="156">    <span class="dt">unsigned</span> <span class="dt">long</span> <span class="dt">long</span> <span class="dt">int</span> fhold;</a>
+<a class="sourceLine" id="cb69-157" title="157"></a>
+<a class="sourceLine" id="cb69-158" title="158">    <span class="dt">char</span> *s;                    <span class="co">// strings</span></a>
+<a class="sourceLine" id="cb69-159" title="159">    <span class="dt">unsigned</span> <span class="dt">int</span> len;</a>
+<a class="sourceLine" id="cb69-160" title="160"></a>
+<a class="sourceLine" id="cb69-161" title="161">    <span class="dt">unsigned</span> <span class="dt">int</span> size = <span class="dv">0</span>;</a>
+<a class="sourceLine" id="cb69-162" title="162"></a>
+<a class="sourceLine" id="cb69-163" title="163">    va_start(ap, format);</a>
+<a class="sourceLine" id="cb69-164" title="164"></a>
+<a class="sourceLine" id="cb69-165" title="165">    <span class="cf">for</span>(; *format != &#39;\<span class="dv">0</span>&#39;; format++) {</a>
+<a class="sourceLine" id="cb69-166" title="166">        <span class="cf">switch</span>(*format) {</a>
+<a class="sourceLine" id="cb69-167" title="167">        <span class="cf">case</span> <span class="ch">&#39;c&#39;</span>: <span class="co">// 8-bit</span></a>
+<a class="sourceLine" id="cb69-168" title="168">            size += <span class="dv">1</span>;</a>
+<a class="sourceLine" id="cb69-169" title="169">            c = (<span class="dt">signed</span> <span class="dt">char</span>)va_arg(ap, <span class="dt">int</span>); <span class="co">// promoted</span></a>
+<a class="sourceLine" id="cb69-170" title="170">            *buf++ = c;</a>
+<a class="sourceLine" id="cb69-171" title="171">            <span class="cf">break</span>;</a>
+<a class="sourceLine" id="cb69-172" title="172"></a>
+<a class="sourceLine" id="cb69-173" title="173">        <span class="cf">case</span> <span class="ch">&#39;C&#39;</span>: <span class="co">// 8-bit unsigned</span></a>
+<a class="sourceLine" id="cb69-174" title="174">            size += <span class="dv">1</span>;</a>
+<a class="sourceLine" id="cb69-175" title="175">            C = (<span class="dt">unsigned</span> <span class="dt">char</span>)va_arg(ap, <span class="dt">unsigned</span> <span class="dt">int</span>); <span class="co">// promoted</span></a>
+<a class="sourceLine" id="cb69-176" title="176">            *buf++ = C;</a>
+<a class="sourceLine" id="cb69-177" title="177">            <span class="cf">break</span>;</a>
+<a class="sourceLine" id="cb69-178" title="178"></a>
+<a class="sourceLine" id="cb69-179" title="179">        <span class="cf">case</span> <span class="ch">&#39;h&#39;</span>: <span class="co">// 16-bit</span></a>
+<a class="sourceLine" id="cb69-180" title="180">            size += <span class="dv">2</span>;</a>
+<a class="sourceLine" id="cb69-181" title="181">            h = va_arg(ap, <span class="dt">int</span>);</a>
+<a class="sourceLine" id="cb69-182" title="182">            packi16(buf, h);</a>
+<a class="sourceLine" id="cb69-183" title="183">            buf += <span class="dv">2</span>;</a>
+<a class="sourceLine" id="cb69-184" title="184">            <span class="cf">break</span>;</a>
+<a class="sourceLine" id="cb69-185" title="185"></a>
+<a class="sourceLine" id="cb69-186" title="186">        <span class="cf">case</span> <span class="ch">&#39;H&#39;</span>: <span class="co">// 16-bit unsigned</span></a>
+<a class="sourceLine" id="cb69-187" title="187">            size += <span class="dv">2</span>;</a>
+<a class="sourceLine" id="cb69-188" title="188">            H = va_arg(ap, <span class="dt">unsigned</span> <span class="dt">int</span>);</a>
+<a class="sourceLine" id="cb69-189" title="189">            packi16(buf, H);</a>
+<a class="sourceLine" id="cb69-190" title="190">            buf += <span class="dv">2</span>;</a>
+<a class="sourceLine" id="cb69-191" title="191">            <span class="cf">break</span>;</a>
+<a class="sourceLine" id="cb69-192" title="192"></a>
+<a class="sourceLine" id="cb69-193" title="193">        <span class="cf">case</span> <span class="ch">&#39;l&#39;</span>: <span class="co">// 32-bit</span></a>
+<a class="sourceLine" id="cb69-194" title="194">            size += <span class="dv">4</span>;</a>
+<a class="sourceLine" id="cb69-195" title="195">            l = va_arg(ap, <span class="dt">long</span> <span class="dt">int</span>);</a>
+<a class="sourceLine" id="cb69-196" title="196">            packi32(buf, l);</a>
+<a class="sourceLine" id="cb69-197" title="197">            buf += <span class="dv">4</span>;</a>
+<a class="sourceLine" id="cb69-198" title="198">            <span class="cf">break</span>;</a>
+<a class="sourceLine" id="cb69-199" title="199"></a>
+<a class="sourceLine" id="cb69-200" title="200">        <span class="cf">case</span> <span class="ch">&#39;L&#39;</span>: <span class="co">// 32-bit unsigned</span></a>
+<a class="sourceLine" id="cb69-201" title="201">            size += <span class="dv">4</span>;</a>
+<a class="sourceLine" id="cb69-202" title="202">            L = va_arg(ap, <span class="dt">unsigned</span> <span class="dt">long</span> <span class="dt">int</span>);</a>
+<a class="sourceLine" id="cb69-203" title="203">            packi32(buf, L);</a>
+<a class="sourceLine" id="cb69-204" title="204">            buf += <span class="dv">4</span>;</a>
+<a class="sourceLine" id="cb69-205" title="205">            <span class="cf">break</span>;</a>
+<a class="sourceLine" id="cb69-206" title="206"></a>
+<a class="sourceLine" id="cb69-207" title="207">        <span class="cf">case</span> <span class="ch">&#39;q&#39;</span>: <span class="co">// 64-bit</span></a>
+<a class="sourceLine" id="cb69-208" title="208">            size += <span class="dv">8</span>;</a>
+<a class="sourceLine" id="cb69-209" title="209">            q = va_arg(ap, <span class="dt">long</span> <span class="dt">long</span> <span class="dt">int</span>);</a>
+<a class="sourceLine" id="cb69-210" title="210">            packi64(buf, q);</a>
+<a class="sourceLine" id="cb69-211" title="211">            buf += <span class="dv">8</span>;</a>
+<a class="sourceLine" id="cb69-212" title="212">            <span class="cf">break</span>;</a>
+<a class="sourceLine" id="cb69-213" title="213"></a>
+<a class="sourceLine" id="cb69-214" title="214">        <span class="cf">case</span> <span class="ch">&#39;Q&#39;</span>: <span class="co">// 64-bit unsigned</span></a>
+<a class="sourceLine" id="cb69-215" title="215">            size += <span class="dv">8</span>;</a>
+<a class="sourceLine" id="cb69-216" title="216">            Q = va_arg(ap, <span class="dt">unsigned</span> <span class="dt">long</span> <span class="dt">long</span> <span class="dt">int</span>);</a>
+<a class="sourceLine" id="cb69-217" title="217">            packi64(buf, Q);</a>
+<a class="sourceLine" id="cb69-218" title="218">            buf += <span class="dv">8</span>;</a>
+<a class="sourceLine" id="cb69-219" title="219">            <span class="cf">break</span>;</a>
+<a class="sourceLine" id="cb69-220" title="220"></a>
+<a class="sourceLine" id="cb69-221" title="221">        <span class="cf">case</span> <span class="ch">&#39;f&#39;</span>: <span class="co">// float-16</span></a>
+<a class="sourceLine" id="cb69-222" title="222">            size += <span class="dv">2</span>;</a>
+<a class="sourceLine" id="cb69-223" title="223">            f = (<span class="dt">float</span>)va_arg(ap, <span class="dt">double</span>); <span class="co">// promoted</span></a>
+<a class="sourceLine" id="cb69-224" title="224">            fhold = pack754_16(f); <span class="co">// convert to IEEE 754</span></a>
+<a class="sourceLine" id="cb69-225" title="225">            packi16(buf, fhold);</a>
+<a class="sourceLine" id="cb69-226" title="226">            buf += <span class="dv">2</span>;</a>
+<a class="sourceLine" id="cb69-227" title="227">            <span class="cf">break</span>;</a>
+<a class="sourceLine" id="cb69-228" title="228"></a>
+<a class="sourceLine" id="cb69-229" title="229">        <span class="cf">case</span> <span class="ch">&#39;d&#39;</span>: <span class="co">// float-32</span></a>
+<a class="sourceLine" id="cb69-230" title="230">            size += <span class="dv">4</span>;</a>
+<a class="sourceLine" id="cb69-231" title="231">            d = va_arg(ap, <span class="dt">double</span>);</a>
+<a class="sourceLine" id="cb69-232" title="232">            fhold = pack754_32(d); <span class="co">// convert to IEEE 754</span></a>
+<a class="sourceLine" id="cb69-233" title="233">            packi32(buf, fhold);</a>
+<a class="sourceLine" id="cb69-234" title="234">            buf += <span class="dv">4</span>;</a>
+<a class="sourceLine" id="cb69-235" title="235">            <span class="cf">break</span>;</a>
+<a class="sourceLine" id="cb69-236" title="236"></a>
+<a class="sourceLine" id="cb69-237" title="237">        <span class="cf">case</span> <span class="ch">&#39;g&#39;</span>: <span class="co">// float-64</span></a>
+<a class="sourceLine" id="cb69-238" title="238">            size += <span class="dv">8</span>;</a>
+<a class="sourceLine" id="cb69-239" title="239">            g = va_arg(ap, <span class="dt">long</span> <span class="dt">double</span>);</a>
+<a class="sourceLine" id="cb69-240" title="240">            fhold = pack754_64(g); <span class="co">// convert to IEEE 754</span></a>
+<a class="sourceLine" id="cb69-241" title="241">            packi64(buf, fhold);</a>
+<a class="sourceLine" id="cb69-242" title="242">            buf += <span class="dv">8</span>;</a>
+<a class="sourceLine" id="cb69-243" title="243">            <span class="cf">break</span>;</a>
+<a class="sourceLine" id="cb69-244" title="244"></a>
+<a class="sourceLine" id="cb69-245" title="245">        <span class="cf">case</span> <span class="ch">&#39;s&#39;</span>: <span class="co">// string</span></a>
+<a class="sourceLine" id="cb69-246" title="246">            s = va_arg(ap, <span class="dt">char</span>*);</a>
+<a class="sourceLine" id="cb69-247" title="247">            len = strlen(s);</a>
+<a class="sourceLine" id="cb69-248" title="248">            size += len + <span class="dv">2</span>;</a>
+<a class="sourceLine" id="cb69-249" title="249">            packi16(buf, len);</a>
+<a class="sourceLine" id="cb69-250" title="250">            buf += <span class="dv">2</span>;</a>
+<a class="sourceLine" id="cb69-251" title="251">            memcpy(buf, s, len);</a>
+<a class="sourceLine" id="cb69-252" title="252">            buf += len;</a>
+<a class="sourceLine" id="cb69-253" title="253">            <span class="cf">break</span>;</a>
+<a class="sourceLine" id="cb69-254" title="254">        }</a>
+<a class="sourceLine" id="cb69-255" title="255">    }</a>
+<a class="sourceLine" id="cb69-256" title="256"></a>
+<a class="sourceLine" id="cb69-257" title="257">    va_end(ap);</a>
+<a class="sourceLine" id="cb69-258" title="258"></a>
+<a class="sourceLine" id="cb69-259" title="259">    <span class="cf">return</span> size;</a>
+<a class="sourceLine" id="cb69-260" title="260">}</a>
+<a class="sourceLine" id="cb69-261" title="261"></a>
+<a class="sourceLine" id="cb69-262" title="262"><span class="co">/*</span></a>
+<a class="sourceLine" id="cb69-263" title="263"><span class="co">** unpack() -- unpack data dictated by the format string into the buffer</span></a>
+<a class="sourceLine" id="cb69-264" title="264"><span class="co">**</span></a>
+<a class="sourceLine" id="cb69-265" title="265"><span class="co">**   bits |signed   unsigned   float   string</span></a>
+<a class="sourceLine" id="cb69-266" title="266"><span class="co">**   -----+----------------------------------</span></a>
+<a class="sourceLine" id="cb69-267" title="267"><span class="co">**      8 |   c        C</span></a>
+<a class="sourceLine" id="cb69-268" title="268"><span class="co">**     16 |   h        H         f</span></a>
+<a class="sourceLine" id="cb69-269" title="269"><span class="co">**     32 |   l        L         d</span></a>
+<a class="sourceLine" id="cb69-270" title="270"><span class="co">**     64 |   q        Q         g</span></a>
+<a class="sourceLine" id="cb69-271" title="271"><span class="co">**      - |                               s</span></a>
+<a class="sourceLine" id="cb69-272" title="272"><span class="co">**</span></a>
+<a class="sourceLine" id="cb69-273" title="273"><span class="co">**  (string is extracted based on its stored length, but &#39;s&#39; can be</span></a>
+<a class="sourceLine" id="cb69-274" title="274"><span class="co">**  prepended with a max length)</span></a>
+<a class="sourceLine" id="cb69-275" title="275"><span class="co">*/</span></a>
+<a class="sourceLine" id="cb69-276" title="276"><span class="dt">void</span> unpack(<span class="dt">unsigned</span> <span class="dt">char</span> *buf, <span class="dt">char</span> *format, ...)</a>
+<a class="sourceLine" id="cb69-277" title="277">{</a>
+<a class="sourceLine" id="cb69-278" title="278">    <span class="dt">va_list</span> ap;</a>
+<a class="sourceLine" id="cb69-279" title="279"></a>
+<a class="sourceLine" id="cb69-280" title="280">    <span class="dt">signed</span> <span class="dt">char</span> *c;              <span class="co">// 8-bit</span></a>
+<a class="sourceLine" id="cb69-281" title="281">    <span class="dt">unsigned</span> <span class="dt">char</span> *C;</a>
+<a class="sourceLine" id="cb69-282" title="282"></a>
+<a class="sourceLine" id="cb69-283" title="283">    <span class="dt">int</span> *h;                      <span class="co">// 16-bit</span></a>
+<a class="sourceLine" id="cb69-284" title="284">    <span class="dt">unsigned</span> <span class="dt">int</span> *H;</a>
+<a class="sourceLine" id="cb69-285" title="285"></a>
+<a class="sourceLine" id="cb69-286" title="286">    <span class="dt">long</span> <span class="dt">int</span> *l;                 <span class="co">// 32-bit</span></a>
+<a class="sourceLine" id="cb69-287" title="287">    <span class="dt">unsigned</span> <span class="dt">long</span> <span class="dt">int</span> *L;</a>
+<a class="sourceLine" id="cb69-288" title="288"></a>
+<a class="sourceLine" id="cb69-289" title="289">    <span class="dt">long</span> <span class="dt">long</span> <span class="dt">int</span> *q;            <span class="co">// 64-bit</span></a>
+<a class="sourceLine" id="cb69-290" title="290">    <span class="dt">unsigned</span> <span class="dt">long</span> <span class="dt">long</span> <span class="dt">int</span> *Q;</a>
+<a class="sourceLine" id="cb69-291" title="291"></a>
+<a class="sourceLine" id="cb69-292" title="292">    <span class="dt">float</span> *f;                    <span class="co">// floats</span></a>
+<a class="sourceLine" id="cb69-293" title="293">    <span class="dt">double</span> *d;</a>
+<a class="sourceLine" id="cb69-294" title="294">    <span class="dt">long</span> <span class="dt">double</span> *g;</a>
+<a class="sourceLine" id="cb69-295" title="295">    <span class="dt">unsigned</span> <span class="dt">long</span> <span class="dt">long</span> <span class="dt">int</span> fhold;</a>
+<a class="sourceLine" id="cb69-296" title="296"></a>
+<a class="sourceLine" id="cb69-297" title="297">    <span class="dt">char</span> *s;</a>
+<a class="sourceLine" id="cb69-298" title="298">    <span class="dt">unsigned</span> <span class="dt">int</span> len, maxstrlen=<span class="dv">0</span>, count;</a>
+<a class="sourceLine" id="cb69-299" title="299"></a>
+<a class="sourceLine" id="cb69-300" title="300">    va_start(ap, format);</a>
+<a class="sourceLine" id="cb69-301" title="301"></a>
+<a class="sourceLine" id="cb69-302" title="302">    <span class="cf">for</span>(; *format != &#39;\<span class="dv">0</span>&#39;; format++) {</a>
+<a class="sourceLine" id="cb69-303" title="303">        <span class="cf">switch</span>(*format) {</a>
+<a class="sourceLine" id="cb69-304" title="304">        <span class="cf">case</span> <span class="ch">&#39;c&#39;</span>: <span class="co">// 8-bit</span></a>
+<a class="sourceLine" id="cb69-305" title="305">            c = va_arg(ap, <span class="dt">signed</span> <span class="dt">char</span>*);</a>
+<a class="sourceLine" id="cb69-306" title="306">            <span class="cf">if</span> (*buf &lt;= <span class="bn">0x7f</span>) { *c = *buf;} <span class="co">// re-sign</span></a>
+<a class="sourceLine" id="cb69-307" title="307">            <span class="cf">else</span> { *c = <span class="dv">-1</span> - (<span class="dt">unsigned</span> <span class="dt">char</span>)(0xffu - *buf); }</a>
+<a class="sourceLine" id="cb69-308" title="308">            buf++;</a>
+<a class="sourceLine" id="cb69-309" title="309">            <span class="cf">break</span>;</a>
+<a class="sourceLine" id="cb69-310" title="310"></a>
+<a class="sourceLine" id="cb69-311" title="311">        <span class="cf">case</span> <span class="ch">&#39;C&#39;</span>: <span class="co">// 8-bit unsigned</span></a>
+<a class="sourceLine" id="cb69-312" title="312">            C = va_arg(ap, <span class="dt">unsigned</span> <span class="dt">char</span>*);</a>
+<a class="sourceLine" id="cb69-313" title="313">            *C = *buf++;</a>
+<a class="sourceLine" id="cb69-314" title="314">            <span class="cf">break</span>;</a>
+<a class="sourceLine" id="cb69-315" title="315"></a>
+<a class="sourceLine" id="cb69-316" title="316">        <span class="cf">case</span> <span class="ch">&#39;h&#39;</span>: <span class="co">// 16-bit</span></a>
+<a class="sourceLine" id="cb69-317" title="317">            h = va_arg(ap, <span class="dt">int</span>*);</a>
+<a class="sourceLine" id="cb69-318" title="318">            *h = unpacki16(buf);</a>
+<a class="sourceLine" id="cb69-319" title="319">            buf += <span class="dv">2</span>;</a>
+<a class="sourceLine" id="cb69-320" title="320">            <span class="cf">break</span>;</a>
+<a class="sourceLine" id="cb69-321" title="321"></a>
+<a class="sourceLine" id="cb69-322" title="322">        <span class="cf">case</span> <span class="ch">&#39;H&#39;</span>: <span class="co">// 16-bit unsigned</span></a>
+<a class="sourceLine" id="cb69-323" title="323">            H = va_arg(ap, <span class="dt">unsigned</span> <span class="dt">int</span>*);</a>
+<a class="sourceLine" id="cb69-324" title="324">            *H = unpacku16(buf);</a>
+<a class="sourceLine" id="cb69-325" title="325">            buf += <span class="dv">2</span>;</a>
+<a class="sourceLine" id="cb69-326" title="326">            <span class="cf">break</span>;</a>
+<a class="sourceLine" id="cb69-327" title="327"></a>
+<a class="sourceLine" id="cb69-328" title="328">        <span class="cf">case</span> <span class="ch">&#39;l&#39;</span>: <span class="co">// 32-bit</span></a>
+<a class="sourceLine" id="cb69-329" title="329">            l = va_arg(ap, <span class="dt">long</span> <span class="dt">int</span>*);</a>
+<a class="sourceLine" id="cb69-330" title="330">            *l = unpacki32(buf);</a>
+<a class="sourceLine" id="cb69-331" title="331">            buf += <span class="dv">4</span>;</a>
+<a class="sourceLine" id="cb69-332" title="332">            <span class="cf">break</span>;</a>
+<a class="sourceLine" id="cb69-333" title="333"></a>
+<a class="sourceLine" id="cb69-334" title="334">        <span class="cf">case</span> <span class="ch">&#39;L&#39;</span>: <span class="co">// 32-bit unsigned</span></a>
+<a class="sourceLine" id="cb69-335" title="335">            L = va_arg(ap, <span class="dt">unsigned</span> <span class="dt">long</span> <span class="dt">int</span>*);</a>
+<a class="sourceLine" id="cb69-336" title="336">            *L = unpacku32(buf);</a>
+<a class="sourceLine" id="cb69-337" title="337">            buf += <span class="dv">4</span>;</a>
+<a class="sourceLine" id="cb69-338" title="338">            <span class="cf">break</span>;</a>
+<a class="sourceLine" id="cb69-339" title="339"></a>
+<a class="sourceLine" id="cb69-340" title="340">        <span class="cf">case</span> <span class="ch">&#39;q&#39;</span>: <span class="co">// 64-bit</span></a>
+<a class="sourceLine" id="cb69-341" title="341">            q = va_arg(ap, <span class="dt">long</span> <span class="dt">long</span> <span class="dt">int</span>*);</a>
+<a class="sourceLine" id="cb69-342" title="342">            *q = unpacki64(buf);</a>
+<a class="sourceLine" id="cb69-343" title="343">            buf += <span class="dv">8</span>;</a>
+<a class="sourceLine" id="cb69-344" title="344">            <span class="cf">break</span>;</a>
+<a class="sourceLine" id="cb69-345" title="345"></a>
+<a class="sourceLine" id="cb69-346" title="346">        <span class="cf">case</span> <span class="ch">&#39;Q&#39;</span>: <span class="co">// 64-bit unsigned</span></a>
+<a class="sourceLine" id="cb69-347" title="347">            Q = va_arg(ap, <span class="dt">unsigned</span> <span class="dt">long</span> <span class="dt">long</span> <span class="dt">int</span>*);</a>
+<a class="sourceLine" id="cb69-348" title="348">            *Q = unpacku64(buf);</a>
+<a class="sourceLine" id="cb69-349" title="349">            buf += <span class="dv">8</span>;</a>
+<a class="sourceLine" id="cb69-350" title="350">            <span class="cf">break</span>;</a>
+<a class="sourceLine" id="cb69-351" title="351"></a>
+<a class="sourceLine" id="cb69-352" title="352">        <span class="cf">case</span> <span class="ch">&#39;f&#39;</span>: <span class="co">// float</span></a>
+<a class="sourceLine" id="cb69-353" title="353">            f = va_arg(ap, <span class="dt">float</span>*);</a>
+<a class="sourceLine" id="cb69-354" title="354">            fhold = unpacku16(buf);</a>
+<a class="sourceLine" id="cb69-355" title="355">            *f = unpack754_16(fhold);</a>
+<a class="sourceLine" id="cb69-356" title="356">            buf += <span class="dv">2</span>;</a>
+<a class="sourceLine" id="cb69-357" title="357">            <span class="cf">break</span>;</a>
+<a class="sourceLine" id="cb69-358" title="358"></a>
+<a class="sourceLine" id="cb69-359" title="359">        <span class="cf">case</span> <span class="ch">&#39;d&#39;</span>: <span class="co">// float-32</span></a>
+<a class="sourceLine" id="cb69-360" title="360">            d = va_arg(ap, <span class="dt">double</span>*);</a>
+<a class="sourceLine" id="cb69-361" title="361">            fhold = unpacku32(buf);</a>
+<a class="sourceLine" id="cb69-362" title="362">            *d = unpack754_32(fhold);</a>
+<a class="sourceLine" id="cb69-363" title="363">            buf += <span class="dv">4</span>;</a>
+<a class="sourceLine" id="cb69-364" title="364">            <span class="cf">break</span>;</a>
+<a class="sourceLine" id="cb69-365" title="365"></a>
+<a class="sourceLine" id="cb69-366" title="366">        <span class="cf">case</span> <span class="ch">&#39;g&#39;</span>: <span class="co">// float-64</span></a>
+<a class="sourceLine" id="cb69-367" title="367">            g = va_arg(ap, <span class="dt">long</span> <span class="dt">double</span>*);</a>
+<a class="sourceLine" id="cb69-368" title="368">            fhold = unpacku64(buf);</a>
+<a class="sourceLine" id="cb69-369" title="369">            *g = unpack754_64(fhold);</a>
+<a class="sourceLine" id="cb69-370" title="370">            buf += <span class="dv">8</span>;</a>
+<a class="sourceLine" id="cb69-371" title="371">            <span class="cf">break</span>;</a>
+<a class="sourceLine" id="cb69-372" title="372"></a>
+<a class="sourceLine" id="cb69-373" title="373">        <span class="cf">case</span> <span class="ch">&#39;s&#39;</span>: <span class="co">// string</span></a>
+<a class="sourceLine" id="cb69-374" title="374">            s = va_arg(ap, <span class="dt">char</span>*);</a>
+<a class="sourceLine" id="cb69-375" title="375">            len = unpacku16(buf);</a>
+<a class="sourceLine" id="cb69-376" title="376">            buf += <span class="dv">2</span>;</a>
+<a class="sourceLine" id="cb69-377" title="377">            <span class="cf">if</span> (maxstrlen &gt; <span class="dv">0</span> &amp;&amp; len &gt;= maxstrlen) count = maxstrlen - <span class="dv">1</span>;</a>
+<a class="sourceLine" id="cb69-378" title="378">            <span class="cf">else</span> count = len;</a>
+<a class="sourceLine" id="cb69-379" title="379">            memcpy(s, buf, count);</a>
+<a class="sourceLine" id="cb69-380" title="380">            s[count] = &#39;\<span class="dv">0</span>&#39;;</a>
+<a class="sourceLine" id="cb69-381" title="381">            buf += len;</a>
+<a class="sourceLine" id="cb69-382" title="382">            <span class="cf">break</span>;</a>
+<a class="sourceLine" id="cb69-383" title="383"></a>
+<a class="sourceLine" id="cb69-384" title="384">        <span class="cf">default</span>:</a>
+<a class="sourceLine" id="cb69-385" title="385">            <span class="cf">if</span> (isdigit(*format)) { <span class="co">// track max str len</span></a>
+<a class="sourceLine" id="cb69-386" title="386">                maxstrlen = maxstrlen * <span class="dv">10</span> + (*format-<span class="ch">&#39;0&#39;</span>);</a>
+<a class="sourceLine" id="cb69-387" title="387">            }</a>
+<a class="sourceLine" id="cb69-388" title="388">        }</a>
+<a class="sourceLine" id="cb69-389" title="389"></a>
+<a class="sourceLine" id="cb69-390" title="390">        <span class="cf">if</span> (!isdigit(*format)) maxstrlen = <span class="dv">0</span>;</a>
+<a class="sourceLine" id="cb69-391" title="391">    }</a>
+<a class="sourceLine" id="cb69-392" title="392"></a>
+<a class="sourceLine" id="cb69-393" title="393">    va_end(ap);</a>
+<a class="sourceLine" id="cb69-394" title="394">}</a></code></pre></div><p>And <a href="https://beej.us/guide/bgnet/examples/pack2.c">here is a demonstration program</a><a href="more-references.html#fn41" class="footnote-ref" id="fnref41"><sup>41</sup></a> of the above code that packs some data into <code>buf</code> and then unpacks it into variables. Note that when calling <code>unpack()</code> with a string argument (format specifier “<code>s</code>”), it’s wise to put a maximum length count in front of it to prevent a buffer overrun, e.g. “<code>96s</code>”. Be wary when unpacking data you get over the network—a malicious user might send badly-constructed packets in an effort to attack your system!</p><div class="sourceCode" id="cb70"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><a class="sourceLine" id="cb70-1" title="1"><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></a>
+<a class="sourceLine" id="cb70-2" title="2"></a>
+<a class="sourceLine" id="cb70-3" title="3"><span class="co">// various bits for floating point types--</span></a>
+<a class="sourceLine" id="cb70-4" title="4"><span class="co">// varies for different architectures</span></a>
+<a class="sourceLine" id="cb70-5" title="5"><span class="kw">typedef</span> <span class="dt">float</span> float32_t;</a>
+<a class="sourceLine" id="cb70-6" title="6"><span class="kw">typedef</span> <span class="dt">double</span> float64_t;</a>
+<a class="sourceLine" id="cb70-7" title="7"></a>
+<a class="sourceLine" id="cb70-8" title="8"><span class="dt">int</span> main(<span class="dt">void</span>)</a>
+<a class="sourceLine" id="cb70-9" title="9">{</a>
+<a class="sourceLine" id="cb70-10" title="10">    <span class="dt">unsigned</span> <span class="dt">char</span> buf[<span class="dv">1024</span>];</a>
+<a class="sourceLine" id="cb70-11" title="11">    <span class="dt">int8_t</span> magic;</a>
+<a class="sourceLine" id="cb70-12" title="12">    <span class="dt">int16_t</span> monkeycount;</a>
+<a class="sourceLine" id="cb70-13" title="13">    <span class="dt">int32_t</span> altitude;</a>
+<a class="sourceLine" id="cb70-14" title="14">    float32_t absurdityfactor;</a>
+<a class="sourceLine" id="cb70-15" title="15">    <span class="dt">char</span> *s = <span class="st">&quot;Great unmitigated Zot! You&#39;ve found the Runestaff!&quot;</span>;</a>
+<a class="sourceLine" id="cb70-16" title="16">    <span class="dt">char</span> s2[<span class="dv">96</span>];</a>
+<a class="sourceLine" id="cb70-17" title="17">    <span class="dt">int16_t</span> packetsize, ps2;</a>
+<a class="sourceLine" id="cb70-18" title="18"></a>
+<a class="sourceLine" id="cb70-19" title="19">    packetsize = pack(buf, <span class="st">&quot;chhlsf&quot;</span>, (<span class="dt">int8_t</span>)<span class="ch">&#39;B&#39;</span>, (<span class="dt">int16_t</span>)<span class="dv">0</span>, (<span class="dt">int16_t</span>)<span class="dv">37</span>,</a>
+<a class="sourceLine" id="cb70-20" title="20">            (<span class="dt">int32_t</span>)-<span class="dv">5</span>, s, (float32_t)-<span class="fl">3490.6677</span>);</a>
+<a class="sourceLine" id="cb70-21" title="21">    packi16(buf+<span class="dv">1</span>, packetsize); <span class="co">// store packet size in packet for kicks</span></a>
+<a class="sourceLine" id="cb70-22" title="22"></a>
+<a class="sourceLine" id="cb70-23" title="23">    printf(<span class="st">&quot;packet is %&quot;</span> PRId32 <span class="st">&quot; bytes</span><span class="sc">\n</span><span class="st">&quot;</span>, packetsize);</a>
+<a class="sourceLine" id="cb70-24" title="24"></a>
+<a class="sourceLine" id="cb70-25" title="25">    unpack(buf, <span class="st">&quot;chhl96sf&quot;</span>, &amp;magic, &amp;ps2, &amp;monkeycount, &amp;altitude, s2,</a>
+<a class="sourceLine" id="cb70-26" title="26">        &amp;absurdityfactor);</a>
+<a class="sourceLine" id="cb70-27" title="27"></a>
+<a class="sourceLine" id="cb70-28" title="28">    printf(<span class="st">&quot;&#39;%c&#39; %&quot;</span> PRId32<span class="st">&quot; %&quot;</span> PRId16 <span class="st">&quot; %&quot;</span> PRId32</a>
+<a class="sourceLine" id="cb70-29" title="29">            <span class="st">&quot; </span><span class="sc">\&quot;</span><span class="st">%s</span><span class="sc">\&quot;</span><span class="st"> %f</span><span class="sc">\n</span><span class="st">&quot;</span>, magic, ps2, monkeycount,</a>
+<a class="sourceLine" id="cb70-30" title="30">            altitude, s2, absurdityfactor);</a>
+<a class="sourceLine" id="cb70-31" title="31"></a>
+<a class="sourceLine" id="cb70-32" title="32">    <span class="cf">return</span> <span class="dv">0</span>;</a>
+<a class="sourceLine" id="cb70-33" title="33">}</a></code></pre></div><p>Whether you roll your own code or use someone else’s, it’s a good idea to have a general set of data packing routines for the sake of keeping bugs in check, rather than packing each bit by hand each time.</p><p>When packing the data, what’s a good format to use? Excellent question. Fortunately,  <a href="https://tools.ietf.org/html/rfc4506">RFC 4506</a><a href="more-references.html#fn42" class="footnote-ref" id="fnref42"><sup>42</sup></a>, the External Data Representation Standard, already defines binary formats for a bunch of different types, like floating point types, integer types, arrays, raw data, etc. I suggest conforming to that if you’re going to roll the data yourself. But you’re not obligated to. The Packet Police are not right outside your door. At least, I don’t <em>think</em> they are.</p><p>In any case, encoding the data somehow or another before you send it is the right way of doing things!</p><p></p><h2 id="sonofdataencap"><span class="header-section-number">7.6</span> Son of Data Encapsulation</h2><p>What does it really mean to encapsulate data, anyway? In the simplest case, it means you’ll stick a header on there with either some identifying information or a packet length, or both.</p><p>What should your header look like? Well, it’s just some binary data that represents whatever you feel is necessary to complete your project.</p><p>Wow. That’s vague.</p><p>Okay. For instance, let’s say you have a multi-user chat program that uses <code>SOCK_STREAM</code>s. When a user types (“says”) something, two pieces of information need to be transmitted to the server: what was said and who said it.</p><p>So far so good? “What’s the problem?” you’re asking.</p><p>The problem is that the messages can be of varying lengths. One person named “tom” might say, “Hi”, and another person named “Benjamin” might say, “Hey guys what is up?”</p><p>So you <code>send()</code> all this stuff to the clients as it comes in. Your outgoing data stream looks like this:</p><pre><code>t o m H i B e n j a m i n H e y g u y s w h a t i s u p ?</code></pre><p>And so on. How does the client know when one message starts and another stops? You could, if you wanted, make all messages the same length and just call the  <code>sendall()</code> we implemented, <a href="약간-더-고급스러운-기술.html#sendall">above</a>. But that wastes bandwidth! We don’t want to <code>send()</code> 1024 bytes just so “tom” can say “Hi”.</p><p>So we <em>encapsulate</em> the data in a tiny header and packet structure. Both the client and server know how to pack and unpack (sometimes referred to as “marshal” and “unmarshal”) this data. Don’t look now, but we’re starting to define a <em>protocol</em> that describes how a client and server communicate!</p><p>In this case, let’s assume the user name is a fixed length of 8 characters, padded with <code>'\0'</code>. And then let’s assume the data is variable length, up to a maximum of 128 characters. Let’s have a look a sample packet structure that we might use in this situation:</p><ol type="1"><li><p><code>len</code> (1 byte, unsigned)—The total length of the packet, counting the 8-byte user name and chat data.</p></li><li><p><code>name</code> (8 bytes)—The user’s name, NUL-padded if necessary.</p></li><li><p><code>chatdata</code> (<em>n</em>-bytes)—The data itself, no more than 128 bytes. The length of the packet should be calculated as the length of this data plus 8 (the length of the name field, above).</p></li></ol><p>Why did I choose the 8-byte and 128-byte limits for the fields? I pulled them out of the air, assuming they’d be long enough. Maybe, though, 8 bytes is too restrictive for your needs, and you can have a 30-byte name field, or whatever. The choice is up to you.</p><p>Using the above packet definition, the first packet would consist of the following information (in hex and ASCII):</p><pre><code>   0A     74 6F 6D 00 00 00 00 00      48 69
+(length)  T  o  m    (padding)         H  i</code></pre><p>And the second is similar:</p><pre><code>   18     42 65 6E 6A 61 6D 69 6E      48 65 79 20 67 75 79 73 20 77 ...
+(length)  B  e  n  j  a  m  i  n       H  e  y     g  u  y  s     w  ...</code></pre><p>(The length is stored in Network Byte Order, of course. In this case, it’s only one byte so it doesn’t matter, but generally speaking you’ll want all your binary integers to be stored in Network Byte Order in your packets.)</p><p>When you’re sending this data, you should be safe and use a command similar to <a href="약간-더-고급스러운-기술.html#sendall"><code>sendall()</code></a>, above, so you know all the data is sent, even if it takes multiple calls to <code>send()</code> to get it all out.</p><p>Likewise, when you’re receiving this data, you need to do a bit of extra work. To be safe, you should assume that you might receive a partial packet (like maybe we receive “<code>18 42 65 6E 6A</code>” from Benjamin, above, but that’s all we get in this call to <code>recv()</code>). We need to call <code>recv()</code> over and over again until the packet is completely received.</p><p>But how? Well, we know the number of bytes we need to receive in total for the packet to be complete, since that number is tacked on the front of the packet. We also know the maximum packet size is 1+8+128, or 137 bytes (because that’s how we defined the packet).</p><p>There are actually a couple things you can do here. Since you know every packet starts off with a length, you can call <code>recv()</code> just to get the packet length. Then once you have that, you can call it again specifying exactly the remaining length of the packet (possibly repeatedly to get all the data) until you have the complete packet. The advantage of this method is that you only need a buffer large enough for one packet, while the disadvantage is that you need to call <code>recv()</code> at least twice to get all the data.</p><p>Another option is just to call <code>recv()</code> and say the amount you’re willing to receive is the maximum number of bytes in a packet. Then whatever you get, stick it onto the back of a buffer, and finally check to see if the packet is complete. Of course, you might get some of the next packet, so you’ll need to have room for that.</p><p>What you can do is declare an array big enough for two packets. This is your work array where you will reconstruct packets as they arrive.</p><p>Every time you <code>recv()</code> data, you’ll append it into the work buffer and check to see if the packet is complete. That is, the number of bytes in the buffer is greater than or equal to the length specified in the header (+1, because the length in the header doesn’t include the byte for the length itself). If the number of bytes in the buffer is less than 1, the packet is not complete, obviously. You have to make a special case for this, though, since the first byte is garbage and you can’t rely on it for the correct packet length.</p><p>Once the packet is complete, you can do with it what you will. Use it, and remove it from your work buffer.</p><p>Whew! Are you juggling that in your head yet? Well, here’s the second of the one-two punch: you might have read past the end of one packet and onto the next in a single <code>recv()</code> call. That is, you have a work buffer with one complete packet, and an incomplete part of the next packet! Bloody heck. (But this is why you made your work buffer large enough to hold <em>two</em> packets—in case this happened!)</p><p>Since you know the length of the first packet from the header, and you’ve been keeping track of the number of bytes in the work buffer, you can subtract and calculate how many of the bytes in the work buffer belong to the second (incomplete) packet. When you’ve handled the first one, you can clear it out of the work buffer and move the partial second packet down the to front of the buffer so it’s all ready to go for the next <code>recv()</code>.</p><p>(Some of you readers will note that actually moving the partial second packet to the beginning of the work buffer takes time, and the program can be coded to not require this by using a circular buffer. Unfortunately for the rest of you, a discussion on circular buffers is beyond the scope of this article. If you’re still curious, grab a data structures book and go from there.)</p><p>I never said it was easy. Ok, I did say it was easy. And it is; you just need practice and pretty soon it’ll come to you naturally. By  Excalibur I swear it!</p><h2 id="broadcast-packetshello-world"><span class="header-section-number">7.7</span> Broadcast Packets—Hello, World!</h2><p>So far, this guide has talked about sending data from one host to one other host. But it is possible, I insist, that you can, with the proper authority, send data to multiple hosts <em>at the same time</em>!</p><p>With  UDP (only UDP, not TCP) and standard IPv4, this is done through a mechanism called  <em>broadcasting</em>. With IPv6, broadcasting isn’t supported, and you have to resort to the often superior technique of <em>multicasting</em>, which, sadly I won’t be discussing at this time. But enough of the starry-eyed future—we’re stuck in the 32-bit present.</p><p>But wait! You can’t just run off and start broadcasting willy-nilly; You have to  set the socket option  <code>SO_BROADCAST</code> before you can send a broadcast packet out on the network. It’s like a one of those little plastic covers they put over the missile launch switch! That’s just how much power you hold in your hands!</p><p>But seriously, though, there is a danger to using broadcast packets, and that is: every system that receives a broadcast packet must undo all the onion-skin layers of data encapsulation until it finds out what port the data is destined to. And then it hands the data over or discards it. In either case, it’s a lot of work for each machine that receives the broadcast packet, and since it is all of them on the local network, that could be a lot of machines doing a lot of unnecessary work. When the game Doom first came out, this was a complaint about its network code.</p><p>Now, there is more than one way to skin a cat… wait a minute. Is there really more than one way to skin a cat? What kind of expression is that? Uh, and likewise, there is more than one way to send a broadcast packet. So, to get to the meat and potatoes of the whole thing: how do you specify the destination address for a broadcast message? There are two common ways:</p><ol type="1"><li><p>Send the data to a specific subnet’s broadcast address. This is the subnet’s network number with all one-bits set for the host portion of the address. For instance, at home my network is <code>192.168.1.0</code>, my netmask is <code>255.255.255.0</code>, so the last byte of the address is my host number (because the first three bytes, according to the netmask, are the network number). So my broadcast address is <code>192.168.1.255</code>. Under Unix, the <code>ifconfig</code> command will actually give you all this data. (If you’re curious, the bitwise logic to get your broadcast address is <code>network_number</code> OR (NOT <code>netmask</code>).) You can send this type of broadcast packet to remote networks as well as your local network, but you run the risk of the packet being dropped by the destination’s router. (If they didn’t drop it, then some random smurf could start flooding their LAN with broadcast traffic.)</p></li><li><p>Send the data to the “global” broadcast address. This is  <code>255.255.255.255</code>, aka  <code>INADDR_BROADCAST</code>. Many machines will automatically bitwise AND this with your network number to convert it to a network broadcast address, but some won’t. It varies. Routers do not forward this type of broadcast packet off your local network, ironically enough.</p></li></ol><p>So what happens if you try to send data on the broadcast address without first setting the <code>SO_BROADCAST</code> socket option? Well, let’s fire up good old <a href="클라인트-서버-배경지식.html#datagram"><code>talker</code> and <code>listener</code></a> and see what happens.</p><pre><code>$ talker 192.168.1.2 foo
+sent 3 bytes to 192.168.1.2
+$ talker 192.168.1.255 foo
+sendto: Permission denied
+$ talker 255.255.255.255 foo
+sendto: Permission denied</code></pre><p>Yes, it’s not happy at all…because we didn’t set the <code>SO_BROADCAST</code> socket option. Do that, and now you can <code>sendto()</code> anywhere you want!</p><p>In fact, that’s the <em>only difference</em> between a UDP application that can broadcast and one that can’t. So let’s take the old <code>talker</code> application and add one section that sets the <code>SO_BROADCAST</code> socket option. We’ll call this program <a href="https://beej.us/guide/bgnet/examples/broadcaster.c"><code>broadcaster.c</code></a><a href="more-references.html#fn43" class="footnote-ref" id="fnref43"><sup>43</sup></a>:</p><div class="sourceCode" id="cb75"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><a class="sourceLine" id="cb75-1" title="1"><span class="co">/*</span></a>
+<a class="sourceLine" id="cb75-2" title="2"><span class="co">** broadcaster.c -- a datagram &quot;client&quot; like talker.c, except</span></a>
+<a class="sourceLine" id="cb75-3" title="3"><span class="co">**                  this one can broadcast</span></a>
+<a class="sourceLine" id="cb75-4" title="4"><span class="co">*/</span></a>
+<a class="sourceLine" id="cb75-5" title="5"></a>
+<a class="sourceLine" id="cb75-6" title="6"><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></a>
+<a class="sourceLine" id="cb75-7" title="7"><span class="pp">#include </span><span class="im">&lt;stdlib.h&gt;</span></a>
+<a class="sourceLine" id="cb75-8" title="8"><span class="pp">#include </span><span class="im">&lt;unistd.h&gt;</span></a>
+<a class="sourceLine" id="cb75-9" title="9"><span class="pp">#include </span><span class="im">&lt;errno.h&gt;</span></a>
+<a class="sourceLine" id="cb75-10" title="10"><span class="pp">#include </span><span class="im">&lt;string.h&gt;</span></a>
+<a class="sourceLine" id="cb75-11" title="11"><span class="pp">#include </span><span class="im">&lt;sys/types.h&gt;</span></a>
+<a class="sourceLine" id="cb75-12" title="12"><span class="pp">#include </span><span class="im">&lt;sys/socket.h&gt;</span></a>
+<a class="sourceLine" id="cb75-13" title="13"><span class="pp">#include </span><span class="im">&lt;netinet/in.h&gt;</span></a>
+<a class="sourceLine" id="cb75-14" title="14"><span class="pp">#include </span><span class="im">&lt;arpa/inet.h&gt;</span></a>
+<a class="sourceLine" id="cb75-15" title="15"><span class="pp">#include </span><span class="im">&lt;netdb.h&gt;</span></a>
+<a class="sourceLine" id="cb75-16" title="16"></a>
+<a class="sourceLine" id="cb75-17" title="17"><span class="pp">#define SERVERPORT 4950 </span><span class="co">// the port users will be connecting to</span></a>
+<a class="sourceLine" id="cb75-18" title="18"></a>
+<a class="sourceLine" id="cb75-19" title="19"><span class="dt">int</span> main(<span class="dt">int</span> argc, <span class="dt">char</span> *argv[])</a>
+<a class="sourceLine" id="cb75-20" title="20">{</a>
+<a class="sourceLine" id="cb75-21" title="21">    <span class="dt">int</span> sockfd;</a>
+<a class="sourceLine" id="cb75-22" title="22">    <span class="kw">struct</span> sockaddr_in their_addr; <span class="co">// connector&#39;s address information</span></a>
+<a class="sourceLine" id="cb75-23" title="23">    <span class="kw">struct</span> hostent *he;</a>
+<a class="sourceLine" id="cb75-24" title="24">    <span class="dt">int</span> numbytes;</a>
+<a class="sourceLine" id="cb75-25" title="25">    <span class="dt">int</span> broadcast = <span class="dv">1</span>;</a>
+<a class="sourceLine" id="cb75-26" title="26">    <span class="co">//char broadcast = &#39;1&#39;; // if that doesn&#39;t work, try this</span></a>
+<a class="sourceLine" id="cb75-27" title="27"></a>
+<a class="sourceLine" id="cb75-28" title="28">    <span class="cf">if</span> (argc != <span class="dv">3</span>) {</a>
+<a class="sourceLine" id="cb75-29" title="29">        fprintf(stderr,<span class="st">&quot;usage: broadcaster hostname message</span><span class="sc">\n</span><span class="st">&quot;</span>);</a>
+<a class="sourceLine" id="cb75-30" title="30">        exit(<span class="dv">1</span>);</a>
+<a class="sourceLine" id="cb75-31" title="31">    }</a>
+<a class="sourceLine" id="cb75-32" title="32"></a>
+<a class="sourceLine" id="cb75-33" title="33">    <span class="cf">if</span> ((he=gethostbyname(argv[<span class="dv">1</span>])) == NULL) {  <span class="co">// get the host info</span></a>
+<a class="sourceLine" id="cb75-34" title="34">        perror(<span class="st">&quot;gethostbyname&quot;</span>);</a>
+<a class="sourceLine" id="cb75-35" title="35">        exit(<span class="dv">1</span>);</a>
+<a class="sourceLine" id="cb75-36" title="36">    }</a>
+<a class="sourceLine" id="cb75-37" title="37"></a>
+<a class="sourceLine" id="cb75-38" title="38">    <span class="cf">if</span> ((sockfd = socket(AF_INET, SOCK_DGRAM, <span class="dv">0</span>)) == <span class="dv">-1</span>) {</a>
+<a class="sourceLine" id="cb75-39" title="39">        perror(<span class="st">&quot;socket&quot;</span>);</a>
+<a class="sourceLine" id="cb75-40" title="40">        exit(<span class="dv">1</span>);</a>
+<a class="sourceLine" id="cb75-41" title="41">    }</a>
+<a class="sourceLine" id="cb75-42" title="42"></a>
+<a class="sourceLine" id="cb75-43" title="43">    <span class="co">// this call is what allows broadcast packets to be sent:</span></a>
+<a class="sourceLine" id="cb75-44" title="44">    <span class="cf">if</span> (setsockopt(sockfd, SOL_SOCKET, SO_BROADCAST, &amp;broadcast,</a>
+<a class="sourceLine" id="cb75-45" title="45">        <span class="kw">sizeof</span> broadcast) == <span class="dv">-1</span>) {</a>
+<a class="sourceLine" id="cb75-46" title="46">        perror(<span class="st">&quot;setsockopt (SO_BROADCAST)&quot;</span>);</a>
+<a class="sourceLine" id="cb75-47" title="47">        exit(<span class="dv">1</span>);</a>
+<a class="sourceLine" id="cb75-48" title="48">    }</a>
+<a class="sourceLine" id="cb75-49" title="49"></a>
+<a class="sourceLine" id="cb75-50" title="50">    their_addr.sin_family = AF_INET;     <span class="co">// host byte order</span></a>
+<a class="sourceLine" id="cb75-51" title="51">    their_addr.sin_port = htons(SERVERPORT); <span class="co">// short, network byte order</span></a>
+<a class="sourceLine" id="cb75-52" title="52">    their_addr.sin_addr = *((<span class="kw">struct</span> in_addr *)he-&gt;h_addr);</a>
+<a class="sourceLine" id="cb75-53" title="53">    memset(their_addr.sin_zero, &#39;\<span class="dv">0</span>&#39;, <span class="kw">sizeof</span> their_addr.sin_zero);</a>
+<a class="sourceLine" id="cb75-54" title="54"></a>
+<a class="sourceLine" id="cb75-55" title="55">    <span class="cf">if</span> ((numbytes=sendto(sockfd, argv[<span class="dv">2</span>], strlen(argv[<span class="dv">2</span>]), <span class="dv">0</span>,</a>
+<a class="sourceLine" id="cb75-56" title="56">             (<span class="kw">struct</span> sockaddr *)&amp;their_addr, <span class="kw">sizeof</span> their_addr)) == <span class="dv">-1</span>) {</a>
+<a class="sourceLine" id="cb75-57" title="57">        perror(<span class="st">&quot;sendto&quot;</span>);</a>
+<a class="sourceLine" id="cb75-58" title="58">        exit(<span class="dv">1</span>);</a>
+<a class="sourceLine" id="cb75-59" title="59">    }</a>
+<a class="sourceLine" id="cb75-60" title="60"></a>
+<a class="sourceLine" id="cb75-61" title="61">    printf(<span class="st">&quot;sent %d bytes to %s</span><span class="sc">\n</span><span class="st">&quot;</span>, numbytes,</a>
+<a class="sourceLine" id="cb75-62" title="62">        inet_ntoa(their_addr.sin_addr));</a>
+<a class="sourceLine" id="cb75-63" title="63"></a>
+<a class="sourceLine" id="cb75-64" title="64">    close(sockfd);</a>
+<a class="sourceLine" id="cb75-65" title="65"></a>
+<a class="sourceLine" id="cb75-66" title="66">    <span class="cf">return</span> <span class="dv">0</span>;</a>
+<a class="sourceLine" id="cb75-67" title="67">}</a></code></pre></div><p>What’s different between this and a “normal” UDP client/server situation? Nothing! (With the exception of the client being allowed to send broadcast packets in this case.) As such, go ahead and run the old UDP <a href="클라인트-서버-배경지식.html#datagram"><code>listener</code></a> program in one window, and <code>broadcaster</code> in another. You should be now be able to do all those sends that failed, above.</p><pre><code>$ broadcaster 192.168.1.2 foo
+sent 3 bytes to 192.168.1.2
+$ broadcaster 192.168.1.255 foo
+sent 3 bytes to 192.168.1.255
+$ broadcaster 255.255.255.255 foo
+sent 3 bytes to 255.255.255.255</code></pre><p>And you should see <code>listener</code> responding that it got the packets. (If <code>listener</code> doesn’t respond, it could be because it’s bound to an IPv6 address. Try changing the <code>AF_INET6</code> in <code>listener.c</code> to <code>AF_INET</code> to force IPv4.)</p><p>Well, that’s kind of exciting. But now fire up <code>listener</code> on another machine next to you on the same network so that you have two copies going, one on each machine, and run <code>broadcaster</code> again with your broadcast address… Hey! Both <code>listener</code>s get the packet even though you only called <code>sendto()</code> once! Cool!</p><p>If the <code>listener</code> gets data you send directly to it, but not data on the broadcast address, it could be that you have a  firewall on your local machine that is blocking the packets. (Yes,  Pat and  Bapper, thank you for realizing before I did that this is why my sample code wasn’t working. I told you I’d mention you in the guide, and here you are. So <em>nyah</em>.)</p><p>Again, be careful with broadcast packets. Since every machine on the LAN will be forced to deal with the packet whether it <code>recvfrom()</code>s it or not, it can present quite a load to the entire computing network. They are definitely to be used sparingly and appropriately.</p><hr><div style="text-align:center"><span><a href="클라인트-서버-배경지식.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="common-questions.html">Next</a></span></div></body>
+</html>
