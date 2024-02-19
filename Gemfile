@@ -17,7 +17,7 @@ gem "webrick", "~> 1.8.0"
 # If you have any plugins, put them here!
 group :jekyll_plugins do
   gem "jekyll-feed", "~> 0.17.0"
-  gem "jekyll-sitemap"
+  # gem "jekyll-sitemap"
 end
 
 # Windows and JRuby does not include zoneinfo files, so bundle the tzinfo-data gem
@@ -31,6 +31,7 @@ end
 gem "wdm", "~> 0.1.1", :platforms => [:mingw, :x64_mingw, :mswin]
 
 gem "github-pages", "~> 231", group: :jekyll_plugins
+gem "jekyll-sitemap", group: :jekyll_plugins
 
 # some dependencies which are required by some other dependencies which are excluded from standard library
 gem "csv"
