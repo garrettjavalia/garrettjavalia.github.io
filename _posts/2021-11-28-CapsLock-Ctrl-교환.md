@@ -4,6 +4,7 @@ title: "CapsLock과 Left Ctrl키의 교환 설정(윈도우)"
 date: 2021-11-28 04:01:00 +0900
 categories: windows
 tags: Windows CapsLock Ctrl
+# parent: "글"
 ---
 
 # 프로그래머와 Ctrl키
@@ -20,7 +21,7 @@ tags: Windows CapsLock Ctrl
 
 # 윈도우라면 레지스트리 수정이 제일 좋다.
 
-그래서 결국 레지스트리의 관련 설정을 수정하는 정보글들을 인터넷에서 찾아보았고, [이 레지스트리 파일]({{ site.baseurl }}{% link static/keyswapper/InstallCtrlCapsLockSwapper.reg %})을 만들었다. 이 파일은 CapsLock에 Ctrl을 배정하는 것에 그치지 않고, 원래의 Ctrl키 위치에는 CapsLock을 배정하여 CapsLock도 상황에 따라서는 쓸 수 있다. 레지스트리 파일을 실행하는 것이 불안하다면, 직접 열어서 내용을 확인해봐도 좋다.
+그래서 결국 레지스트리의 관련 설정을 수정하는 정보글들을 인터넷에서 찾아보았고, [이 레지스트리 파일]({{ site.baseurl }}/assets/keyswapper/InstallCtrlCapsLockSwapper.reg)을 만들었다. 이 파일은 CapsLock에 Ctrl을 배정하는 것에 그치지 않고, 원래의 Ctrl키 위치에는 CapsLock을 배정하여 CapsLock도 상황에 따라서는 쓸 수 있다. 레지스트리 파일을 실행하는 것이 불안하다면, 직접 열어서 내용을 확인해봐도 좋다.
 
 # 레지스트리 파일의 내용
 
@@ -36,7 +37,7 @@ Windows Registry Editor Version 5.00 //이 파일이 윈도우 레지스트리 �
 
 위의 파일 내용 중 마지막 줄은 Scancode Map이라는 항목이름에 16진수 이진값을 추가하며, 8바이트의 0으로 기록 시작을 나타내고, 그 후 03 00 00 00은 뒤에 3\*4바이트의 정보가 더 온다는 것을 의미하며, 1d, 00, 3a, 00은 뒤에 제시된 키(1d는 LeftCtrl, 3a는 CapsLock)를 앞에 제시되는 키로 바꾼다는 뜻이다. 뒤에 이어지는 것은 마찬가지로 LeftCtrl을 CapsLock으로 인식한다는 의미이며, 정보기록이 끝났다는 의미로 마지막에 00, 00, 00, 00이 붙는다.
 
-위 내용을 삭제하기 위해서는 [이 파일]({{ site.baseurl }}{% link static/keyswapper/UninstallCtrlCapsLockSwapper.reg %})을 실행하면 된다. 내용을 확인하고 싶다면 편집기로 열면 되며, 내용은 훨씬 간단하다.
+위 내용을 삭제하기 위해서는 [이 파일]({{ site.baseurl }}/assets/keyswapper/UninstallCtrlCapsLockSwapper.reg)을 실행하면 된다. 내용을 확인하고 싶다면 편집기로 열면 되며, 내용은 훨씬 간단하다.
 
 # 2023-09-26 추가
 
@@ -48,10 +49,10 @@ Windows Registry Editor Version 5.00 //이 파일이 윈도우 레지스트리 �
 
 # 첨부파일 목록
 
-첨부파일 1. [InstallCtrlCapsLockSwapper]({{ site.baseurl }}{% link static/keyswapper/InstallCtrlCapsLockSwapper.reg %})
+첨부파일 1. [InstallCtrlCapsLockSwapper]({{ site.baseurl }}/assets/keyswapper/InstallCtrlCapsLockSwapper.reg)
 
-첨부파일 2. [UninstallCtrlCapsLockSwapper]({{ site.baseurl }}{% link static/keyswapper/UninstallCtrlCapsLockSwapper.reg %})
+첨부파일 2. [UninstallCtrlCapsLockSwapper]({{ site.baseurl }}/assets/keyswapper/UninstallCtrlCapsLockSwapper.reg)
 
-첨부파일 3. [CtrlSwapper]({{ site.baseurl }}{% link static/keyswapper/CtrlSwapper.reg %})
+첨부파일 3. [CtrlSwapper]({{ site.baseurl }}/assets/keyswapper/CtrlSwapper.reg)
 
-첨부파일 4. [Keyboard Scan Code Specification]({{ site.baseurl }}{% link static/keyswapper/KeyboardSpecification.doc %})
+첨부파일 4. [Keyboard Scan Code Specification]({{ site.baseurl }}/assets/keyswapper/KeyboardSpecification.doc)

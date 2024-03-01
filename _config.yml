@@ -24,7 +24,7 @@ lsi: false
 excerpt_separator: "\n\n"
 incremental: false
 
-title: Javalia의 개발 기록
+title: Javalia의 개발기록
 email: javalia.javalia@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
   개발한 내용을 기록하는 간소한 노트.
@@ -34,12 +34,39 @@ url: "https://garrettjavalia.github.io" # the base hostname & protocol for your 
 github_username:  garrettjavalia
 
 # Build settings
-theme: minima
+theme: just-the-docs
 plugins:
   - jekyll-feed
   - jekyll-sitemap
 
-google_analytics: G-G7P8PXM5K6
+ga_tracking: G-G7P8PXM5K6
+
+# aux_links:
+#   Template Repository: https://github.com/just-the-docs/just-the-docs-template
+
+defaults:
+  - scope:
+      path: 'assets'
+      type: pages
+    values:
+      title: overried
+      published: false
+
+exclude: [ assets/ ]
+keep_files: [ assets/ ]
+
+just_the_docs:
+  # Define which collections are used in just-the-docs
+  collections:
+    # Reference the "tests" collection
+    posts:
+      # Give the collection a name
+      name: 글
+
+collections:
+  posts:
+    permalink: "/:collection/:path/"
+    output: true
 
 # Exclude from processing.
 # The following items will not be processed, by default.
