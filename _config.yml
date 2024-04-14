@@ -35,6 +35,7 @@ github_username:  garrettjavalia
 
 # Build settings
 theme: just-the-docs
+
 plugins:
   - jekyll-feed
   - jekyll-sitemap
@@ -51,6 +52,8 @@ defaults:
     values:
       title: overried
       published: false
+
+lang: ko-KR
 
 exclude:
   - assets/ 
