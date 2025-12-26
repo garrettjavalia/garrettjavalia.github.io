@@ -8,7 +8,7 @@
 # For technical reasons, this file is *NOT* reloaded automatically when you use
 # 'bundle exec jekyll serve'. If you change this file, please restart the server process.
 #
-# If you need help with YAML syntax, here are some quick references for you: 
+# If you need help with YAML syntax, here are some quick references for you:
 # https://learn-the-web.algonquindesign.ca/topics/markdown-yaml-cheat-sheet/#yaml
 # https://learnxinyminutes.com/docs/yaml/
 #
@@ -31,7 +31,7 @@ description: >- # this means to ignore newlines until "baseurl:"
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://garrettjavalia.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 #twitter_username: jekyllrb
-github_username:  garrettjavalia
+github_username: garrettjavalia
 
 # Build settings
 theme: just-the-docs
@@ -47,7 +47,7 @@ ga_tracking: G-G7P8PXM5K6
 
 defaults:
   - scope:
-      path: 'assets'
+      path: "assets"
       type: pages
     values:
       title: overried
@@ -56,7 +56,7 @@ defaults:
 lang: ko-KR
 
 exclude:
-  - assets/ 
+  - assets/
   - .sass-cache/
   - .jekyll-cache/
   - gemfiles/
@@ -80,7 +80,6 @@ collections:
   posts:
     permalink: "/:collection/:path/"
     output: true
-
 # Exclude from processing.
 # The following items will not be processed, by default.
 # Any item listed under the `exclude:` key here will be automatically added to

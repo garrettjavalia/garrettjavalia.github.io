@@ -17,7 +17,7 @@ published: true
 아래는 일반적으로 쓰이는 리액트 다이얼로그 열기 코드이다.
 
 ```tsx
-// 아래 코드는 copilt을 이용해서 생성했다. 개념을 보여주는 코드이므로 특별히 실행 검증을 하지는 않았다.
+// 아래 코드는 Copilot을 이용해서 생성했다. 개념을 보여주는 코드이므로 특별히 실행 검증을 하지는 않았다.
 import React, { useState } from "react";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -191,7 +191,7 @@ export function useDialogView() {
   const [dialogs, setDialogs] = useState<React.ReactNode[]>([]);
   const openDialog(dialogFunc: () => React.ReactNode, args:any[]) => {
     setDialogs(oldDialogs => {
-      return [...oldDialogs, createElement(dialogFunc, any)]
+      return [...oldDialogs, createElement(dialogFunc, args)]
     })
   }
   return [dialogs, openDialog] as const;
