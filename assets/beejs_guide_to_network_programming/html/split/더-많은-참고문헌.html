@@ -5,77 +5,727 @@
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>Beej의 네트워크 프로그래밍 안내서</title>
-  <style type="text/css">
+  <style>
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <!-- Generated by the mklightdark script -->
+  <!-- Modify that script to change syntax highlighting -->
+    <style>
+     @media (prefers-color-scheme: light) {
+      html {
+        color: #1a1a1a;
+        background-color: #fdfdfd;
+      }
+      body {
+        margin: 0 auto;
+        max-width: 36em;
+        padding-left: 50px;
+        padding-right: 50px;
+        padding-top: 50px;
+        padding-bottom: 50px;
+        hyphens: auto;
+        overflow-wrap: break-word;
+        text-rendering: optimizeLegibility;
+        font-kerning: normal;
+      }
+      @media (max-width: 600px) {
+        body {
+          font-size: 0.9em;
+          padding: 12px;
+        }
+        h1 {
+          font-size: 1.8em;
+        }
+      }
+      @media print {
+        html {
+          background-color: white;
+        }
+        body {
+          background-color: transparent;
+          color: black;
+          font-size: 12pt;
+        }
+        p, h2, h3 {
+          orphans: 3;
+          widows: 3;
+        }
+        h2, h3, h4 {
+          page-break-after: avoid;
+        }
+      }
+      p {
+        margin: 1em 0;
+      }
+      a {
+        color: #1a1a1a;
+      }
+      a:visited {
+        color: #1a1a1a;
+      }
+      img {
+        max-width: 100%;
+      }
+      svg {
+        height: auto;
+        max-width: 100%;
+      }
+      h1, h2, h3, h4, h5, h6 {
+        margin-top: 1.4em;
+      }
+      h5, h6 {
+        font-size: 1em;
+        font-style: italic;
+      }
+      h6 {
+        font-weight: normal;
+      }
+      ol, ul {
+        padding-left: 1.7em;
+        margin-top: 1em;
+      }
+      li > ol, li > ul {
+        margin-top: 0;
+      }
+      blockquote {
+        margin: 1em 0 1em 1.7em;
+        padding-left: 1em;
+        border-left: 2px solid #e6e6e6;
+        color: #606060;
+      }
+      code {
+        font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+        font-size: 85%;
+        margin: 0;
+        hyphens: manual;
+      }
+      pre {
+        margin: 1em 0;
+        overflow: auto;
+      }
+      pre code {
+        padding: 0;
+        overflow: visible;
+        overflow-wrap: normal;
+      }
+      .sourceCode {
+       background-color: transparent;
+       overflow: visible;
+      }
+      hr {
+        background-color: #1a1a1a;
+        border: none;
+        height: 1px;
+        margin: 1em 0;
+      }
+      table {
+        margin: 1em 0;
+        border-collapse: collapse;
+        width: 100%;
+        overflow-x: auto;
+        display: block;
+        font-variant-numeric: lining-nums tabular-nums;
+      }
+      table caption {
+        margin-bottom: 0.75em;
+      }
+      tbody {
+        margin-top: 0.5em;
+        border-top: 1px solid #1a1a1a;
+        border-bottom: 1px solid #1a1a1a;
+      }
+      th {
+        border-top: 1px solid #1a1a1a;
+        padding: 0.25em 0.5em 0.25em 0.5em;
+      }
+      td {
+        padding: 0.125em 0.5em 0.25em 0.5em;
+      }
+      header {
+        margin-bottom: 4em;
+        text-align: center;
+      }
+      #TOC li {
+        list-style: none;
+      }
+      #TOC ul {
+        padding-left: 1.3em;
+      }
+      #TOC > ul {
+        padding-left: 0;
+      }
+      #TOC a:not(:hover) {
+        text-decoration: none;
+      }
       code{white-space: pre-wrap;}
       span.smallcaps{font-variant: small-caps;}
-      span.underline{text-decoration: underline;}
-      div.column{display: inline-block; vertical-align: top; width: 50%;}
-  </style>
-  <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
-}
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(title);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-    color: #aaaaaa;
-  }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-div.sourceCode
-  {  }
-@media screen {
-a.sourceLine::before { text-decoration: underline; }
-}
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-  </style>
-  <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono&display=swap" rel="stylesheet"> 
-  <link rel="stylesheet" as="style" crossorigin="None" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.6/dist/web/static/pretendard.css" />
+      div.columns{display: flex; gap: min(4vw, 1.5em);}
+      div.column{flex: auto; overflow-x: auto;}
+      div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+      /* The extra [class] is a hack that increases specificity enough to
+         override a similar rule in reveal.js */
+      ul.task-list[class]{list-style: none;}
+      ul.task-list li input[type="checkbox"] {
+        font-size: inherit;
+        width: 0.8em;
+        margin: 0 0.8em 0.2em -1.6em;
+        vertical-align: middle;
+      }
+      .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+      /* CSS for syntax highlighting */
+      html { -webkit-text-size-adjust: 100%; }
+      pre > code.sourceCode { white-space: pre; position: relative; }
+      pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+      pre > code.sourceCode > span:empty { height: 1.2em; }
+      .sourceCode { overflow: visible; }
+      code.sourceCode > span { color: inherit; text-decoration: inherit; }
+      div.sourceCode { margin: 1em 0; }
+      pre.sourceCode { margin: 0; }
+      @media screen {
+      div.sourceCode { overflow: auto; }
+      }
+      @media print {
+      pre > code.sourceCode { white-space: pre-wrap; }
+      pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+      }
+      pre.numberSource code
+        { counter-reset: source-line 0; }
+      pre.numberSource code > span
+        { position: relative; left: -4em; counter-increment: source-line; }
+      pre.numberSource code > span > a:first-child::before
+        { content: counter(source-line);
+          position: relative; left: -1em; text-align: right; vertical-align: baseline;
+          border: none; display: inline-block;
+          -webkit-touch-callout: none; -webkit-user-select: none;
+          -khtml-user-select: none; -moz-user-select: none;
+          -ms-user-select: none; user-select: none;
+          padding: 0 4px; width: 4em;
+          color: #aaaaaa;
+        }
+      pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+      div.sourceCode
+        {   }
+      @media screen {
+      pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+      }
+      code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+      code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+      code span.at { color: #7d9029; } /* Attribute */
+      code span.bn { color: #40a070; } /* BaseN */
+      code span.bu { color: #008000; } /* BuiltIn */
+      code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+      code span.ch { color: #4070a0; } /* Char */
+      code span.cn { color: #880000; } /* Constant */
+      code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+      code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+      code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+      code span.dt { color: #902000; } /* DataType */
+      code span.dv { color: #40a070; } /* DecVal */
+      code span.er { color: #ff0000; font-weight: bold; } /* Error */
+      code span.ex { } /* Extension */
+      code span.fl { color: #40a070; } /* Float */
+      code span.fu { color: #06287e; } /* Function */
+      code span.im { color: #008000; font-weight: bold; } /* Import */
+      code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+      code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+      code span.op { color: #666666; } /* Operator */
+      code span.ot { color: #007020; } /* Other */
+      code span.pp { color: #bc7a00; } /* Preprocessor */
+      code span.sc { color: #4070a0; } /* SpecialChar */
+      code span.ss { color: #bb6688; } /* SpecialString */
+      code span.st { color: #4070a0; } /* String */
+      code span.va { color: #19177c; } /* Variable */
+      code span.vs { color: #4070a0; } /* VerbatimString */
+      code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+      }
+    </style>
+    <style>
+     @media (prefers-color-scheme: dark) {
+      html {
+        color: #1a1a1a;
+        background-color: #fdfdfd;
+      }
+      body {
+        margin: 0 auto;
+        max-width: 36em;
+        padding-left: 50px;
+        padding-right: 50px;
+        padding-top: 50px;
+        padding-bottom: 50px;
+        hyphens: auto;
+        overflow-wrap: break-word;
+        text-rendering: optimizeLegibility;
+        font-kerning: normal;
+      }
+      @media (max-width: 600px) {
+        body {
+          font-size: 0.9em;
+          padding: 12px;
+        }
+        h1 {
+          font-size: 1.8em;
+        }
+      }
+      @media print {
+        html {
+          background-color: white;
+        }
+        body {
+          background-color: transparent;
+          color: black;
+          font-size: 12pt;
+        }
+        p, h2, h3 {
+          orphans: 3;
+          widows: 3;
+        }
+        h2, h3, h4 {
+          page-break-after: avoid;
+        }
+      }
+      p {
+        margin: 1em 0;
+      }
+      a {
+        color: #1a1a1a;
+      }
+      a:visited {
+        color: #1a1a1a;
+      }
+      img {
+        max-width: 100%;
+      }
+      svg {
+        height: auto;
+        max-width: 100%;
+      }
+      h1, h2, h3, h4, h5, h6 {
+        margin-top: 1.4em;
+      }
+      h5, h6 {
+        font-size: 1em;
+        font-style: italic;
+      }
+      h6 {
+        font-weight: normal;
+      }
+      ol, ul {
+        padding-left: 1.7em;
+        margin-top: 1em;
+      }
+      li > ol, li > ul {
+        margin-top: 0;
+      }
+      blockquote {
+        margin: 1em 0 1em 1.7em;
+        padding-left: 1em;
+        border-left: 2px solid #e6e6e6;
+        color: #606060;
+      }
+      code {
+        font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+        font-size: 85%;
+        margin: 0;
+        hyphens: manual;
+      }
+      pre {
+        margin: 1em 0;
+        overflow: auto;
+      }
+      pre code {
+        padding: 0;
+        overflow: visible;
+        overflow-wrap: normal;
+      }
+      .sourceCode {
+       background-color: transparent;
+       overflow: visible;
+      }
+      hr {
+        background-color: #1a1a1a;
+        border: none;
+        height: 1px;
+        margin: 1em 0;
+      }
+      table {
+        margin: 1em 0;
+        border-collapse: collapse;
+        width: 100%;
+        overflow-x: auto;
+        display: block;
+        font-variant-numeric: lining-nums tabular-nums;
+      }
+      table caption {
+        margin-bottom: 0.75em;
+      }
+      tbody {
+        margin-top: 0.5em;
+        border-top: 1px solid #1a1a1a;
+        border-bottom: 1px solid #1a1a1a;
+      }
+      th {
+        border-top: 1px solid #1a1a1a;
+        padding: 0.25em 0.5em 0.25em 0.5em;
+      }
+      td {
+        padding: 0.125em 0.5em 0.25em 0.5em;
+      }
+      header {
+        margin-bottom: 4em;
+        text-align: center;
+      }
+      #TOC li {
+        list-style: none;
+      }
+      #TOC ul {
+        padding-left: 1.3em;
+      }
+      #TOC > ul {
+        padding-left: 0;
+      }
+      #TOC a:not(:hover) {
+        text-decoration: none;
+      }
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      div.columns{display: flex; gap: min(4vw, 1.5em);}
+      div.column{flex: auto; overflow-x: auto;}
+      div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+      /* The extra [class] is a hack that increases specificity enough to
+         override a similar rule in reveal.js */
+      ul.task-list[class]{list-style: none;}
+      ul.task-list li input[type="checkbox"] {
+        font-size: inherit;
+        width: 0.8em;
+        margin: 0 0.8em 0.2em -1.6em;
+        vertical-align: middle;
+      }
+      .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+      /* CSS for syntax highlighting */
+      html { -webkit-text-size-adjust: 100%; }
+      pre > code.sourceCode { white-space: pre; position: relative; }
+      pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+      pre > code.sourceCode > span:empty { height: 1.2em; }
+      .sourceCode { overflow: visible; }
+      code.sourceCode > span { color: inherit; text-decoration: inherit; }
+      div.sourceCode { margin: 1em 0; }
+      pre.sourceCode { margin: 0; }
+      @media screen {
+      div.sourceCode { overflow: auto; }
+      }
+      @media print {
+      pre > code.sourceCode { white-space: pre-wrap; }
+      pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+      }
+      pre.numberSource code
+        { counter-reset: source-line 0; }
+      pre.numberSource code > span
+        { position: relative; left: -4em; counter-increment: source-line; }
+      pre.numberSource code > span > a:first-child::before
+        { content: counter(source-line);
+          position: relative; left: -1em; text-align: right; vertical-align: baseline;
+          border: none; display: inline-block;
+          -webkit-touch-callout: none; -webkit-user-select: none;
+          -khtml-user-select: none; -moz-user-select: none;
+          -ms-user-select: none; user-select: none;
+          padding: 0 4px; width: 4em;
+        }
+      pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+      div.sourceCode
+        { color: #cccccc; background-color: #303030; }
+      @media screen {
+      pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+      }
+      code span.al { color: #ffcfaf; } /* Alert */
+      code span.an { color: #7f9f7f; font-weight: bold; } /* Annotation */
+      code span.at { } /* Attribute */
+      code span.bn { color: #dca3a3; } /* BaseN */
+      code span.bu { } /* BuiltIn */
+      code span.cf { color: #f0dfaf; } /* ControlFlow */
+      code span.ch { color: #dca3a3; } /* Char */
+      code span.cn { color: #dca3a3; font-weight: bold; } /* Constant */
+      code span.co { color: #7f9f7f; } /* Comment */
+      code span.cv { color: #7f9f7f; font-weight: bold; } /* CommentVar */
+      code span.do { color: #7f9f7f; } /* Documentation */
+      code span.dt { color: #dfdfbf; } /* DataType */
+      code span.dv { color: #dcdccc; } /* DecVal */
+      code span.er { color: #c3bf9f; } /* Error */
+      code span.ex { } /* Extension */
+      code span.fl { color: #c0bed1; } /* Float */
+      code span.fu { color: #efef8f; } /* Function */
+      code span.im { } /* Import */
+      code span.in { color: #7f9f7f; font-weight: bold; } /* Information */
+      code span.kw { color: #f0dfaf; } /* Keyword */
+      code span.op { color: #f0efd0; } /* Operator */
+      code span.ot { color: #efef8f; } /* Other */
+      code span.pp { color: #ffcfaf; font-weight: bold; } /* Preprocessor */
+      code span.sc { color: #dca3a3; } /* SpecialChar */
+      code span.ss { color: #cc9393; } /* SpecialString */
+      code span.st { color: #cc9393; } /* String */
+      code span.va { } /* Variable */
+      code span.vs { color: #cc9393; } /* VerbatimString */
+      code span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
+      }
+    </style>
+  <!-- Hand-rolled dark mode overrides for Pandoc's default CSS -->
+  <!-- Credit: GitHub user ardabbour -->
+    <style>
+     @media (prefers-color-scheme: dark) {
+      html {
+        color: #ddd;
+        background-color: #151515;
+      }
+      a {
+        color: #abb2bf;
+      }
+      a:visited {
+        color: #abb2bf;
+      }
+      hr {
+        background-color: #abb2bf;
+      }
+      table {
+        border-top: 1px solid #abb2bf;
+        border-bottom: 1px solid #abb2bf;
+      }
+      th {
+        border-top: 1px solid #abb2bf;
+      }
+      tbody {
+        border-top: 1px solid #abb2bf;
+        border-bottom: 1px solid #abb2bf;
+      }
+      blockquote {
+        border-left: 2px solid #282c34;
+        color: #5c6370;
+      }
+      figure > embed {
+          filter: invert(0.8); /* yuck -- this part is Beej's fault*/
+      }
+     }
+    </style>
   <!-- BG custom styling -->
   <style type="text/css">
   /* Fix for line numbers not visible */
@@ -85,67 +735,423 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   pre.numberSource {
       margin-left: initial;
   }
-  
+
   /* Put some space after the section numbers */
   span.toc-section-number::after {
       content: "\a0\a0\a0";  /* non-breaking whitespace */
   }
-  
+
   /* Hide underlines on code number links */
   pre > code.sourceCode > span > a:first-child::before {
       text-decoration: none;
   }
-  
+
   /* Color the source blocks */
   div.sourceCode {
-      background-color: #f0f0f0;
+      /* background-color: #f0f0f0; */
   }
-  
+
   /* Fix iOS big text rendering issue */
   pre > code.sourceCode > span {
       display: initial;
   }
-  
-  
+
+
   /* Color the inline code */
   code:not(.sourceCode) {
-      background: #f0f0f0;
+      /* background: #f0f0f0; */
       padding-left: 0.2em;
       padding-right: 0.2em;
       border-radius: 0.2em;
   }
-  
+
+  pre.sourceCode {
+      border: 1px solid #ccc;
+      padding: 0.5em;
+      border-radius: 0.2em;
+  }
+
   /* Keep code tags from wrapping in tables */
   tbody code {
       white-space: nowrap;
   }
-  
+
+  /* Prevent hyphenation and hyphen breaks in code*/
+  code {
+      word-break: keep-all;
+  }
+
   td {
       vertical-align: top;
   }
-  
+
   body {
       font-size: 12pt;
-      box-sizing: border-box;
-      margin: 0;
-      padding: 1em;
-      max-width: min(43em, 100vw);
+      max-width: 43em;
+      font-family: sans-serif;
   }
-  
+
   html {
-      display: flex;
-      justify-content: center;
-      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard Variable", Pretendard, Roboto, "Noto Sans KR", "Segoe UI", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+      /* background: #f9f9f9; */
   }
-  
+
+  figure > embed {
+      max-width: 100%;
+  }
+
   figure {
       text-align: center;
+      margin-top: 2em;
+      margin-bottom: 2em;
+  }
+
+  figcaption {
+      font-size: 0.9em;
+      font-style: italic;
+      margin-top: 0.6em;
+  }
+
+  body {
+      counter-reset: figure-counter-major;
+      counter-reset: figure-counter-minor;
+  }
+
+  figure {
+      counter-increment: figure-counter-minor;
+  }
+
+  figcaption::before {
+      content: "Figure " counter(figure-counter-major) "." counter(figure-counter-minor) ": ";
+  }
+
+  blockquote {
+      border-left: 2px solid #bbb;
+      /*color: #444;*/
+  }
+
+  /* Contents */
+
+  nav[role="doc-toc"] > ul > li {
+    font-weight: bold;
+    margin-top: 1.2em;
+  }
+
+  nav[role="doc-toc"] > ul > li:first {
+    font-weight: bold;
+    margin-top: initial;
+  }
+
+  nav[role="doc-toc"] > ul > li > ul {
+    font-weight: normal;
+    margin-top: 0.3em;
+  }
+
+  /*
+  In multipage, we need to reset the figure counter to the chapter
+  number. Luckily, this is in the <h1 data-number> attribute. Unluckily,
+  there is no way to get this in a general way.
+
+  This doesn't work:
+
+    h1[data-number] {
+      counter-set: figure-counter-major attr(data-number);
+    }
+
+  Nor this:
+
+    h1[data-number] {
+      --figure-counter-major-value: attr(data-number);
+      counter-set: figure-counter-major var(--figure-counter-major-value);
+    }
+
+  So, dumbly, we have a bunch of rules for all these sections, up to the
+  maximum possible section.
+
+  Here's a program to generate them:
+
+    for (let i = 1; i < 100; i++)
+        console.log(`h1[data-number="${i}"]{counter-set:figure-counter-major ${i};counter-reset:figure-counter-minor;}`);
+
+  Note to self: never write a book with more than 99 frickin' chapters.
+  */
+
+  h1[data-number="1"]{counter-set:figure-counter-major 1;counter-reset:figure-counter-minor;}
+  h1[data-number="2"]{counter-set:figure-counter-major 2;counter-reset:figure-counter-minor;}
+  h1[data-number="3"]{counter-set:figure-counter-major 3;counter-reset:figure-counter-minor;}
+  h1[data-number="4"]{counter-set:figure-counter-major 4;counter-reset:figure-counter-minor;}
+  h1[data-number="5"]{counter-set:figure-counter-major 5;counter-reset:figure-counter-minor;}
+  h1[data-number="6"]{counter-set:figure-counter-major 6;counter-reset:figure-counter-minor;}
+  h1[data-number="7"]{counter-set:figure-counter-major 7;counter-reset:figure-counter-minor;}
+  h1[data-number="8"]{counter-set:figure-counter-major 8;counter-reset:figure-counter-minor;}
+  h1[data-number="9"]{counter-set:figure-counter-major 9;counter-reset:figure-counter-minor;}
+  h1[data-number="10"]{counter-set:figure-counter-major 10;counter-reset:figure-counter-minor;}
+  h1[data-number="11"]{counter-set:figure-counter-major 11;counter-reset:figure-counter-minor;}
+  h1[data-number="12"]{counter-set:figure-counter-major 12;counter-reset:figure-counter-minor;}
+  h1[data-number="13"]{counter-set:figure-counter-major 13;counter-reset:figure-counter-minor;}
+  h1[data-number="14"]{counter-set:figure-counter-major 14;counter-reset:figure-counter-minor;}
+  h1[data-number="15"]{counter-set:figure-counter-major 15;counter-reset:figure-counter-minor;}
+  h1[data-number="16"]{counter-set:figure-counter-major 16;counter-reset:figure-counter-minor;}
+  h1[data-number="17"]{counter-set:figure-counter-major 17;counter-reset:figure-counter-minor;}
+  h1[data-number="18"]{counter-set:figure-counter-major 18;counter-reset:figure-counter-minor;}
+  h1[data-number="19"]{counter-set:figure-counter-major 19;counter-reset:figure-counter-minor;}
+  h1[data-number="20"]{counter-set:figure-counter-major 20;counter-reset:figure-counter-minor;}
+  h1[data-number="21"]{counter-set:figure-counter-major 21;counter-reset:figure-counter-minor;}
+  h1[data-number="22"]{counter-set:figure-counter-major 22;counter-reset:figure-counter-minor;}
+  h1[data-number="23"]{counter-set:figure-counter-major 23;counter-reset:figure-counter-minor;}
+  h1[data-number="24"]{counter-set:figure-counter-major 24;counter-reset:figure-counter-minor;}
+  h1[data-number="25"]{counter-set:figure-counter-major 25;counter-reset:figure-counter-minor;}
+  h1[data-number="26"]{counter-set:figure-counter-major 26;counter-reset:figure-counter-minor;}
+  h1[data-number="27"]{counter-set:figure-counter-major 27;counter-reset:figure-counter-minor;}
+  h1[data-number="28"]{counter-set:figure-counter-major 28;counter-reset:figure-counter-minor;}
+  h1[data-number="29"]{counter-set:figure-counter-major 29;counter-reset:figure-counter-minor;}
+  h1[data-number="30"]{counter-set:figure-counter-major 30;counter-reset:figure-counter-minor;}
+  h1[data-number="31"]{counter-set:figure-counter-major 31;counter-reset:figure-counter-minor;}
+  h1[data-number="32"]{counter-set:figure-counter-major 32;counter-reset:figure-counter-minor;}
+  h1[data-number="33"]{counter-set:figure-counter-major 33;counter-reset:figure-counter-minor;}
+  h1[data-number="34"]{counter-set:figure-counter-major 34;counter-reset:figure-counter-minor;}
+  h1[data-number="35"]{counter-set:figure-counter-major 35;counter-reset:figure-counter-minor;}
+  h1[data-number="36"]{counter-set:figure-counter-major 36;counter-reset:figure-counter-minor;}
+  h1[data-number="37"]{counter-set:figure-counter-major 37;counter-reset:figure-counter-minor;}
+  h1[data-number="38"]{counter-set:figure-counter-major 38;counter-reset:figure-counter-minor;}
+  h1[data-number="39"]{counter-set:figure-counter-major 39;counter-reset:figure-counter-minor;}
+  h1[data-number="40"]{counter-set:figure-counter-major 40;counter-reset:figure-counter-minor;}
+  h1[data-number="41"]{counter-set:figure-counter-major 41;counter-reset:figure-counter-minor;}
+  h1[data-number="42"]{counter-set:figure-counter-major 42;counter-reset:figure-counter-minor;}
+  h1[data-number="43"]{counter-set:figure-counter-major 43;counter-reset:figure-counter-minor;}
+  h1[data-number="44"]{counter-set:figure-counter-major 44;counter-reset:figure-counter-minor;}
+  h1[data-number="45"]{counter-set:figure-counter-major 45;counter-reset:figure-counter-minor;}
+  h1[data-number="46"]{counter-set:figure-counter-major 46;counter-reset:figure-counter-minor;}
+  h1[data-number="47"]{counter-set:figure-counter-major 47;counter-reset:figure-counter-minor;}
+  h1[data-number="48"]{counter-set:figure-counter-major 48;counter-reset:figure-counter-minor;}
+  h1[data-number="49"]{counter-set:figure-counter-major 49;counter-reset:figure-counter-minor;}
+  h1[data-number="50"]{counter-set:figure-counter-major 50;counter-reset:figure-counter-minor;}
+  h1[data-number="51"]{counter-set:figure-counter-major 51;counter-reset:figure-counter-minor;}
+  h1[data-number="52"]{counter-set:figure-counter-major 52;counter-reset:figure-counter-minor;}
+  h1[data-number="53"]{counter-set:figure-counter-major 53;counter-reset:figure-counter-minor;}
+  h1[data-number="54"]{counter-set:figure-counter-major 54;counter-reset:figure-counter-minor;}
+  h1[data-number="55"]{counter-set:figure-counter-major 55;counter-reset:figure-counter-minor;}
+  h1[data-number="56"]{counter-set:figure-counter-major 56;counter-reset:figure-counter-minor;}
+  h1[data-number="57"]{counter-set:figure-counter-major 57;counter-reset:figure-counter-minor;}
+  h1[data-number="58"]{counter-set:figure-counter-major 58;counter-reset:figure-counter-minor;}
+  h1[data-number="59"]{counter-set:figure-counter-major 59;counter-reset:figure-counter-minor;}
+  h1[data-number="60"]{counter-set:figure-counter-major 60;counter-reset:figure-counter-minor;}
+  h1[data-number="61"]{counter-set:figure-counter-major 61;counter-reset:figure-counter-minor;}
+  h1[data-number="62"]{counter-set:figure-counter-major 62;counter-reset:figure-counter-minor;}
+  h1[data-number="63"]{counter-set:figure-counter-major 63;counter-reset:figure-counter-minor;}
+  h1[data-number="64"]{counter-set:figure-counter-major 64;counter-reset:figure-counter-minor;}
+  h1[data-number="65"]{counter-set:figure-counter-major 65;counter-reset:figure-counter-minor;}
+  h1[data-number="66"]{counter-set:figure-counter-major 66;counter-reset:figure-counter-minor;}
+  h1[data-number="67"]{counter-set:figure-counter-major 67;counter-reset:figure-counter-minor;}
+  h1[data-number="68"]{counter-set:figure-counter-major 68;counter-reset:figure-counter-minor;}
+  h1[data-number="69"]{counter-set:figure-counter-major 69;counter-reset:figure-counter-minor;}
+  h1[data-number="70"]{counter-set:figure-counter-major 70;counter-reset:figure-counter-minor;}
+  h1[data-number="71"]{counter-set:figure-counter-major 71;counter-reset:figure-counter-minor;}
+  h1[data-number="72"]{counter-set:figure-counter-major 72;counter-reset:figure-counter-minor;}
+  h1[data-number="73"]{counter-set:figure-counter-major 73;counter-reset:figure-counter-minor;}
+  h1[data-number="74"]{counter-set:figure-counter-major 74;counter-reset:figure-counter-minor;}
+  h1[data-number="75"]{counter-set:figure-counter-major 75;counter-reset:figure-counter-minor;}
+  h1[data-number="76"]{counter-set:figure-counter-major 76;counter-reset:figure-counter-minor;}
+  h1[data-number="77"]{counter-set:figure-counter-major 77;counter-reset:figure-counter-minor;}
+  h1[data-number="78"]{counter-set:figure-counter-major 78;counter-reset:figure-counter-minor;}
+  h1[data-number="79"]{counter-set:figure-counter-major 79;counter-reset:figure-counter-minor;}
+  h1[data-number="80"]{counter-set:figure-counter-major 80;counter-reset:figure-counter-minor;}
+  h1[data-number="81"]{counter-set:figure-counter-major 81;counter-reset:figure-counter-minor;}
+  h1[data-number="82"]{counter-set:figure-counter-major 82;counter-reset:figure-counter-minor;}
+  h1[data-number="83"]{counter-set:figure-counter-major 83;counter-reset:figure-counter-minor;}
+  h1[data-number="84"]{counter-set:figure-counter-major 84;counter-reset:figure-counter-minor;}
+  h1[data-number="85"]{counter-set:figure-counter-major 85;counter-reset:figure-counter-minor;}
+  h1[data-number="86"]{counter-set:figure-counter-major 86;counter-reset:figure-counter-minor;}
+  h1[data-number="87"]{counter-set:figure-counter-major 87;counter-reset:figure-counter-minor;}
+  h1[data-number="88"]{counter-set:figure-counter-major 88;counter-reset:figure-counter-minor;}
+  h1[data-number="89"]{counter-set:figure-counter-major 89;counter-reset:figure-counter-minor;}
+  h1[data-number="90"]{counter-set:figure-counter-major 90;counter-reset:figure-counter-minor;}
+  h1[data-number="91"]{counter-set:figure-counter-major 91;counter-reset:figure-counter-minor;}
+  h1[data-number="92"]{counter-set:figure-counter-major 92;counter-reset:figure-counter-minor;}
+  h1[data-number="93"]{counter-set:figure-counter-major 93;counter-reset:figure-counter-minor;}
+  h1[data-number="94"]{counter-set:figure-counter-major 94;counter-reset:figure-counter-minor;}
+  h1[data-number="95"]{counter-set:figure-counter-major 95;counter-reset:figure-counter-minor;}
+  h1[data-number="96"]{counter-set:figure-counter-major 96;counter-reset:figure-counter-minor;}
+  h1[data-number="97"]{counter-set:figure-counter-major 97;counter-reset:figure-counter-minor;}
+  h1[data-number="98"]{counter-set:figure-counter-major 98;counter-reset:figure-counter-minor;}
+  h1[data-number="99"]{counter-set:figure-counter-major 99;counter-reset:figure-counter-minor;}
+
+
+  </style>
+  <link rel="stylesheet" as="style" crossorigin="None" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+  <link rel="stylesheet" href="fonts/yeomil-mono/yeomilmono.css" />
+  <!-- Korean translation font override -->
+  <style type="text/css">
+  body {
+      font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+  }
+
+  pre, code, kbd, samp {
+      font-family: "Yeomil Mono", Menlo, Monaco, Consolas, "Lucida Console", monospace;
   }
   </style>
+  <!-- Korean HTML head additions. -->
+  <!-- This file feeds regular, wide, split, and split-wide HTML builds. -->
+  <script async="None" src="https://www.googletagmanager.com/gtag/js?id=G-G7P8PXM5K6"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-G7P8PXM5K6');
+  </script>
 </head>
 <body>
-<div style="text-align:center"><span><a href="man-pages.html">Prev</a> | </span><a href="index.html">Contents</a><span style="visibility: hidden"> | <a href="">Next</a></span></div><hr>
-<h1 id="더-많은-참고문헌"><span class="header-section-number">10</span> 더 많은 참고문헌</h1><p>여기까지 왔고, 더 많은 것을 원하시나요? 네트워크에 대해서 더 배우려면 어디로 가야할까요?</p><h2 id="books"><span class="header-section-number">10.1</span> 책들</h2><p></p><p>옛날식의, 정말로 손에 쥘 수 있는, 종이로 만든 책들입니다. 아래에 있는 훌륭한 책 중 몇몇을 읽어보세요. 이것들은 저에게 좋은 보상을 주는 유명한 도서 유통업자들의 제휴된 링크로 여러분을 안내할 것입니다. 좀 더 관대한 독자라면 페이팔로 <a href="mailto:beej@beej.us"><code>beej@beej.us</code></a>에 기부해주시길 바랍니다. <code>:-)</code></p><p><strong>Unix Network Programming, volumes 1-2</strong> W. Richard Stevens 지음. Addison-Wesley Professional와 Prentice Hall 출판. 1~2권 ISBN: <a href="https://beej.us/guide/url/unixnet1">978-0131411555</a><sup>[https://beej.us/guide/url/unixnet1], <a href="https://beej.us/guide/url/unixnet2">978-0130810816</a></sup>[https://beej.us/guide/url/unixnet2].</p><p><strong>Internetworking with TCP/IP, volume I</strong> Douglas E. Comer 지음. Pearson 출판. ISBN <a href="https://beej.us/guide/url/intertcp1">978-0136085300</a><a href="더-많은-참고문헌.html#fn49" class="footnote-ref" id="fnref49"><sup>49</sup></a>.</p><p><strong>TCP/IP Illustrated, volumes 1-3</strong> W. Richard Stevens와 Gary R. Wright 지음. Addison Wesley 출판. 1~3권의 ISBN (과 3권 통합본의 ISBN): <a href="https://beej.us/guide/url/tcpi1">978-0201633467</a><a href="더-많은-참고문헌.html#fn50" class="footnote-ref" id="fnref50"><sup>50</sup></a>, <a href="https://beej.us/guide/url/tcpi2">978-0201633542</a><sup>[https://beej.us/guide/url/tcpi2], <a href="https://beej.us/guide/url/tcpi3">978-0201634952</a></sup>[https://beej.us/guide/url/tcpi3], (<a href="https://beej.us/guide/url/tcpi123">978-0201776317</a><a href="더-많은-참고문헌.html#fn51" class="footnote-ref" id="fnref51"><sup>51</sup></a>).</p><p><strong>TCP/IP Network Administration</strong> Craig Hunt 지금. O’Reilly &amp; Associates, Inc. 출판. ISBN <a href="https://beej.us/guide/url/tcpna">978-0596002978</a><a href="더-많은-참고문헌.html#fn52" class="footnote-ref" id="fnref52"><sup>52</sup></a>.</p><p><strong>Advanced Programming in the UNIX Environment</strong> W. Richard Stevens 지음. Addison Wesley 출판. ISBN <a href="https://beej.us/guide/url/advunix">978-0321637734</a><a href="더-많은-참고문헌.html#fn53" class="footnote-ref" id="fnref53"><sup>53</sup></a>.</p><p></p><h2 id="웹-참고문헌"><span class="header-section-number">10.2</span> 웹 참고문헌</h2><p></p><p>인터넷에는 아래와 같은 정보가 있습니다.</p><p><strong><a href="https://cis.temple.edu/~giorgio/old/cis307s96/readings/docs/sockets.html">BSD Sockets: A Quick And Dirty Primer</a><a href="더-많은-참고문헌.html#fn54" class="footnote-ref" id="fnref54"><sup>54</sup></a></strong> (유닉스 시스템 프로그래밍 정보도 있습니다!)</p><p><strong><a href="https://developerweb.net/?f=70">The Unix Socket FAQ</a><a href="더-많은-참고문헌.html#fn55" class="footnote-ref" id="fnref55"><sup>55</sup></a></strong></p><p><strong><a href="http://www.faqs.org/faqs/internet/tcp-ip/tcp-ip-faq/part1/">TCP/IP FAQ</a><a href="더-많은-참고문헌.html#fn56" class="footnote-ref" id="fnref56"><sup>56</sup></a></strong></p><p><strong><a href="https://tangentsoft.net/wskfaq/">The Winsock FAQ</a><a href="더-많은-참고문헌.html#fn57" class="footnote-ref" id="fnref57"><sup>57</sup></a></strong></p><p>그리고 여기 연관된 위키백과 페이지입니다.</p><p><strong><a href="https://en.wikipedia.org/wiki/Berkeley_sockets">Berkeley Sockets</a><a href="더-많은-참고문헌.html#fn58" class="footnote-ref" id="fnref58"><sup>58</sup></a></strong></p><p><strong><a href="https://en.wikipedia.org/wiki/Internet_Protocol">Internet Protocol (IP)</a><a href="더-많은-참고문헌.html#fn59" class="footnote-ref" id="fnref59"><sup>59</sup></a></strong></p><p><strong><a href="https://en.wikipedia.org/wiki/Transmission_Control_Protocol">Transmission Control Protocol (TCP)</a><a href="더-많은-참고문헌.html#fn60" class="footnote-ref" id="fnref60"><sup>60</sup></a></strong></p><p><strong><a href="https://en.wikipedia.org/wiki/User_Datagram_Protocol">User Datagram Protocol (UDP)</a><a href="더-많은-참고문헌.html#fn61" class="footnote-ref" id="fnref61"><sup>61</sup></a></strong></p><p><strong><a href="https://en.wikipedia.org/wiki/Client-server">Client-Server</a><a href="더-많은-참고문헌.html#fn62" class="footnote-ref" id="fnref62"><sup>62</sup></a></strong></p><p><strong><a href="https://en.wikipedia.org/wiki/Serialization">Serialization</a><a href="더-많은-참고문헌.html#fn63" class="footnote-ref" id="fnref63"><sup>63</sup></a></strong> (데이터 패킹과 언패킹)</p><p></p><h2 id="rfcs"><span class="header-section-number">10.3</span> RFCs</h2><p> </p><p><a href="https://www.rfc-editor.org/">RFC들</a><a href="더-많은-참고문헌.html#fn64" class="footnote-ref" id="fnref64"><sup>64</sup></a>—진짜 진탕입니다! 이것들은 인터넷에 사용된 할당된 번호와 프로그래밍 API, 프로토콜 등을 설명하는 문서입니다. 여러분의 즐거움을 위해 그 중 일부에 대한 링크를 포함했습니다. 팝콘을 한 바가지 가져와서 생각모자를 써 봅시다.(역자 주 : 어떤 것을 진지하게 생각한다는 의미)</p><p><strong><a href="https://tools.ietf.org/html/rfc1">RFC 1</a><a href="더-많은-참고문헌.html#fn65" class="footnote-ref" id="fnref65"><sup>65</sup></a></strong> —The First RFC; this gives you an idea of what the “Internet” was like just as it was coming to life, and an insight into how it was being designed from the ground up. (This RFC is completely obsolete, obviously!)</p><p> <strong><a href="https://tools.ietf.org/html/rfc768">RFC 768</a><a href="더-많은-참고문헌.html#fn66" class="footnote-ref" id="fnref66"><sup>66</sup></a></strong> —The User Datagram Protocol (UDP)</p><p> <strong><a href="https://tools.ietf.org/html/rfc791">RFC 791</a><a href="더-많은-참고문헌.html#fn67" class="footnote-ref" id="fnref67"><sup>67</sup></a></strong> —The Internet Protocol (IP)</p><p> <strong><a href="https://tools.ietf.org/html/rfc793">RFC 793</a><a href="더-많은-참고문헌.html#fn68" class="footnote-ref" id="fnref68"><sup>68</sup></a></strong> —The Transmission Control Protocol (TCP)</p><p> <strong><a href="https://tools.ietf.org/html/rfc854">RFC 854</a><a href="더-많은-참고문헌.html#fn69" class="footnote-ref" id="fnref69"><sup>69</sup></a></strong> —The Telnet Protocol</p><p> <strong><a href="https://tools.ietf.org/html/rfc959">RFC 959</a><a href="더-많은-참고문헌.html#fn70" class="footnote-ref" id="fnref70"><sup>70</sup></a></strong> —File Transfer Protocol (FTP)</p><p> <strong><a href="https://tools.ietf.org/html/rfc1350">RFC 1350</a><a href="더-많은-참고문헌.html#fn71" class="footnote-ref" id="fnref71"><sup>71</sup></a></strong> —The Trivial File Transfer Protocol (TFTP)</p><p> <strong><a href="https://tools.ietf.org/html/rfc1459">RFC 1459</a><a href="더-많은-참고문헌.html#fn72" class="footnote-ref" id="fnref72"><sup>72</sup></a></strong> —Internet Relay Chat Protocol (IRC)</p><p><strong><a href="https://tools.ietf.org/html/rfc1918">RFC 1918</a><a href="더-많은-참고문헌.html#fn73" class="footnote-ref" id="fnref73"><sup>73</sup></a></strong> —Address Allocation for Private Internets</p><p> <strong><a href="https://tools.ietf.org/html/rfc2131">RFC 2131</a><a href="더-많은-참고문헌.html#fn74" class="footnote-ref" id="fnref74"><sup>74</sup></a></strong> —Dynamic Host Configuration Protocol (DHCP)</p><p> <strong><a href="https://tools.ietf.org/html/rfc2616">RFC 2616</a><a href="더-많은-참고문헌.html#fn75" class="footnote-ref" id="fnref75"><sup>75</sup></a></strong> —Hypertext Transfer Protocol (HTTP)</p><p> <strong><a href="https://tools.ietf.org/html/rfc2821">RFC 2821</a><a href="더-많은-참고문헌.html#fn76" class="footnote-ref" id="fnref76"><sup>76</sup></a></strong> —Simple Mail Transfer Protocol (SMTP)</p><p><strong><a href="https://tools.ietf.org/html/rfc3330">RFC 3330</a><a href="더-많은-참고문헌.html#fn77" class="footnote-ref" id="fnref77"><sup>77</sup></a></strong> —Special-Use IPv4 Addresses</p><p><strong><a href="https://tools.ietf.org/html/rfc3493">RFC 3493</a><a href="더-많은-참고문헌.html#fn78" class="footnote-ref" id="fnref78"><sup>78</sup></a></strong> —Basic Socket Interface Extensions for IPv6</p><p><strong><a href="https://tools.ietf.org/html/rfc3542">RFC 3542</a><a href="더-많은-참고문헌.html#fn79" class="footnote-ref" id="fnref79"><sup>79</sup></a></strong> —Advanced Sockets Application Program Interface (API) for IPv6</p><p><strong><a href="https://tools.ietf.org/html/rfc3849">RFC 3849</a><a href="더-많은-참고문헌.html#fn80" class="footnote-ref" id="fnref80"><sup>80</sup></a></strong> —IPv6 Address Prefix Reserved for Documentation</p><p> <strong><a href="https://tools.ietf.org/html/rfc3920">RFC 3920</a><a href="더-많은-참고문헌.html#fn81" class="footnote-ref" id="fnref81"><sup>81</sup></a></strong> —Extensible Messaging and Presence Protocol (XMPP)</p><p> <strong><a href="https://tools.ietf.org/html/rfc3977">RFC 3977</a><a href="더-많은-참고문헌.html#fn82" class="footnote-ref" id="fnref82"><sup>82</sup></a></strong> —Network News Transfer Protocol (NNTP)</p><p><strong><a href="https://tools.ietf.org/html/rfc4193">RFC 4193</a><a href="더-많은-참고문헌.html#fn83" class="footnote-ref" id="fnref83"><sup>83</sup></a></strong> —Unique Local IPv6 Unicast Addresses</p><p> <strong><a href="https://tools.ietf.org/html/rfc4506">RFC 4506</a><a href="더-많은-참고문헌.html#fn84" class="footnote-ref" id="fnref84"><sup>84</sup></a></strong> —External Data Representation Standard (XDR)</p><p>IETF에는 <a href="https://tools.ietf.org/rfc/">RFC를 찾고 살펴보기 위한 좋은 도구</a><a href="더-많은-참고문헌.html#fn85" class="footnote-ref" id="fnref85"><sup>85</sup></a>가 있습니다.</p><p> </p><section class="footnotes"><hr /><ol><li id="fn1"><p>https://www.linux.com/<a href="도입부.html#fnref1" class="footnote-back">↩</a></p></li><li id="fn2"><p>https://bsd.org/<a href="도입부.html#fnref2" class="footnote-back">↩</a></p></li><li id="fn3"><p>https://learn.microsoft.com/en-us/windows/wsl/<a href="도입부.html#fnref3" class="footnote-back">↩</a></p></li><li id="fn4"><p>https://cygwin.com/<a href="도입부.html#fnref4" class="footnote-back">↩</a></p></li><li id="fn5"><p>https://www.tallyhawk.net/WinsockExamples/<a href="도입부.html#fnref5" class="footnote-back">↩</a></p></li><li id="fn6"><p>http://www.catb.org/~esr/faqs/smart-questions.html<a href="도입부.html#fnref6" class="footnote-back">↩</a></p></li><li id="fn7"><p>https://beej.us/guide/bgnet/examples/telnot.c<a href="소켓이란-무엇인가.html#fnref7" class="footnote-back">↩</a></p></li><li id="fn8"><p>https://tools.ietf.org/html/rfc854<a href="소켓이란-무엇인가.html#fnref8" class="footnote-back">↩</a></p></li><li id="fn9"><p>https://tools.ietf.org/html/rfc793<a href="소켓이란-무엇인가.html#fnref9" class="footnote-back">↩</a></p></li><li id="fn10"><p>https://tools.ietf.org/html/rfc791<a href="소켓이란-무엇인가.html#fnref10" class="footnote-back">↩</a></p></li><li id="fn11"><p>https://tools.ietf.org/html/rfc768<a href="소켓이란-무엇인가.html#fnref11" class="footnote-back">↩</a></p></li><li id="fn12"><p>https://tools.ietf.org/html/rfc791<a href="소켓이란-무엇인가.html#fnref12" class="footnote-back">↩</a></p></li><li id="fn13"><p>https://en.wikipedia.org/wiki/Vint_Cerf<a href="ip-주소-구조체들-데이터-처리munging.html#fnref13" class="footnote-back">↩</a></p></li><li id="fn14"><p>https://en.wikipedia.org/wiki/ELIZA<a href="ip-주소-구조체들-데이터-처리munging.html#fnref14" class="footnote-back">↩</a></p></li><li id="fn15"><p>https://www.iana.org/assignments/port-numbers<a href="ip-주소-구조체들-데이터-처리munging.html#fnref15" class="footnote-back">↩</a></p></li><li id="fn16"><p>https://en.wikipedia.org/wiki/Doom_(1993_video_game)<a href="ip-주소-구조체들-데이터-처리munging.html#fnref16" class="footnote-back">↩</a></p></li><li id="fn17"><p>https://en.wikipedia.org/wiki/Wilford_Brimley<a href="ip-주소-구조체들-데이터-처리munging.html#fnref17" class="footnote-back">↩</a></p></li><li id="fn18"><p>https://tools.ietf.org/html/rfc1918<a href="ip-주소-구조체들-데이터-처리munging.html#fnref18" class="footnote-back">↩</a></p></li><li id="fn19"><p>https://tools.ietf.org/html/rfc4193<a href="ip-주소-구조체들-데이터-처리munging.html#fnref19" class="footnote-back">↩</a></p></li><li id="fn20"><p>https://www.iana.org/assignments/port-numbers<a href="시스템-콜이-아니면-죽음을.html#fnref20" class="footnote-back">↩</a></p></li><li id="fn21"><p>https://beej.us/guide/bgnet/examples/showip.c<a href="시스템-콜이-아니면-죽음을.html#fnref21" class="footnote-back">↩</a></p></li><li id="fn22"><p>https://tools.ietf.org/html/rfc1413<a href="시스템-콜이-아니면-죽음을.html#fnref22" class="footnote-back">↩</a></p></li><li id="fn23"><p>https://beej.us/guide/bgnet/examples/server.c<a href="클라인트-서버-배경지식.html#fnref23" class="footnote-back">↩</a></p></li><li id="fn24"><p>https://beej.us/guide/bgnet/examples/client.c<a href="클라인트-서버-배경지식.html#fnref24" class="footnote-back">↩</a></p></li><li id="fn25"><p>https://beej.us/guide/bgnet/examples/listener.c<a href="클라인트-서버-배경지식.html#fnref25" class="footnote-back">↩</a></p></li><li id="fn26"><p>https://beej.us/guide/bgnet/examples/talker.c<a href="클라인트-서버-배경지식.html#fnref26" class="footnote-back">↩</a></p></li><li id="fn27"><p>https://libevent.org/<a href="약간-더-고급스러운-기술.html#fnref27" class="footnote-back">↩</a></p></li><li id="fn28"><p>https://beej.us/guide/bgnet/examples/poll.c<a href="약간-더-고급스러운-기술.html#fnref28" class="footnote-back">↩</a></p></li><li id="fn29"><p>https://beej.us/guide/bgnet/examples/pollserver.c<a href="약간-더-고급스러운-기술.html#fnref29" class="footnote-back">↩</a></p></li><li id="fn30"><p>https://libevent.org/<a href="약간-더-고급스러운-기술.html#fnref30" class="footnote-back">↩</a></p></li><li id="fn31"><p>https://beej.us/guide/bgnet/examples/select.c<a href="약간-더-고급스러운-기술.html#fnref31" class="footnote-back">↩</a></p></li><li id="fn32"><p>https://beej.us/guide/bgnet/examples/selectserver.c<a href="약간-더-고급스러운-기술.html#fnref32" class="footnote-back">↩</a></p></li><li id="fn33"><p>https://en.wikipedia.org/wiki/Internet_Relay_Chat<a href="약간-더-고급스러운-기술.html#fnref33" class="footnote-back">↩</a></p></li><li id="fn34"><p>https://beej.us/guide/bgnet/examples/pack.c<a href="약간-더-고급스러운-기술.html#fnref34" class="footnote-back">↩</a></p></li><li id="fn35"><p>https://en.wikipedia.org/wiki/IEEE_754<a href="약간-더-고급스러운-기술.html#fnref35" class="footnote-back">↩</a></p></li><li id="fn36"><p>https://beej.us/guide/bgnet/examples/ieee754.c<a href="약간-더-고급스러운-기술.html#fnref36" class="footnote-back">↩</a></p></li><li id="fn37"><p>https://beej.us/guide/url/tpop<a href="약간-더-고급스러운-기술.html#fnref37" class="footnote-back">↩</a></p></li><li id="fn38"><p>https://github.com/protobuf-c/protobuf-c<a href="약간-더-고급스러운-기술.html#fnref38" class="footnote-back">↩</a></p></li><li id="fn39"><p>https://beej.us/guide/bgnet/examples/pack2.c<a href="약간-더-고급스러운-기술.html#fnref39" class="footnote-back">↩</a></p></li><li id="fn40"><p>https://beej.us/guide/bgnet/examples/pack2.c<a href="약간-더-고급스러운-기술.html#fnref40" class="footnote-back">↩</a></p></li><li id="fn41"><p>https://tools.ietf.org/html/rfc4506<a href="약간-더-고급스러운-기술.html#fnref41" class="footnote-back">↩</a></p></li><li id="fn42"><p>https://beej.us/guide/bgnet/examples/broadcaster.c<a href="약간-더-고급스러운-기술.html#fnref42" class="footnote-back">↩</a></p></li><li id="fn43"><p>http://www.unpbook.com/src.html<a href="일반적인-질문들.html#fnref43" class="footnote-back">↩</a></p></li><li id="fn44"><p>http://www.unpbook.com/src.html<a href="일반적인-질문들.html#fnref44" class="footnote-back">↩</a></p></li><li id="fn45"><p>https://www.openssl.org/<a href="일반적인-질문들.html#fnref45" class="footnote-back">↩</a></p></li><li id="fn46"><p>https://stackoverflow.com/questions/21323023/<a href="일반적인-질문들.html#fnref46" class="footnote-back">↩</a></p></li><li id="fn47"><p>https://www.iana.org/assignments/port-numbers<a href="일반적인-질문들.html#fnref47" class="footnote-back">↩</a></p></li><li id="fn48"><p>https://www.iana.org/assignments/port-numbers<a href="man-pages.html#fnref48" class="footnote-back">↩</a></p></li><li id="fn49"><p>https://beej.us/guide/url/intertcp1<a href="더-많은-참고문헌.html#fnref49" class="footnote-back">↩</a></p></li><li id="fn50"><p>https://beej.us/guide/url/tcpi1<a href="더-많은-참고문헌.html#fnref50" class="footnote-back">↩</a></p></li><li id="fn51"><p>https://beej.us/guide/url/tcpi123<a href="더-많은-참고문헌.html#fnref51" class="footnote-back">↩</a></p></li><li id="fn52"><p>https://beej.us/guide/url/tcpna<a href="더-많은-참고문헌.html#fnref52" class="footnote-back">↩</a></p></li><li id="fn53"><p>https://beej.us/guide/url/advunix<a href="더-많은-참고문헌.html#fnref53" class="footnote-back">↩</a></p></li><li id="fn54"><p>https://cis.temple.edu/~giorgio/old/cis307s96/readings/docs/sockets.html<a href="더-많은-참고문헌.html#fnref54" class="footnote-back">↩</a></p></li><li id="fn55"><p>https://developerweb.net/?f=70<a href="더-많은-참고문헌.html#fnref55" class="footnote-back">↩</a></p></li><li id="fn56"><p>http://www.faqs.org/faqs/internet/tcp-ip/tcp-ip-faq/part1/<a href="더-많은-참고문헌.html#fnref56" class="footnote-back">↩</a></p></li><li id="fn57"><p>https://tangentsoft.net/wskfaq/<a href="더-많은-참고문헌.html#fnref57" class="footnote-back">↩</a></p></li><li id="fn58"><p>https://en.wikipedia.org/wiki/Berkeley_sockets<a href="더-많은-참고문헌.html#fnref58" class="footnote-back">↩</a></p></li><li id="fn59"><p>https://en.wikipedia.org/wiki/Internet_Protocol<a href="더-많은-참고문헌.html#fnref59" class="footnote-back">↩</a></p></li><li id="fn60"><p>https://en.wikipedia.org/wiki/Transmission_Control_Protocol<a href="더-많은-참고문헌.html#fnref60" class="footnote-back">↩</a></p></li><li id="fn61"><p>https://en.wikipedia.org/wiki/User_Datagram_Protocol<a href="더-많은-참고문헌.html#fnref61" class="footnote-back">↩</a></p></li><li id="fn62"><p>https://en.wikipedia.org/wiki/Client-server<a href="더-많은-참고문헌.html#fnref62" class="footnote-back">↩</a></p></li><li id="fn63"><p>https://en.wikipedia.org/wiki/Serialization<a href="더-많은-참고문헌.html#fnref63" class="footnote-back">↩</a></p></li><li id="fn64"><p>https://www.rfc-editor.org/<a href="더-많은-참고문헌.html#fnref64" class="footnote-back">↩</a></p></li><li id="fn65"><p>https://tools.ietf.org/html/rfc1<a href="더-많은-참고문헌.html#fnref65" class="footnote-back">↩</a></p></li><li id="fn66"><p>https://tools.ietf.org/html/rfc768<a href="더-많은-참고문헌.html#fnref66" class="footnote-back">↩</a></p></li><li id="fn67"><p>https://tools.ietf.org/html/rfc791<a href="더-많은-참고문헌.html#fnref67" class="footnote-back">↩</a></p></li><li id="fn68"><p>https://tools.ietf.org/html/rfc793<a href="더-많은-참고문헌.html#fnref68" class="footnote-back">↩</a></p></li><li id="fn69"><p>https://tools.ietf.org/html/rfc854<a href="더-많은-참고문헌.html#fnref69" class="footnote-back">↩</a></p></li><li id="fn70"><p>https://tools.ietf.org/html/rfc959<a href="더-많은-참고문헌.html#fnref70" class="footnote-back">↩</a></p></li><li id="fn71"><p>https://tools.ietf.org/html/rfc1350<a href="더-많은-참고문헌.html#fnref71" class="footnote-back">↩</a></p></li><li id="fn72"><p>https://tools.ietf.org/html/rfc1459<a href="더-많은-참고문헌.html#fnref72" class="footnote-back">↩</a></p></li><li id="fn73"><p>https://tools.ietf.org/html/rfc1918<a href="더-많은-참고문헌.html#fnref73" class="footnote-back">↩</a></p></li><li id="fn74"><p>https://tools.ietf.org/html/rfc2131<a href="더-많은-참고문헌.html#fnref74" class="footnote-back">↩</a></p></li><li id="fn75"><p>https://tools.ietf.org/html/rfc2616<a href="더-많은-참고문헌.html#fnref75" class="footnote-back">↩</a></p></li><li id="fn76"><p>https://tools.ietf.org/html/rfc2821<a href="더-많은-참고문헌.html#fnref76" class="footnote-back">↩</a></p></li><li id="fn77"><p>https://tools.ietf.org/html/rfc3330<a href="더-많은-참고문헌.html#fnref77" class="footnote-back">↩</a></p></li><li id="fn78"><p>https://tools.ietf.org/html/rfc3493<a href="더-많은-참고문헌.html#fnref78" class="footnote-back">↩</a></p></li><li id="fn79"><p>https://tools.ietf.org/html/rfc3542<a href="더-많은-참고문헌.html#fnref79" class="footnote-back">↩</a></p></li><li id="fn80"><p>https://tools.ietf.org/html/rfc3849<a href="더-많은-참고문헌.html#fnref80" class="footnote-back">↩</a></p></li><li id="fn81"><p>https://tools.ietf.org/html/rfc3920<a href="더-많은-참고문헌.html#fnref81" class="footnote-back">↩</a></p></li><li id="fn82"><p>https://tools.ietf.org/html/rfc3977<a href="더-많은-참고문헌.html#fnref82" class="footnote-back">↩</a></p></li><li id="fn83"><p>https://tools.ietf.org/html/rfc4193<a href="더-많은-참고문헌.html#fnref83" class="footnote-back">↩</a></p></li><li id="fn84"><p>https://tools.ietf.org/html/rfc4506<a href="더-많은-참고문헌.html#fnref84" class="footnote-back">↩</a></p></li><li id="fn85"><p>https://tools.ietf.org/rfc/<a href="더-많은-참고문헌.html#fnref85" class="footnote-back">↩</a></p></li></ol></section>
+<div style="text-align:center"><span><a href="맨페이지.html" rel="prev">Prev</a> | </span><a href="index.html">Contents</a><span style="visibility: hidden"> | <a href="" rel="next">Next</a></span></div><hr>
+<h1 data-number="10" id="더-많은-참고문헌"><span class="header-section-number">10</span> 더 많은 참고문헌</h1>
+<p>여기까지 왔고, 이제 더 많은 것을 원하시나요? 이 모든 것에 대해 더 배우려면 어디로 가야 할까요?</p>
+<h2 data-number="10.1" id="books"><span class="header-section-number">10.1</span> 책들</h2>
+<p></p>
+<p>옛날식으로, 정말 손에 들 수 있는 종이책을 원한다면 아래의 훌륭한 책들을 살펴보세요. 이 링크들은 유명 서점의 제휴 링크로 연결되며, 저에게 소소한 수수료를 안겨 줍니다. 그냥 너그러운 마음이 든다면 PayPal로 <a href="mailto:beej@beej.us"><code>beej@beej.us</code></a>에 기부해 주셔도 됩니다. <code>:-)</code></p>
+<p><strong>Unix Network Programming, volumes 1-2</strong> W. Richard Stevens 지음. Addison-Wesley Professional와 Prentice Hall 출판. 1~2권 ISBN: <a href="https://beej.us/guide/url/unixnet1">978-0131411555</a><a href="더-많은-참고문헌.html#fn54" class="footnote-ref" id="fnref54" role="doc-noteref"><sup>54</sup></a>, <a href="https://beej.us/guide/url/unixnet2">978-0130810816</a><a href="더-많은-참고문헌.html#fn55" class="footnote-ref" id="fnref55" role="doc-noteref"><sup>55</sup></a>.</p>
+<p><strong>Internetworking with TCP/IP, volume I</strong> Douglas E. Comer 지음. Pearson 출판. ISBN <a href="https://beej.us/guide/url/intertcp1">978-0136085300</a><a href="더-많은-참고문헌.html#fn56" class="footnote-ref" id="fnref56" role="doc-noteref"><sup>56</sup></a>.</p>
+<p><strong>TCP/IP Illustrated, volumes 1-3</strong> W. Richard Stevens와 Gary R. Wright 지음. Addison Wesley 출판. 1~3권 ISBN(그리고 3권 통합본 ISBN): <a href="https://beej.us/guide/url/tcpi1">978-0201633467</a><a href="더-많은-참고문헌.html#fn57" class="footnote-ref" id="fnref57" role="doc-noteref"><sup>57</sup></a>, <a href="https://beej.us/guide/url/tcpi2">978-0201633542</a><a href="더-많은-참고문헌.html#fn58" class="footnote-ref" id="fnref58" role="doc-noteref"><sup>58</sup></a>, <a href="https://beej.us/guide/url/tcpi3">978-0201634952</a><a href="더-많은-참고문헌.html#fn59" class="footnote-ref" id="fnref59" role="doc-noteref"><sup>59</sup></a>, (<a href="https://beej.us/guide/url/tcpi123">978-0201776317</a><a href="더-많은-참고문헌.html#fn60" class="footnote-ref" id="fnref60" role="doc-noteref"><sup>60</sup></a>).</p>
+<p><strong>TCP/IP Network Administration</strong> Craig Hunt 지음. O’Reilly &amp; Associates, Inc. 출판. ISBN <a href="https://beej.us/guide/url/tcpna">978-0596002978</a><a href="더-많은-참고문헌.html#fn61" class="footnote-ref" id="fnref61" role="doc-noteref"><sup>61</sup></a>.</p>
+<p><strong>Advanced Programming in the UNIX Environment</strong> W. Richard Stevens 지음. Addison Wesley 출판. ISBN <a href="https://beej.us/guide/url/advunix">978-0321637734</a><a href="더-많은-참고문헌.html#fn62" class="footnote-ref" id="fnref62" role="doc-noteref"><sup>62</sup></a>.</p>
+<p></p>
+<h2 data-number="10.2" id="웹-참고문헌"><span class="header-section-number">10.2</span> 웹 참고문헌</h2>
+<p></p>
+<p>인터넷에는 아래와 같은 정보가 있습니다.</p>
+<p><strong><a href="https://cis.temple.edu/~giorgio/old/cis307s96/readings/docs/sockets.html">BSD Sockets: A Quick And Dirty Primer</a><a href="더-많은-참고문헌.html#fn63" class="footnote-ref" id="fnref63" role="doc-noteref"><sup>63</sup></a></strong> (유닉스 시스템 프로그래밍 정보도 있습니다!)</p>
+<p><strong><a href="https://developerweb.net/?f=70">The Unix Socket FAQ</a><a href="더-많은-참고문헌.html#fn64" class="footnote-ref" id="fnref64" role="doc-noteref"><sup>64</sup></a></strong></p>
+<p><strong><a href="http://www.faqs.org/faqs/internet/tcp-ip/tcp-ip-faq/part1/">TCP/IP FAQ</a><a href="더-많은-참고문헌.html#fn65" class="footnote-ref" id="fnref65" role="doc-noteref"><sup>65</sup></a></strong></p>
+<p><strong><a href="https://tangentsoft.net/wskfaq/">The Winsock FAQ</a><a href="더-많은-참고문헌.html#fn66" class="footnote-ref" id="fnref66" role="doc-noteref"><sup>66</sup></a></strong></p>
+<p>그리고 관련된 위키백과 페이지도 있습니다.</p>
+<p><strong><a href="https://en.wikipedia.org/wiki/Berkeley_sockets">Berkeley Sockets</a><a href="더-많은-참고문헌.html#fn67" class="footnote-ref" id="fnref67" role="doc-noteref"><sup>67</sup></a></strong></p>
+<p><strong><a href="https://en.wikipedia.org/wiki/Internet_Protocol">Internet Protocol (IP)</a><a href="더-많은-참고문헌.html#fn68" class="footnote-ref" id="fnref68" role="doc-noteref"><sup>68</sup></a></strong></p>
+<p><strong><a href="https://en.wikipedia.org/wiki/Transmission_Control_Protocol">Transmission Control Protocol (TCP)</a><a href="더-많은-참고문헌.html#fn69" class="footnote-ref" id="fnref69" role="doc-noteref"><sup>69</sup></a></strong></p>
+<p><strong><a href="https://en.wikipedia.org/wiki/User_Datagram_Protocol">User Datagram Protocol (UDP)</a><a href="더-많은-참고문헌.html#fn70" class="footnote-ref" id="fnref70" role="doc-noteref"><sup>70</sup></a></strong></p>
+<p><strong><a href="https://en.wikipedia.org/wiki/Client-server">Client-Server</a><a href="더-많은-참고문헌.html#fn71" class="footnote-ref" id="fnref71" role="doc-noteref"><sup>71</sup></a></strong></p>
+<p><strong><a href="https://en.wikipedia.org/wiki/Serialization">Serialization</a><a href="더-많은-참고문헌.html#fn72" class="footnote-ref" id="fnref72" role="doc-noteref"><sup>72</sup></a></strong> (데이터 패킹과 언패킹)</p>
+<p></p>
+<h2 data-number="10.3" id="rfcs"><span class="header-section-number">10.3</span> RFCs</h2>
+<p> </p>
+<p><a href="https://www.rfc-editor.org/">RFC</a><a href="더-많은-참고문헌.html#fn73" class="footnote-ref" id="fnref73" role="doc-noteref"><sup>73</sup></a>—진짜 알짜배기입니다! 이것들은 인터넷에서 쓰이는 할당 번호와 프로그래밍 API, 프로토콜 등을 설명하는 문서입니다. 여러분의 즐거움을 위해 그중 일부에 대한 링크를 포함했습니다. 팝콘 한 통을 챙기고, 머리를 굴릴 준비를 해 봅시다.</p>
+<p><strong><a href="https://tools.ietf.org/html/rfc1">RFC 1</a><a href="더-많은-참고문헌.html#fn74" class="footnote-ref" id="fnref74" role="doc-noteref"><sup>74</sup></a></strong> —최초의 RFC입니다. 이 문서는 “인터넷”이 막 태어나던 시점에 어떤 모습이었는지, 그리고 인터넷이 밑바닥부터 어떻게 설계되고 있었는지 엿볼 수 있게 해 줍니다. (물론 이 RFC는 완전히 폐기되었습니다!)</p>
+<p> <strong><a href="https://tools.ietf.org/html/rfc768">RFC 768</a><a href="더-많은-참고문헌.html#fn75" class="footnote-ref" id="fnref75" role="doc-noteref"><sup>75</sup></a></strong> —사용자 데이터그램 프로토콜(UDP)</p>
+<p> <strong><a href="https://tools.ietf.org/html/rfc791">RFC 791</a><a href="더-많은-참고문헌.html#fn76" class="footnote-ref" id="fnref76" role="doc-noteref"><sup>76</sup></a></strong> —인터넷 프로토콜(IP)</p>
+<p> <strong><a href="https://tools.ietf.org/html/rfc793">RFC 793</a><a href="더-많은-참고문헌.html#fn77" class="footnote-ref" id="fnref77" role="doc-noteref"><sup>77</sup></a></strong> —전송 제어 프로토콜(TCP)</p>
+<p> <strong><a href="https://tools.ietf.org/html/rfc854">RFC 854</a><a href="더-많은-참고문헌.html#fn78" class="footnote-ref" id="fnref78" role="doc-noteref"><sup>78</sup></a></strong> —Telnet 프로토콜</p>
+<p> <strong><a href="https://tools.ietf.org/html/rfc959">RFC 959</a><a href="더-많은-참고문헌.html#fn79" class="footnote-ref" id="fnref79" role="doc-noteref"><sup>79</sup></a></strong> —파일 전송 프로토콜(FTP)</p>
+<p> <strong><a href="https://tools.ietf.org/html/rfc1350">RFC 1350</a><a href="더-많은-참고문헌.html#fn80" class="footnote-ref" id="fnref80" role="doc-noteref"><sup>80</sup></a></strong> —간이 파일 전송 프로토콜(TFTP)</p>
+<p> <strong><a href="https://tools.ietf.org/html/rfc1459">RFC 1459</a><a href="더-많은-참고문헌.html#fn81" class="footnote-ref" id="fnref81" role="doc-noteref"><sup>81</sup></a></strong> —인터넷 릴레이 채팅 프로토콜(IRC)</p>
+<p><strong><a href="https://tools.ietf.org/html/rfc1918">RFC 1918</a><a href="더-많은-참고문헌.html#fn82" class="footnote-ref" id="fnref82" role="doc-noteref"><sup>82</sup></a></strong> —사설 인터넷을 위한 주소 할당</p>
+<p> <strong><a href="https://tools.ietf.org/html/rfc2131">RFC 2131</a><a href="더-많은-참고문헌.html#fn83" class="footnote-ref" id="fnref83" role="doc-noteref"><sup>83</sup></a></strong> —동적 호스트 구성 프로토콜(DHCP)</p>
+<p> <strong><a href="https://tools.ietf.org/html/rfc9110">RFC 9110</a><a href="더-많은-참고문헌.html#fn84" class="footnote-ref" id="fnref84" role="doc-noteref"><sup>84</sup></a></strong> —하이퍼텍스트 전송 프로토콜(HTTP)</p>
+<p> <strong><a href="https://tools.ietf.org/html/rfc2821">RFC 2821</a><a href="더-많은-참고문헌.html#fn85" class="footnote-ref" id="fnref85" role="doc-noteref"><sup>85</sup></a></strong> —단순 메일 전송 프로토콜(SMTP)</p>
+<p><strong><a href="https://tools.ietf.org/html/rfc3330">RFC 3330</a><a href="더-많은-참고문헌.html#fn86" class="footnote-ref" id="fnref86" role="doc-noteref"><sup>86</sup></a></strong> —특수 용도 IPv4 주소</p>
+<p><strong><a href="https://tools.ietf.org/html/rfc3493">RFC 3493</a><a href="더-많은-참고문헌.html#fn87" class="footnote-ref" id="fnref87" role="doc-noteref"><sup>87</sup></a></strong> —IPv6을 위한 기본 소켓 인터페이스 확장</p>
+<p><strong><a href="https://tools.ietf.org/html/rfc3542">RFC 3542</a><a href="더-많은-참고문헌.html#fn88" class="footnote-ref" id="fnref88" role="doc-noteref"><sup>88</sup></a></strong> —IPv6을 위한 고급 소켓 응용프로그램 인터페이스(API)</p>
+<p><strong><a href="https://tools.ietf.org/html/rfc3849">RFC 3849</a><a href="더-많은-참고문헌.html#fn89" class="footnote-ref" id="fnref89" role="doc-noteref"><sup>89</sup></a></strong> —문서화를 위해 예약된 IPv6 주소 접두사</p>
+<p> <strong><a href="https://tools.ietf.org/html/rfc3920">RFC 3920</a><a href="더-많은-참고문헌.html#fn90" class="footnote-ref" id="fnref90" role="doc-noteref"><sup>90</sup></a></strong> —확장 가능 메시징 및 프레즌스 프로토콜(XMPP)</p>
+<p> <strong><a href="https://tools.ietf.org/html/rfc3977">RFC 3977</a><a href="더-많은-참고문헌.html#fn91" class="footnote-ref" id="fnref91" role="doc-noteref"><sup>91</sup></a></strong> —네트워크 뉴스 전송 프로토콜(NNTP)</p>
+<p><strong><a href="https://tools.ietf.org/html/rfc4193">RFC 4193</a><a href="더-많은-참고문헌.html#fn92" class="footnote-ref" id="fnref92" role="doc-noteref"><sup>92</sup></a></strong> —고유 로컬 IPv6 유니캐스트 주소</p>
+<p> <strong><a href="https://tools.ietf.org/html/rfc4506">RFC 4506</a><a href="더-많은-참고문헌.html#fn93" class="footnote-ref" id="fnref93" role="doc-noteref"><sup>93</sup></a></strong> —외부 데이터 표현 표준(XDR)</p>
+<p>IETF에는 <a href="https://tools.ietf.org/rfc/">RFC를 찾고 살펴보기 위한 좋은 도구</a><a href="더-많은-참고문헌.html#fn94" class="footnote-ref" id="fnref94" role="doc-noteref"><sup>94</sup></a>가 있습니다.</p>
+<p> </p>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>https://www.linux.com/<a href="도입부.html#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>https://bsd.org/<a href="도입부.html#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>https://www.illumos.org/<a href="도입부.html#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>https://learn.microsoft.com/en-us/windows/wsl/<a href="도입부.html#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>https://cygwin.com/<a href="도입부.html#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>https://www.tallyhawk.net/WinsockExamples/<a href="도입부.html#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7"><p>http://www.catb.org/~esr/faqs/smart-questions.html<a href="도입부.html#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn8"><p>../source/examples/telnot.c<a href="소켓이란-무엇인가.html#fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn9"><p>https://tools.ietf.org/html/rfc854<a href="소켓이란-무엇인가.html#fnref9" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn10"><p>https://tools.ietf.org/html/rfc793<a href="소켓이란-무엇인가.html#fnref10" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn11"><p>https://tools.ietf.org/html/rfc791<a href="소켓이란-무엇인가.html#fnref11" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn12"><p>https://tools.ietf.org/html/rfc768<a href="소켓이란-무엇인가.html#fnref12" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn13"><p>https://tools.ietf.org/html/rfc791<a href="소켓이란-무엇인가.html#fnref13" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn14"><p>https://en.wikipedia.org/wiki/Vint_Cerf<a href="ip-주소-구조체들-데이터-처리munging.html#fnref14" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn15"><p>https://en.wikipedia.org/wiki/ELIZA<a href="ip-주소-구조체들-데이터-처리munging.html#fnref15" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn16"><p>https://www.iana.org/assignments/port-numbers<a href="ip-주소-구조체들-데이터-처리munging.html#fnref16" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn17"><p>https://en.wikipedia.org/wiki/Doom_%281993_video_game%29<a href="ip-주소-구조체들-데이터-처리munging.html#fnref17" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn18"><p>https://en.wikipedia.org/wiki/Wilford_Brimley<a href="ip-주소-구조체들-데이터-처리munging.html#fnref18" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn19"><p>https://tools.ietf.org/html/rfc1918<a href="ip-주소-구조체들-데이터-처리munging.html#fnref19" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn20"><p>https://tools.ietf.org/html/rfc4193<a href="ip-주소-구조체들-데이터-처리munging.html#fnref20" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn21"><p>https://www.iana.org/assignments/port-numbers<a href="시스템-콜이-아니면-죽음을.html#fnref21" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn22"><p>../source/examples/showip.c<a href="시스템-콜이-아니면-죽음을.html#fnref22" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn23"><p>https://tools.ietf.org/html/rfc1413<a href="시스템-콜이-아니면-죽음을.html#fnref23" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn24"><p>../source/examples/server.c<a href="클라이언트-서버-배경지식.html#fnref24" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn25"><p>../source/examples/client.c<a href="클라이언트-서버-배경지식.html#fnref25" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn26"><p>../source/examples/listener.c<a href="클라이언트-서버-배경지식.html#fnref26" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn27"><p>../source/examples/talker.c<a href="클라이언트-서버-배경지식.html#fnref27" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn28"><p>https://libevent.org/<a href="약간-더-고급스러운-기술.html#fnref28" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn29"><p>../source/examples/poll.c<a href="약간-더-고급스러운-기술.html#fnref29" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn30"><p>../source/examples/pollserver.c<a href="약간-더-고급스러운-기술.html#fnref30" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn31"><p>https://libevent.org/<a href="약간-더-고급스러운-기술.html#fnref31" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn32"><p>../source/examples/select.c<a href="약간-더-고급스러운-기술.html#fnref32" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn33"><p>../source/examples/selectserver.c<a href="약간-더-고급스러운-기술.html#fnref33" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn34"><p>https://en.wikipedia.org/wiki/Internet_Relay_Chat<a href="약간-더-고급스러운-기술.html#fnref34" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn35"><p>../source/examples/pack.c<a href="약간-더-고급스러운-기술.html#fnref35" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn36"><p>https://en.wikipedia.org/wiki/IEEE_754<a href="약간-더-고급스러운-기술.html#fnref36" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn37"><p>../source/examples/ieee754.c<a href="약간-더-고급스러운-기술.html#fnref37" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn38"><p>https://beej.us/guide/url/tpop<a href="약간-더-고급스러운-기술.html#fnref38" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn39"><p>https://github.com/protobuf-c/protobuf-c<a href="약간-더-고급스러운-기술.html#fnref39" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn40"><p>../source/examples/pack2.c<a href="약간-더-고급스러운-기술.html#fnref40" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn41"><p>../source/examples/pack2.c<a href="약간-더-고급스러운-기술.html#fnref41" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn42"><p>https://tools.ietf.org/html/rfc4506<a href="약간-더-고급스러운-기술.html#fnref42" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn43"><p>기록 차원에서 말해 두자면, 저는 고양이를 좋아합니다. 최고죠. 평생 여러 마리를 사랑하며 함께 살았습니다. 기원을 알 수 없는 이 음울한 비유 표현을 싫어하는 분들이 있다는 것도 알지만, 이 안내서의 이 부분에는 이 표현이 가장 잘 맞는다고 생각합니다. (역자 주 : 각주 번호 6178은 숫자를 180도 돌려 읽으면 “glib”처럼 보이는 말장난입니다. “glib”은 말만 번지르르하고 깊이가 없다는 뜻입니다.)<a href="약간-더-고급스러운-기술.html#fnref43" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn44"><p>../source/examples/broadcaster.c<a href="약간-더-고급스러운-기술.html#fnref44" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn45"><p>http://www.unpbook.com/src.html<a href="일반적인-질문들.html#fnref45" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn46"><p>http://www.unpbook.com/src.html<a href="일반적인-질문들.html#fnref46" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn47"><p>https://www.openssl.org/<a href="일반적인-질문들.html#fnref47" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn48"><p>https://stackoverflow.com/questions/21323023/<a href="일반적인-질문들.html#fnref48" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn49"><p>https://www.iana.org/assignments/port-numbers<a href="일반적인-질문들.html#fnref49" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn50"><p>https://www.iana.org/assignments/port-numbers<a href="맨페이지.html#fnref50" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn51"><p>https://man.archlinux.org/man/htobe64<a href="맨페이지.html#fnref51" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn52"><p>https://gcc.gnu.org/onlinedocs/gcc/Byte-Swapping-Builtins.html<a href="맨페이지.html#fnref52" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn53"><p>../source/examples/htonll.c<a href="맨페이지.html#fnref53" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn54"><p>https://beej.us/guide/url/unixnet1<a href="더-많은-참고문헌.html#fnref54" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn55"><p>https://beej.us/guide/url/unixnet2<a href="더-많은-참고문헌.html#fnref55" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn56"><p>https://beej.us/guide/url/intertcp1<a href="더-많은-참고문헌.html#fnref56" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn57"><p>https://beej.us/guide/url/tcpi1<a href="더-많은-참고문헌.html#fnref57" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn58"><p>https://beej.us/guide/url/tcpi2<a href="더-많은-참고문헌.html#fnref58" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn59"><p>https://beej.us/guide/url/tcpi3<a href="더-많은-참고문헌.html#fnref59" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn60"><p>https://beej.us/guide/url/tcpi123<a href="더-많은-참고문헌.html#fnref60" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn61"><p>https://beej.us/guide/url/tcpna<a href="더-많은-참고문헌.html#fnref61" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn62"><p>https://beej.us/guide/url/advunix<a href="더-많은-참고문헌.html#fnref62" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn63"><p>https://cis.temple.edu/~giorgio/old/cis307s96/readings/docs/sockets.html<a href="더-많은-참고문헌.html#fnref63" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn64"><p>https://developerweb.net/?f=70<a href="더-많은-참고문헌.html#fnref64" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn65"><p>http://www.faqs.org/faqs/internet/tcp-ip/tcp-ip-faq/part1/<a href="더-많은-참고문헌.html#fnref65" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn66"><p>https://tangentsoft.net/wskfaq/<a href="더-많은-참고문헌.html#fnref66" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn67"><p>https://en.wikipedia.org/wiki/Berkeley_sockets<a href="더-많은-참고문헌.html#fnref67" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn68"><p>https://en.wikipedia.org/wiki/Internet_Protocol<a href="더-많은-참고문헌.html#fnref68" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn69"><p>https://en.wikipedia.org/wiki/Transmission_Control_Protocol<a href="더-많은-참고문헌.html#fnref69" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn70"><p>https://en.wikipedia.org/wiki/User_Datagram_Protocol<a href="더-많은-참고문헌.html#fnref70" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn71"><p>https://en.wikipedia.org/wiki/Client-server<a href="더-많은-참고문헌.html#fnref71" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn72"><p>https://en.wikipedia.org/wiki/Serialization<a href="더-많은-참고문헌.html#fnref72" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn73"><p>https://www.rfc-editor.org/<a href="더-많은-참고문헌.html#fnref73" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn74"><p>https://tools.ietf.org/html/rfc1<a href="더-많은-참고문헌.html#fnref74" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn75"><p>https://tools.ietf.org/html/rfc768<a href="더-많은-참고문헌.html#fnref75" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn76"><p>https://tools.ietf.org/html/rfc791<a href="더-많은-참고문헌.html#fnref76" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn77"><p>https://tools.ietf.org/html/rfc793<a href="더-많은-참고문헌.html#fnref77" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn78"><p>https://tools.ietf.org/html/rfc854<a href="더-많은-참고문헌.html#fnref78" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn79"><p>https://tools.ietf.org/html/rfc959<a href="더-많은-참고문헌.html#fnref79" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn80"><p>https://tools.ietf.org/html/rfc1350<a href="더-많은-참고문헌.html#fnref80" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn81"><p>https://tools.ietf.org/html/rfc1459<a href="더-많은-참고문헌.html#fnref81" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn82"><p>https://tools.ietf.org/html/rfc1918<a href="더-많은-참고문헌.html#fnref82" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn83"><p>https://tools.ietf.org/html/rfc2131<a href="더-많은-참고문헌.html#fnref83" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn84"><p>https://tools.ietf.org/html/rfc9110<a href="더-많은-참고문헌.html#fnref84" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn85"><p>https://tools.ietf.org/html/rfc2821<a href="더-많은-참고문헌.html#fnref85" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn86"><p>https://tools.ietf.org/html/rfc3330<a href="더-많은-참고문헌.html#fnref86" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn87"><p>https://tools.ietf.org/html/rfc3493<a href="더-많은-참고문헌.html#fnref87" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn88"><p>https://tools.ietf.org/html/rfc3542<a href="더-많은-참고문헌.html#fnref88" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn89"><p>https://tools.ietf.org/html/rfc3849<a href="더-많은-참고문헌.html#fnref89" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn90"><p>https://tools.ietf.org/html/rfc3920<a href="더-많은-참고문헌.html#fnref90" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn91"><p>https://tools.ietf.org/html/rfc3977<a href="더-많은-참고문헌.html#fnref91" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn92"><p>https://tools.ietf.org/html/rfc4193<a href="더-많은-참고문헌.html#fnref92" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn93"><p>https://tools.ietf.org/html/rfc4506<a href="더-많은-참고문헌.html#fnref93" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn94"><p>https://tools.ietf.org/rfc/<a href="더-많은-참고문헌.html#fnref94" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
 </body>
-<hr><div style="text-align:center"><span><a href="man-pages.html">Prev</a> | </span><a href="index.html">Contents</a><span style="visibility: hidden"> | <a href="">Next</a></span></div></body>
+<hr><div style="text-align:center"><span><a href="맨페이지.html" rel="prev">Prev</a> | </span><a href="index.html">Contents</a><span style="visibility: hidden"> | <a href="" rel="next">Next</a></span></div></body>
 </html>

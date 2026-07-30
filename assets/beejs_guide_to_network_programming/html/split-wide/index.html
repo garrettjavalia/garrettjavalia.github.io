@@ -5,77 +5,727 @@
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>Beej의 네트워크 프로그래밍 안내서</title>
-  <style type="text/css">
+  <style>
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <!-- Generated by the mklightdark script -->
+  <!-- Modify that script to change syntax highlighting -->
+    <style>
+     @media (prefers-color-scheme: light) {
+      html {
+        color: #1a1a1a;
+        background-color: #fdfdfd;
+      }
+      body {
+        margin: 0 auto;
+        max-width: 36em;
+        padding-left: 50px;
+        padding-right: 50px;
+        padding-top: 50px;
+        padding-bottom: 50px;
+        hyphens: auto;
+        overflow-wrap: break-word;
+        text-rendering: optimizeLegibility;
+        font-kerning: normal;
+      }
+      @media (max-width: 600px) {
+        body {
+          font-size: 0.9em;
+          padding: 12px;
+        }
+        h1 {
+          font-size: 1.8em;
+        }
+      }
+      @media print {
+        html {
+          background-color: white;
+        }
+        body {
+          background-color: transparent;
+          color: black;
+          font-size: 12pt;
+        }
+        p, h2, h3 {
+          orphans: 3;
+          widows: 3;
+        }
+        h2, h3, h4 {
+          page-break-after: avoid;
+        }
+      }
+      p {
+        margin: 1em 0;
+      }
+      a {
+        color: #1a1a1a;
+      }
+      a:visited {
+        color: #1a1a1a;
+      }
+      img {
+        max-width: 100%;
+      }
+      svg {
+        height: auto;
+        max-width: 100%;
+      }
+      h1, h2, h3, h4, h5, h6 {
+        margin-top: 1.4em;
+      }
+      h5, h6 {
+        font-size: 1em;
+        font-style: italic;
+      }
+      h6 {
+        font-weight: normal;
+      }
+      ol, ul {
+        padding-left: 1.7em;
+        margin-top: 1em;
+      }
+      li > ol, li > ul {
+        margin-top: 0;
+      }
+      blockquote {
+        margin: 1em 0 1em 1.7em;
+        padding-left: 1em;
+        border-left: 2px solid #e6e6e6;
+        color: #606060;
+      }
+      code {
+        font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+        font-size: 85%;
+        margin: 0;
+        hyphens: manual;
+      }
+      pre {
+        margin: 1em 0;
+        overflow: auto;
+      }
+      pre code {
+        padding: 0;
+        overflow: visible;
+        overflow-wrap: normal;
+      }
+      .sourceCode {
+       background-color: transparent;
+       overflow: visible;
+      }
+      hr {
+        background-color: #1a1a1a;
+        border: none;
+        height: 1px;
+        margin: 1em 0;
+      }
+      table {
+        margin: 1em 0;
+        border-collapse: collapse;
+        width: 100%;
+        overflow-x: auto;
+        display: block;
+        font-variant-numeric: lining-nums tabular-nums;
+      }
+      table caption {
+        margin-bottom: 0.75em;
+      }
+      tbody {
+        margin-top: 0.5em;
+        border-top: 1px solid #1a1a1a;
+        border-bottom: 1px solid #1a1a1a;
+      }
+      th {
+        border-top: 1px solid #1a1a1a;
+        padding: 0.25em 0.5em 0.25em 0.5em;
+      }
+      td {
+        padding: 0.125em 0.5em 0.25em 0.5em;
+      }
+      header {
+        margin-bottom: 4em;
+        text-align: center;
+      }
+      #TOC li {
+        list-style: none;
+      }
+      #TOC ul {
+        padding-left: 1.3em;
+      }
+      #TOC > ul {
+        padding-left: 0;
+      }
+      #TOC a:not(:hover) {
+        text-decoration: none;
+      }
       code{white-space: pre-wrap;}
       span.smallcaps{font-variant: small-caps;}
-      span.underline{text-decoration: underline;}
-      div.column{display: inline-block; vertical-align: top; width: 50%;}
-  </style>
-  <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
-}
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(title);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-    color: #aaaaaa;
-  }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-div.sourceCode
-  {  }
-@media screen {
-a.sourceLine::before { text-decoration: underline; }
-}
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-  </style>
-  <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono&display=swap" rel="stylesheet"> 
-  <link rel="stylesheet" as="style" crossorigin="None" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.6/dist/web/static/pretendard.css" />
+      div.columns{display: flex; gap: min(4vw, 1.5em);}
+      div.column{flex: auto; overflow-x: auto;}
+      div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+      /* The extra [class] is a hack that increases specificity enough to
+         override a similar rule in reveal.js */
+      ul.task-list[class]{list-style: none;}
+      ul.task-list li input[type="checkbox"] {
+        font-size: inherit;
+        width: 0.8em;
+        margin: 0 0.8em 0.2em -1.6em;
+        vertical-align: middle;
+      }
+      .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+      /* CSS for syntax highlighting */
+      html { -webkit-text-size-adjust: 100%; }
+      pre > code.sourceCode { white-space: pre; position: relative; }
+      pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+      pre > code.sourceCode > span:empty { height: 1.2em; }
+      .sourceCode { overflow: visible; }
+      code.sourceCode > span { color: inherit; text-decoration: inherit; }
+      div.sourceCode { margin: 1em 0; }
+      pre.sourceCode { margin: 0; }
+      @media screen {
+      div.sourceCode { overflow: auto; }
+      }
+      @media print {
+      pre > code.sourceCode { white-space: pre-wrap; }
+      pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+      }
+      pre.numberSource code
+        { counter-reset: source-line 0; }
+      pre.numberSource code > span
+        { position: relative; left: -4em; counter-increment: source-line; }
+      pre.numberSource code > span > a:first-child::before
+        { content: counter(source-line);
+          position: relative; left: -1em; text-align: right; vertical-align: baseline;
+          border: none; display: inline-block;
+          -webkit-touch-callout: none; -webkit-user-select: none;
+          -khtml-user-select: none; -moz-user-select: none;
+          -ms-user-select: none; user-select: none;
+          padding: 0 4px; width: 4em;
+          color: #aaaaaa;
+        }
+      pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+      div.sourceCode
+        {   }
+      @media screen {
+      pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+      }
+      code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+      code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+      code span.at { color: #7d9029; } /* Attribute */
+      code span.bn { color: #40a070; } /* BaseN */
+      code span.bu { color: #008000; } /* BuiltIn */
+      code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+      code span.ch { color: #4070a0; } /* Char */
+      code span.cn { color: #880000; } /* Constant */
+      code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+      code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+      code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+      code span.dt { color: #902000; } /* DataType */
+      code span.dv { color: #40a070; } /* DecVal */
+      code span.er { color: #ff0000; font-weight: bold; } /* Error */
+      code span.ex { } /* Extension */
+      code span.fl { color: #40a070; } /* Float */
+      code span.fu { color: #06287e; } /* Function */
+      code span.im { color: #008000; font-weight: bold; } /* Import */
+      code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+      code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+      code span.op { color: #666666; } /* Operator */
+      code span.ot { color: #007020; } /* Other */
+      code span.pp { color: #bc7a00; } /* Preprocessor */
+      code span.sc { color: #4070a0; } /* SpecialChar */
+      code span.ss { color: #bb6688; } /* SpecialString */
+      code span.st { color: #4070a0; } /* String */
+      code span.va { color: #19177c; } /* Variable */
+      code span.vs { color: #4070a0; } /* VerbatimString */
+      code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+      }
+    </style>
+    <style>
+     @media (prefers-color-scheme: dark) {
+      html {
+        color: #1a1a1a;
+        background-color: #fdfdfd;
+      }
+      body {
+        margin: 0 auto;
+        max-width: 36em;
+        padding-left: 50px;
+        padding-right: 50px;
+        padding-top: 50px;
+        padding-bottom: 50px;
+        hyphens: auto;
+        overflow-wrap: break-word;
+        text-rendering: optimizeLegibility;
+        font-kerning: normal;
+      }
+      @media (max-width: 600px) {
+        body {
+          font-size: 0.9em;
+          padding: 12px;
+        }
+        h1 {
+          font-size: 1.8em;
+        }
+      }
+      @media print {
+        html {
+          background-color: white;
+        }
+        body {
+          background-color: transparent;
+          color: black;
+          font-size: 12pt;
+        }
+        p, h2, h3 {
+          orphans: 3;
+          widows: 3;
+        }
+        h2, h3, h4 {
+          page-break-after: avoid;
+        }
+      }
+      p {
+        margin: 1em 0;
+      }
+      a {
+        color: #1a1a1a;
+      }
+      a:visited {
+        color: #1a1a1a;
+      }
+      img {
+        max-width: 100%;
+      }
+      svg {
+        height: auto;
+        max-width: 100%;
+      }
+      h1, h2, h3, h4, h5, h6 {
+        margin-top: 1.4em;
+      }
+      h5, h6 {
+        font-size: 1em;
+        font-style: italic;
+      }
+      h6 {
+        font-weight: normal;
+      }
+      ol, ul {
+        padding-left: 1.7em;
+        margin-top: 1em;
+      }
+      li > ol, li > ul {
+        margin-top: 0;
+      }
+      blockquote {
+        margin: 1em 0 1em 1.7em;
+        padding-left: 1em;
+        border-left: 2px solid #e6e6e6;
+        color: #606060;
+      }
+      code {
+        font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+        font-size: 85%;
+        margin: 0;
+        hyphens: manual;
+      }
+      pre {
+        margin: 1em 0;
+        overflow: auto;
+      }
+      pre code {
+        padding: 0;
+        overflow: visible;
+        overflow-wrap: normal;
+      }
+      .sourceCode {
+       background-color: transparent;
+       overflow: visible;
+      }
+      hr {
+        background-color: #1a1a1a;
+        border: none;
+        height: 1px;
+        margin: 1em 0;
+      }
+      table {
+        margin: 1em 0;
+        border-collapse: collapse;
+        width: 100%;
+        overflow-x: auto;
+        display: block;
+        font-variant-numeric: lining-nums tabular-nums;
+      }
+      table caption {
+        margin-bottom: 0.75em;
+      }
+      tbody {
+        margin-top: 0.5em;
+        border-top: 1px solid #1a1a1a;
+        border-bottom: 1px solid #1a1a1a;
+      }
+      th {
+        border-top: 1px solid #1a1a1a;
+        padding: 0.25em 0.5em 0.25em 0.5em;
+      }
+      td {
+        padding: 0.125em 0.5em 0.25em 0.5em;
+      }
+      header {
+        margin-bottom: 4em;
+        text-align: center;
+      }
+      #TOC li {
+        list-style: none;
+      }
+      #TOC ul {
+        padding-left: 1.3em;
+      }
+      #TOC > ul {
+        padding-left: 0;
+      }
+      #TOC a:not(:hover) {
+        text-decoration: none;
+      }
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      div.columns{display: flex; gap: min(4vw, 1.5em);}
+      div.column{flex: auto; overflow-x: auto;}
+      div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+      /* The extra [class] is a hack that increases specificity enough to
+         override a similar rule in reveal.js */
+      ul.task-list[class]{list-style: none;}
+      ul.task-list li input[type="checkbox"] {
+        font-size: inherit;
+        width: 0.8em;
+        margin: 0 0.8em 0.2em -1.6em;
+        vertical-align: middle;
+      }
+      .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+      /* CSS for syntax highlighting */
+      html { -webkit-text-size-adjust: 100%; }
+      pre > code.sourceCode { white-space: pre; position: relative; }
+      pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+      pre > code.sourceCode > span:empty { height: 1.2em; }
+      .sourceCode { overflow: visible; }
+      code.sourceCode > span { color: inherit; text-decoration: inherit; }
+      div.sourceCode { margin: 1em 0; }
+      pre.sourceCode { margin: 0; }
+      @media screen {
+      div.sourceCode { overflow: auto; }
+      }
+      @media print {
+      pre > code.sourceCode { white-space: pre-wrap; }
+      pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+      }
+      pre.numberSource code
+        { counter-reset: source-line 0; }
+      pre.numberSource code > span
+        { position: relative; left: -4em; counter-increment: source-line; }
+      pre.numberSource code > span > a:first-child::before
+        { content: counter(source-line);
+          position: relative; left: -1em; text-align: right; vertical-align: baseline;
+          border: none; display: inline-block;
+          -webkit-touch-callout: none; -webkit-user-select: none;
+          -khtml-user-select: none; -moz-user-select: none;
+          -ms-user-select: none; user-select: none;
+          padding: 0 4px; width: 4em;
+        }
+      pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+      div.sourceCode
+        { color: #cccccc; background-color: #303030; }
+      @media screen {
+      pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+      }
+      code span.al { color: #ffcfaf; } /* Alert */
+      code span.an { color: #7f9f7f; font-weight: bold; } /* Annotation */
+      code span.at { } /* Attribute */
+      code span.bn { color: #dca3a3; } /* BaseN */
+      code span.bu { } /* BuiltIn */
+      code span.cf { color: #f0dfaf; } /* ControlFlow */
+      code span.ch { color: #dca3a3; } /* Char */
+      code span.cn { color: #dca3a3; font-weight: bold; } /* Constant */
+      code span.co { color: #7f9f7f; } /* Comment */
+      code span.cv { color: #7f9f7f; font-weight: bold; } /* CommentVar */
+      code span.do { color: #7f9f7f; } /* Documentation */
+      code span.dt { color: #dfdfbf; } /* DataType */
+      code span.dv { color: #dcdccc; } /* DecVal */
+      code span.er { color: #c3bf9f; } /* Error */
+      code span.ex { } /* Extension */
+      code span.fl { color: #c0bed1; } /* Float */
+      code span.fu { color: #efef8f; } /* Function */
+      code span.im { } /* Import */
+      code span.in { color: #7f9f7f; font-weight: bold; } /* Information */
+      code span.kw { color: #f0dfaf; } /* Keyword */
+      code span.op { color: #f0efd0; } /* Operator */
+      code span.ot { color: #efef8f; } /* Other */
+      code span.pp { color: #ffcfaf; font-weight: bold; } /* Preprocessor */
+      code span.sc { color: #dca3a3; } /* SpecialChar */
+      code span.ss { color: #cc9393; } /* SpecialString */
+      code span.st { color: #cc9393; } /* String */
+      code span.va { } /* Variable */
+      code span.vs { color: #cc9393; } /* VerbatimString */
+      code span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
+      }
+    </style>
+  <!-- Hand-rolled dark mode overrides for Pandoc's default CSS -->
+  <!-- Credit: GitHub user ardabbour -->
+    <style>
+     @media (prefers-color-scheme: dark) {
+      html {
+        color: #ddd;
+        background-color: #151515;
+      }
+      a {
+        color: #abb2bf;
+      }
+      a:visited {
+        color: #abb2bf;
+      }
+      hr {
+        background-color: #abb2bf;
+      }
+      table {
+        border-top: 1px solid #abb2bf;
+        border-bottom: 1px solid #abb2bf;
+      }
+      th {
+        border-top: 1px solid #abb2bf;
+      }
+      tbody {
+        border-top: 1px solid #abb2bf;
+        border-bottom: 1px solid #abb2bf;
+      }
+      blockquote {
+        border-left: 2px solid #282c34;
+        color: #5c6370;
+      }
+      figure > embed {
+          filter: invert(0.8); /* yuck -- this part is Beej's fault*/
+      }
+     }
+    </style>
   <!-- BG custom styling -->
   <style type="text/css">
   /* Fix for line numbers not visible */
@@ -85,87 +735,397 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   pre.numberSource {
       margin-left: initial;
   }
-  
+
   /* Put some space after the section numbers */
   span.toc-section-number::after {
       content: "\a0\a0\a0";  /* non-breaking whitespace */
   }
-  
+
   /* Hide underlines on code number links */
   pre > code.sourceCode > span > a:first-child::before {
       text-decoration: none;
   }
-  
+
   /* Color the source blocks */
   div.sourceCode {
-      background-color: #f0f0f0;
+      /* background-color: #f0f0f0; */
   }
-  
+
   /* Fix iOS big text rendering issue */
   pre > code.sourceCode > span {
       display: initial;
   }
-  
-  
+
+
   /* Color the inline code */
   code:not(.sourceCode) {
-      background: #f0f0f0;
+      /* background: #f0f0f0; */
       padding-left: 0.2em;
       padding-right: 0.2em;
       border-radius: 0.2em;
   }
-  
+
+  pre.sourceCode {
+      border: 1px solid #ccc;
+      padding: 0.5em;
+      border-radius: 0.2em;
+  }
+
   /* Keep code tags from wrapping in tables */
   tbody code {
       white-space: nowrap;
   }
-  
+
+  /* Prevent hyphenation and hyphen breaks in code*/
+  code {
+      word-break: keep-all;
+  }
+
   td {
       vertical-align: top;
   }
-  
+
   body {
       font-size: 12pt;
-      box-sizing: border-box;
-      margin: 0;
-      padding: 1em;
-      max-width: min(43em, 100vw);
+      max-width: 43em;
+      font-family: sans-serif;
   }
-  
+
   html {
-      display: flex;
-      justify-content: center;
-      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard Variable", Pretendard, Roboto, "Noto Sans KR", "Segoe UI", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+      /* background: #f9f9f9; */
   }
-  
+
+  figure > embed {
+      max-width: 100%;
+  }
+
   figure {
       text-align: center;
+      margin-top: 2em;
+      margin-bottom: 2em;
   }
+
+  figcaption {
+      font-size: 0.9em;
+      font-style: italic;
+      margin-top: 0.6em;
+  }
+
+  body {
+      counter-reset: figure-counter-major;
+      counter-reset: figure-counter-minor;
+  }
+
+  figure {
+      counter-increment: figure-counter-minor;
+  }
+
+  figcaption::before {
+      content: "Figure " counter(figure-counter-major) "." counter(figure-counter-minor) ": ";
+  }
+
+  blockquote {
+      border-left: 2px solid #bbb;
+      /*color: #444;*/
+  }
+
+  /* Contents */
+
+  nav[role="doc-toc"] > ul > li {
+    font-weight: bold;
+    margin-top: 1.2em;
+  }
+
+  nav[role="doc-toc"] > ul > li:first {
+    font-weight: bold;
+    margin-top: initial;
+  }
+
+  nav[role="doc-toc"] > ul > li > ul {
+    font-weight: normal;
+    margin-top: 0.3em;
+  }
+
+  /*
+  In multipage, we need to reset the figure counter to the chapter
+  number. Luckily, this is in the <h1 data-number> attribute. Unluckily,
+  there is no way to get this in a general way.
+
+  This doesn't work:
+
+    h1[data-number] {
+      counter-set: figure-counter-major attr(data-number);
+    }
+
+  Nor this:
+
+    h1[data-number] {
+      --figure-counter-major-value: attr(data-number);
+      counter-set: figure-counter-major var(--figure-counter-major-value);
+    }
+
+  So, dumbly, we have a bunch of rules for all these sections, up to the
+  maximum possible section.
+
+  Here's a program to generate them:
+
+    for (let i = 1; i < 100; i++)
+        console.log(`h1[data-number="${i}"]{counter-set:figure-counter-major ${i};counter-reset:figure-counter-minor;}`);
+
+  Note to self: never write a book with more than 99 frickin' chapters.
+  */
+
+  h1[data-number="1"]{counter-set:figure-counter-major 1;counter-reset:figure-counter-minor;}
+  h1[data-number="2"]{counter-set:figure-counter-major 2;counter-reset:figure-counter-minor;}
+  h1[data-number="3"]{counter-set:figure-counter-major 3;counter-reset:figure-counter-minor;}
+  h1[data-number="4"]{counter-set:figure-counter-major 4;counter-reset:figure-counter-minor;}
+  h1[data-number="5"]{counter-set:figure-counter-major 5;counter-reset:figure-counter-minor;}
+  h1[data-number="6"]{counter-set:figure-counter-major 6;counter-reset:figure-counter-minor;}
+  h1[data-number="7"]{counter-set:figure-counter-major 7;counter-reset:figure-counter-minor;}
+  h1[data-number="8"]{counter-set:figure-counter-major 8;counter-reset:figure-counter-minor;}
+  h1[data-number="9"]{counter-set:figure-counter-major 9;counter-reset:figure-counter-minor;}
+  h1[data-number="10"]{counter-set:figure-counter-major 10;counter-reset:figure-counter-minor;}
+  h1[data-number="11"]{counter-set:figure-counter-major 11;counter-reset:figure-counter-minor;}
+  h1[data-number="12"]{counter-set:figure-counter-major 12;counter-reset:figure-counter-minor;}
+  h1[data-number="13"]{counter-set:figure-counter-major 13;counter-reset:figure-counter-minor;}
+  h1[data-number="14"]{counter-set:figure-counter-major 14;counter-reset:figure-counter-minor;}
+  h1[data-number="15"]{counter-set:figure-counter-major 15;counter-reset:figure-counter-minor;}
+  h1[data-number="16"]{counter-set:figure-counter-major 16;counter-reset:figure-counter-minor;}
+  h1[data-number="17"]{counter-set:figure-counter-major 17;counter-reset:figure-counter-minor;}
+  h1[data-number="18"]{counter-set:figure-counter-major 18;counter-reset:figure-counter-minor;}
+  h1[data-number="19"]{counter-set:figure-counter-major 19;counter-reset:figure-counter-minor;}
+  h1[data-number="20"]{counter-set:figure-counter-major 20;counter-reset:figure-counter-minor;}
+  h1[data-number="21"]{counter-set:figure-counter-major 21;counter-reset:figure-counter-minor;}
+  h1[data-number="22"]{counter-set:figure-counter-major 22;counter-reset:figure-counter-minor;}
+  h1[data-number="23"]{counter-set:figure-counter-major 23;counter-reset:figure-counter-minor;}
+  h1[data-number="24"]{counter-set:figure-counter-major 24;counter-reset:figure-counter-minor;}
+  h1[data-number="25"]{counter-set:figure-counter-major 25;counter-reset:figure-counter-minor;}
+  h1[data-number="26"]{counter-set:figure-counter-major 26;counter-reset:figure-counter-minor;}
+  h1[data-number="27"]{counter-set:figure-counter-major 27;counter-reset:figure-counter-minor;}
+  h1[data-number="28"]{counter-set:figure-counter-major 28;counter-reset:figure-counter-minor;}
+  h1[data-number="29"]{counter-set:figure-counter-major 29;counter-reset:figure-counter-minor;}
+  h1[data-number="30"]{counter-set:figure-counter-major 30;counter-reset:figure-counter-minor;}
+  h1[data-number="31"]{counter-set:figure-counter-major 31;counter-reset:figure-counter-minor;}
+  h1[data-number="32"]{counter-set:figure-counter-major 32;counter-reset:figure-counter-minor;}
+  h1[data-number="33"]{counter-set:figure-counter-major 33;counter-reset:figure-counter-minor;}
+  h1[data-number="34"]{counter-set:figure-counter-major 34;counter-reset:figure-counter-minor;}
+  h1[data-number="35"]{counter-set:figure-counter-major 35;counter-reset:figure-counter-minor;}
+  h1[data-number="36"]{counter-set:figure-counter-major 36;counter-reset:figure-counter-minor;}
+  h1[data-number="37"]{counter-set:figure-counter-major 37;counter-reset:figure-counter-minor;}
+  h1[data-number="38"]{counter-set:figure-counter-major 38;counter-reset:figure-counter-minor;}
+  h1[data-number="39"]{counter-set:figure-counter-major 39;counter-reset:figure-counter-minor;}
+  h1[data-number="40"]{counter-set:figure-counter-major 40;counter-reset:figure-counter-minor;}
+  h1[data-number="41"]{counter-set:figure-counter-major 41;counter-reset:figure-counter-minor;}
+  h1[data-number="42"]{counter-set:figure-counter-major 42;counter-reset:figure-counter-minor;}
+  h1[data-number="43"]{counter-set:figure-counter-major 43;counter-reset:figure-counter-minor;}
+  h1[data-number="44"]{counter-set:figure-counter-major 44;counter-reset:figure-counter-minor;}
+  h1[data-number="45"]{counter-set:figure-counter-major 45;counter-reset:figure-counter-minor;}
+  h1[data-number="46"]{counter-set:figure-counter-major 46;counter-reset:figure-counter-minor;}
+  h1[data-number="47"]{counter-set:figure-counter-major 47;counter-reset:figure-counter-minor;}
+  h1[data-number="48"]{counter-set:figure-counter-major 48;counter-reset:figure-counter-minor;}
+  h1[data-number="49"]{counter-set:figure-counter-major 49;counter-reset:figure-counter-minor;}
+  h1[data-number="50"]{counter-set:figure-counter-major 50;counter-reset:figure-counter-minor;}
+  h1[data-number="51"]{counter-set:figure-counter-major 51;counter-reset:figure-counter-minor;}
+  h1[data-number="52"]{counter-set:figure-counter-major 52;counter-reset:figure-counter-minor;}
+  h1[data-number="53"]{counter-set:figure-counter-major 53;counter-reset:figure-counter-minor;}
+  h1[data-number="54"]{counter-set:figure-counter-major 54;counter-reset:figure-counter-minor;}
+  h1[data-number="55"]{counter-set:figure-counter-major 55;counter-reset:figure-counter-minor;}
+  h1[data-number="56"]{counter-set:figure-counter-major 56;counter-reset:figure-counter-minor;}
+  h1[data-number="57"]{counter-set:figure-counter-major 57;counter-reset:figure-counter-minor;}
+  h1[data-number="58"]{counter-set:figure-counter-major 58;counter-reset:figure-counter-minor;}
+  h1[data-number="59"]{counter-set:figure-counter-major 59;counter-reset:figure-counter-minor;}
+  h1[data-number="60"]{counter-set:figure-counter-major 60;counter-reset:figure-counter-minor;}
+  h1[data-number="61"]{counter-set:figure-counter-major 61;counter-reset:figure-counter-minor;}
+  h1[data-number="62"]{counter-set:figure-counter-major 62;counter-reset:figure-counter-minor;}
+  h1[data-number="63"]{counter-set:figure-counter-major 63;counter-reset:figure-counter-minor;}
+  h1[data-number="64"]{counter-set:figure-counter-major 64;counter-reset:figure-counter-minor;}
+  h1[data-number="65"]{counter-set:figure-counter-major 65;counter-reset:figure-counter-minor;}
+  h1[data-number="66"]{counter-set:figure-counter-major 66;counter-reset:figure-counter-minor;}
+  h1[data-number="67"]{counter-set:figure-counter-major 67;counter-reset:figure-counter-minor;}
+  h1[data-number="68"]{counter-set:figure-counter-major 68;counter-reset:figure-counter-minor;}
+  h1[data-number="69"]{counter-set:figure-counter-major 69;counter-reset:figure-counter-minor;}
+  h1[data-number="70"]{counter-set:figure-counter-major 70;counter-reset:figure-counter-minor;}
+  h1[data-number="71"]{counter-set:figure-counter-major 71;counter-reset:figure-counter-minor;}
+  h1[data-number="72"]{counter-set:figure-counter-major 72;counter-reset:figure-counter-minor;}
+  h1[data-number="73"]{counter-set:figure-counter-major 73;counter-reset:figure-counter-minor;}
+  h1[data-number="74"]{counter-set:figure-counter-major 74;counter-reset:figure-counter-minor;}
+  h1[data-number="75"]{counter-set:figure-counter-major 75;counter-reset:figure-counter-minor;}
+  h1[data-number="76"]{counter-set:figure-counter-major 76;counter-reset:figure-counter-minor;}
+  h1[data-number="77"]{counter-set:figure-counter-major 77;counter-reset:figure-counter-minor;}
+  h1[data-number="78"]{counter-set:figure-counter-major 78;counter-reset:figure-counter-minor;}
+  h1[data-number="79"]{counter-set:figure-counter-major 79;counter-reset:figure-counter-minor;}
+  h1[data-number="80"]{counter-set:figure-counter-major 80;counter-reset:figure-counter-minor;}
+  h1[data-number="81"]{counter-set:figure-counter-major 81;counter-reset:figure-counter-minor;}
+  h1[data-number="82"]{counter-set:figure-counter-major 82;counter-reset:figure-counter-minor;}
+  h1[data-number="83"]{counter-set:figure-counter-major 83;counter-reset:figure-counter-minor;}
+  h1[data-number="84"]{counter-set:figure-counter-major 84;counter-reset:figure-counter-minor;}
+  h1[data-number="85"]{counter-set:figure-counter-major 85;counter-reset:figure-counter-minor;}
+  h1[data-number="86"]{counter-set:figure-counter-major 86;counter-reset:figure-counter-minor;}
+  h1[data-number="87"]{counter-set:figure-counter-major 87;counter-reset:figure-counter-minor;}
+  h1[data-number="88"]{counter-set:figure-counter-major 88;counter-reset:figure-counter-minor;}
+  h1[data-number="89"]{counter-set:figure-counter-major 89;counter-reset:figure-counter-minor;}
+  h1[data-number="90"]{counter-set:figure-counter-major 90;counter-reset:figure-counter-minor;}
+  h1[data-number="91"]{counter-set:figure-counter-major 91;counter-reset:figure-counter-minor;}
+  h1[data-number="92"]{counter-set:figure-counter-major 92;counter-reset:figure-counter-minor;}
+  h1[data-number="93"]{counter-set:figure-counter-major 93;counter-reset:figure-counter-minor;}
+  h1[data-number="94"]{counter-set:figure-counter-major 94;counter-reset:figure-counter-minor;}
+  h1[data-number="95"]{counter-set:figure-counter-major 95;counter-reset:figure-counter-minor;}
+  h1[data-number="96"]{counter-set:figure-counter-major 96;counter-reset:figure-counter-minor;}
+  h1[data-number="97"]{counter-set:figure-counter-major 97;counter-reset:figure-counter-minor;}
+  h1[data-number="98"]{counter-set:figure-counter-major 98;counter-reset:figure-counter-minor;}
+  h1[data-number="99"]{counter-set:figure-counter-major 99;counter-reset:figure-counter-minor;}
+
+
   </style>
   <!-- BG custom styling for the wide body variant -->
   <!-- Gets appended after bg-css.html -->
-  
+
   <style type="text/css">
   body {
-      max-width: 100vw;
+      max-width: inherit;
+  }
+  </style><link rel="stylesheet" as="style" crossorigin="None" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+  <link rel="stylesheet" href="fonts/yeomil-mono/yeomilmono.css" />
+  <!-- Korean translation font override -->
+  <style type="text/css">
+  body {
+      font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+  }
+
+  pre, code, kbd, samp {
+      font-family: "Yeomil Mono", Menlo, Monaco, Consolas, "Lucida Console", monospace;
   }
   </style>
+  <!-- Korean HTML head additions. -->
+  <!-- This file feeds regular, wide, split, and split-wide HTML builds. -->
+  <script async="None" src="https://www.googletagmanager.com/gtag/js?id=G-G7P8PXM5K6"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-G7P8PXM5K6');
+  </script>
 </head>
 <body>
-<header>
+<div style="text-align:center"><span style="visibility: hidden"><a href="" rel="prev">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="도입부.html" rel="next">Next</a></span></div><hr>
+<header id="title-block-header">
 <h1 class="title">Beej의 네트워크 프로그래밍 안내서</h1>
 <p class="subtitle">인터넷 소켓 사용법</p>
 <p class="author">Brian “Beej Jorgensen” Hall</p>
-<p class="date">v3.1.11, Copyright © April 8, 2023</p>
+<p class="date">v3.3.2, Copyright © April 18, 2026</p>
 </header>
-<nav id="TOC">
-<ul><li><a href="도입부.html#도입부"><span class="toc-section-number">1</span> 도입부</a><ul><li><a href="도입부.html#읽는이에게"><span class="toc-section-number">1.1</span> 읽는이에게</a></li><li><a href="도입부.html#실행환경과-컴파일러"><span class="toc-section-number">1.2</span> 실행환경과 컴파일러</a></li><li><a href="도입부.html#공식-홈페이지와-책-구매"><span class="toc-section-number">1.3</span> 공식 홈페이지와 책 구매</a></li><li><a href="도입부.html#solaris"><span class="toc-section-number">1.4</span> Solaris/SunOS 프로그래머들을 위한 노트</a></li><li><a href="도입부.html#windows"><span class="toc-section-number">1.5</span> Windows 프로그래머들을 위한 노트</a></li><li><a href="도입부.html#이메일-정책"><span class="toc-section-number">1.6</span> 이메일 정책</a></li><li><a href="도입부.html#미러링"><span class="toc-section-number">1.7</span> 미러링</a></li><li><a href="도입부.html#note-for-translators-번역가들을-위한-노트"><span class="toc-section-number">1.8</span> Note for Translators 번역가들을 위한 노트</a></li><li><a href="도입부.html#legal"><span class="toc-section-number">1.9</span> Copyright, Distribution, and Legal</a></li><li><a href="도입부.html#헌사"><span class="toc-section-number">1.10</span> 헌사</a></li><li><a href="도입부.html#출판-정보"><span class="toc-section-number">1.11</span> 출판 정보</a></li><li><a href="도입부.html#옮긴이의-말"><span class="toc-section-number">1.12</span> 옮긴이의 말</a></li></ul></li><li><a href="소켓이란-무엇인가.html#소켓이란-무엇인가"><span class="toc-section-number">2</span> 소켓이란 무엇인가?</a><ul><li><a href="소켓이란-무엇인가.html#두-종류의-인터넷-소켓"><span class="toc-section-number">2.1</span> 두 종류의 인터넷 소켓</a></li><li><a href="소켓이란-무엇인가.html#lowlevel"><span class="toc-section-number">2.2</span> 저수준 넌센스와 네트워크 이론</a></li></ul></li><li><a href="ip-주소-구조체들-데이터-처리munging.html#ip-주소-구조체들-데이터-처리munging"><span class="toc-section-number">3</span> IP 주소, <code>구조체</code>들, 데이터 처리(Munging)</a><ul><li><a href="ip-주소-구조체들-데이터-처리munging.html#ip-주소-4판과-6판버전4와-버전6"><span class="toc-section-number">3.1</span> IP 주소, 4판과 6판(버전4와 버전6)</a><ul><li><a href="ip-주소-구조체들-데이터-처리munging.html#subnets서브넷-또는-부분망"><span class="toc-section-number">3.1.1</span> Subnets(서브넷 또는 부분망)</a></li><li><a href="ip-주소-구조체들-데이터-처리munging.html#포트-번호"><span class="toc-section-number">3.1.2</span> 포트 번호</a></li></ul></li><li><a href="ip-주소-구조체들-데이터-처리munging.html#바이트-순서"><span class="toc-section-number">3.2</span> 바이트 순서</a></li><li><a href="ip-주소-구조체들-데이터-처리munging.html#structs"><span class="toc-section-number">3.3</span> <code>struct</code>들</a></li><li><a href="ip-주소-구조체들-데이터-처리munging.html#ip-주소-파트-2"><span class="toc-section-number">3.4</span> IP 주소, 파트 2</a><ul><li><a href="ip-주소-구조체들-데이터-처리munging.html#사설또는-분리된-망"><span class="toc-section-number">3.4.1</span> 사설(또는 분리된) 망</a></li></ul></li></ul></li><li><a href="ipv4에서-ipv6으로-점프하기.html#ipv4에서-ipv6으로-점프하기"><span class="toc-section-number">4</span> IPv4에서 IPv6으로 점프하기</a></li><li><a href="시스템-콜이-아니면-죽음을.html#시스템-콜이-아니면-죽음을"><span class="toc-section-number">5</span> 시스템 콜이 아니면 죽음을</a><ul><li><a href="시스템-콜이-아니면-죽음을.html#getaddrinfo발사-준비"><span class="toc-section-number">5.1</span> <code>getaddrinfo()</code>—발사 준비!</a></li><li><a href="시스템-콜이-아니면-죽음을.html#socket"><span class="toc-section-number">5.2</span> <code>socket()</code>—파일 설명자를 받아오자!</a></li><li><a href="시스템-콜이-아니면-죽음을.html#bind"><span class="toc-section-number">5.3</span> <code>bind()</code>—나는 어떤 포트에 있나요?</a></li><li><a href="시스템-콜이-아니면-죽음을.html#connect"><span class="toc-section-number">5.4</span> <code>connect()</code>—거기 안녕!</a></li><li><a href="시스템-콜이-아니면-죽음을.html#listen"><span class="toc-section-number">5.5</span> <code>listen()</code>—누가 연락 좀 해줄래요?</a></li><li><a href="시스템-콜이-아니면-죽음을.html#accept3490포트에-접속해주셔서-감사합니다."><span class="toc-section-number">5.6</span> <code>accept()</code>—“3490포트에 접속해주셔서 감사합니다.”</a></li><li><a href="시스템-콜이-아니면-죽음을.html#sendrecv"><span class="toc-section-number">5.7</span> <code>send()</code>와 <code>recv()</code>—Talk to me, baby!</a></li><li><a href="시스템-콜이-아니면-죽음을.html#sendtorecv"><span class="toc-section-number">5.8</span> <code>sendto()</code>와 <code>recvfrom()</code>—Talk to me, DGRAM-방식</a></li><li><a href="시스템-콜이-아니면-죽음을.html#close와-shutdown내-앞에서-꺼져"><span class="toc-section-number">5.9</span> <code>close()</code>와 <code>shutdown()</code>—내 앞에서 꺼져!</a></li><li><a href="시스템-콜이-아니면-죽음을.html#getpeername누구세요"><span class="toc-section-number">5.10</span> <code>getpeername()</code>—누구세요?</a></li><li><a href="시스템-콜이-아니면-죽음을.html#gethostname나는-누구인가"><span class="toc-section-number">5.11</span> <code>gethostname()</code>—나는 누구인가?</a></li></ul></li><li><a href="클라인트-서버-배경지식.html#클라인트-서버-배경지식"><span class="toc-section-number">6</span> 클라인트-서버 배경지식</a><ul><li><a href="클라인트-서버-배경지식.html#단순한-스트림-서버"><span class="toc-section-number">6.1</span> 단순한 스트림 서버</a></li><li><a href="클라인트-서버-배경지식.html#단순한-스트림-클라이언트"><span class="toc-section-number">6.2</span> 단순한 스트림 클라이언트</a></li><li><a href="클라인트-서버-배경지식.html#datagram"><span class="toc-section-number">6.3</span> 데이터그램 소켓</a></li></ul></li><li><a href="약간-더-고급스러운-기술.html#약간-더-고급스러운-기술"><span class="toc-section-number">7</span> 약간 더 고급스러운 기술</a><ul><li><a href="약간-더-고급스러운-기술.html#blocking"><span class="toc-section-number">7.1</span> 블로킹</a></li><li><a href="약간-더-고급스러운-기술.html#poll"><span class="toc-section-number">7.2</span> <code>poll()</code>—동기 입출력 다중화</a></li><li><a href="약간-더-고급스러운-기술.html#select"><span class="toc-section-number">7.3</span> <code>select()</code>—동기화된 I/O 멀티플렉싱, 예전 방식</a></li><li><a href="약간-더-고급스러운-기술.html#sendall"><span class="toc-section-number">7.4</span> 부분적인 <code>send()</code> 처리하기</a></li><li><a href="약간-더-고급스러운-기술.html#serialization"><span class="toc-section-number">7.5</span> 직렬화—데이터를 포장하는 방법</a></li><li><a href="약간-더-고급스러운-기술.html#sonofdataencap"><span class="toc-section-number">7.6</span> 망할 데이터 캡슐화</a></li><li><a href="약간-더-고급스러운-기술.html#브로드캐스트broadcast-패킷-hello-world"><span class="toc-section-number">7.7</span> 브로드캐스트(Broadcast) 패킷 — Hello, World!</a></li></ul></li><li><a href="일반적인-질문들.html#일반적인-질문들"><span class="toc-section-number">8</span> 일반적인 질문들</a></li><li><a href="man-pages.html#man-pages"><span class="toc-section-number">9</span> Man Pages</a><ul><li><a href="man-pages.html#acceptman"><span class="toc-section-number">9.1</span> <code>accept()</code></a><ul><li><a href="man-pages.html#synopsis">Synopsis</a></li><li><a href="man-pages.html#description">Description</a></li><li><a href="man-pages.html#return-value">Return Value</a></li><li><a href="man-pages.html#example">Example</a></li><li><a href="man-pages.html#see-also">See Also</a></li></ul></li><li><a href="man-pages.html#bindman"><span class="toc-section-number">9.2</span> <code>bind()</code></a><ul><li><a href="man-pages.html#synopsis-1">Synopsis</a></li><li><a href="man-pages.html#description-1">Description</a></li><li><a href="man-pages.html#return-value-1">Return Value</a></li><li><a href="man-pages.html#example-1">Example</a></li><li><a href="man-pages.html#see-also-1">See Also</a></li></ul></li><li><a href="man-pages.html#connectman"><span class="toc-section-number">9.3</span> <code>connect()</code></a><ul><li><a href="man-pages.html#synopsis-2">Synopsis</a></li><li><a href="man-pages.html#description-2">Description</a></li><li><a href="man-pages.html#return-value-2">Return Value</a></li><li><a href="man-pages.html#example-2">Example</a></li><li><a href="man-pages.html#see-also-2">See Also</a></li></ul></li><li><a href="man-pages.html#closeman"><span class="toc-section-number">9.4</span> <code>close()</code></a><ul><li><a href="man-pages.html#synopsis-3">Synopsis</a></li><li><a href="man-pages.html#description-3">Description</a></li><li><a href="man-pages.html#return-value-3">Return Value</a></li><li><a href="man-pages.html#example-3">Example</a></li><li><a href="man-pages.html#see-also-3">See Also</a></li></ul></li><li><a href="man-pages.html#getaddrinfoman"><span class="toc-section-number">9.5</span> <code>getaddrinfo()</code>, <code>freeaddrinfo()</code>, <code>gai_strerror()</code></a><ul><li><a href="man-pages.html#synopsis-4">Synopsis</a></li><li><a href="man-pages.html#description-4">Description</a></li><li><a href="man-pages.html#return-value-4">Return Value</a></li><li><a href="man-pages.html#example-4">Example</a></li><li><a href="man-pages.html#see-also-4">See Also</a></li></ul></li><li><a href="man-pages.html#gethostnameman"><span class="toc-section-number">9.6</span> <code>gethostname()</code></a><ul><li><a href="man-pages.html#synopsis-5">Synopsis</a></li><li><a href="man-pages.html#description-5">Description</a></li><li><a href="man-pages.html#return-value-5">Return Value</a></li><li><a href="man-pages.html#example-5">Example</a></li><li><a href="man-pages.html#see-also-5">See Also</a></li></ul></li><li><a href="man-pages.html#gethostbynameman"><span class="toc-section-number">9.7</span> <code>gethostbyname()</code>, <code>gethostbyaddr()</code></a><ul><li><a href="man-pages.html#synopsis-6">Synopsis</a></li><li><a href="man-pages.html#description-6">Description</a></li><li><a href="man-pages.html#return-value-6">Return Value</a></li><li><a href="man-pages.html#example-6">Example</a></li><li><a href="man-pages.html#see-also-6">See Also</a></li></ul></li><li><a href="man-pages.html#getnameinfoman"><span class="toc-section-number">9.8</span> <code>getnameinfo()</code></a><ul><li><a href="man-pages.html#synopsis-7">Synopsis</a></li><li><a href="man-pages.html#description-7">Description</a></li><li><a href="man-pages.html#return-value-7">Return Value</a></li><li><a href="man-pages.html#example-7">Example</a></li><li><a href="man-pages.html#see-also-7">See Also</a></li></ul></li><li><a href="man-pages.html#getpeernameman"><span class="toc-section-number">9.9</span> <code>getpeername()</code></a><ul><li><a href="man-pages.html#synopsis-8">Synopsis</a></li><li><a href="man-pages.html#description-8">Description</a></li><li><a href="man-pages.html#return-value-8">Return Value</a></li><li><a href="man-pages.html#example-8">Example</a></li><li><a href="man-pages.html#see-also-8">See Also</a></li></ul></li><li><a href="man-pages.html#errnoman"><span class="toc-section-number">9.10</span> <code>errno</code></a><ul><li><a href="man-pages.html#synopsis-9">Synopsis</a></li><li><a href="man-pages.html#description-9">Description</a></li><li><a href="man-pages.html#return-value-9">Return Value</a></li><li><a href="man-pages.html#example-9">Example</a></li><li><a href="man-pages.html#see-also-9">See Also</a></li></ul></li><li><a href="man-pages.html#fcntlman"><span class="toc-section-number">9.11</span> <code>fcntl()</code></a><ul><li><a href="man-pages.html#synopsis-10">Synopsis</a></li><li><a href="man-pages.html#description-10">Description</a></li><li><a href="man-pages.html#return-value-10">Return Value</a></li><li><a href="man-pages.html#example-10">Example</a></li><li><a href="man-pages.html#see-also-10">See Also</a></li></ul></li><li><a href="man-pages.html#htonsman"><span class="toc-section-number">9.12</span> <code>htons()</code>, <code>htonl()</code>, <code>ntohs()</code>, <code>ntohl()</code></a><ul><li><a href="man-pages.html#synopsis-11">Synopsis</a></li><li><a href="man-pages.html#description-11">Description</a></li><li><a href="man-pages.html#return-value-11">Return Value</a></li><li><a href="man-pages.html#example-11">Example</a></li></ul></li><li><a href="man-pages.html#inet_ntoaman"><span class="toc-section-number">9.13</span> <code>inet_ntoa()</code>, <code>inet_aton()</code>, <code>inet_addr</code></a><ul><li><a href="man-pages.html#synopsis-12">Synopsis</a></li><li><a href="man-pages.html#description-12">Description</a></li><li><a href="man-pages.html#return-value-12">Return Value</a></li><li><a href="man-pages.html#example-12">Example</a></li><li><a href="man-pages.html#see-also-11">See Also</a></li></ul></li><li><a href="man-pages.html#inet_ntopman"><span class="toc-section-number">9.14</span> <code>inet_ntop()</code>, <code>inet_pton()</code></a><ul><li><a href="man-pages.html#synopsis-13">Synopsis</a></li><li><a href="man-pages.html#description-13">Description</a></li><li><a href="man-pages.html#return-value-13">Return Value</a></li><li><a href="man-pages.html#example-13">Example</a></li><li><a href="man-pages.html#see-also-12">See Also</a></li></ul></li><li><a href="man-pages.html#listenman"><span class="toc-section-number">9.15</span> <code>listen()</code></a><ul><li><a href="man-pages.html#synopsis-14">Synopsis</a></li><li><a href="man-pages.html#description-14">Description</a></li><li><a href="man-pages.html#return-value-14">Return Value</a></li><li><a href="man-pages.html#example-14">Example</a></li><li><a href="man-pages.html#see-also-13">See Also</a></li></ul></li><li><a href="man-pages.html#perrorman"><span class="toc-section-number">9.16</span> <code>perror()</code>, <code>strerror()</code></a><ul><li><a href="man-pages.html#synopsis-15">Synopsis</a></li><li><a href="man-pages.html#description-15">Description</a></li><li><a href="man-pages.html#return-value-15">Return Value</a></li><li><a href="man-pages.html#example-15">Example</a></li><li><a href="man-pages.html#see-also-14">See Also</a></li></ul></li><li><a href="man-pages.html#pollman"><span class="toc-section-number">9.17</span> <code>poll()</code></a><ul><li><a href="man-pages.html#synopsis-16">Synopsis</a></li><li><a href="man-pages.html#description-16">Description</a></li><li><a href="man-pages.html#return-value-16">Return Value</a></li><li><a href="man-pages.html#example-16">Example</a></li><li><a href="man-pages.html#see-also-15">See Also</a></li></ul></li><li><a href="man-pages.html#recvman"><span class="toc-section-number">9.18</span> <code>recv()</code>, <code>recvfrom()</code></a><ul><li><a href="man-pages.html#synopsis-17">Synopsis</a></li><li><a href="man-pages.html#description-17">Description</a></li><li><a href="man-pages.html#return-value-17">Return Value</a></li><li><a href="man-pages.html#example-17">Example</a></li><li><a href="man-pages.html#see-also-16">See Also</a></li></ul></li><li><a href="man-pages.html#selectman"><span class="toc-section-number">9.19</span> <code>select()</code></a><ul><li><a href="man-pages.html#synopsis-18">Synopsis</a></li><li><a href="man-pages.html#description-18">Description</a></li><li><a href="man-pages.html#return-value-18">Return Value</a></li><li><a href="man-pages.html#example-18">Example</a></li><li><a href="man-pages.html#see-also-17">See Also</a></li></ul></li><li><a href="man-pages.html#setsockoptman"><span class="toc-section-number">9.20</span> <code>setsockopt()</code>, <code>getsockopt()</code></a><ul><li><a href="man-pages.html#synopsis-19">Synopsis</a></li><li><a href="man-pages.html#description-19">Description</a></li><li><a href="man-pages.html#return-value-19">Return Value</a></li><li><a href="man-pages.html#example-19">Example</a></li><li><a href="man-pages.html#see-also-18">See Also</a></li></ul></li><li><a href="man-pages.html#sendman"><span class="toc-section-number">9.21</span> <code>send()</code>, <code>sendto()</code></a><ul><li><a href="man-pages.html#synopsis-20">Synopsis</a></li><li><a href="man-pages.html#description-20">Description</a></li><li><a href="man-pages.html#return-value-20">Return Value</a></li><li><a href="man-pages.html#example-20">Example</a></li><li><a href="man-pages.html#see-also-19">See Also</a></li></ul></li><li><a href="man-pages.html#shutdownman"><span class="toc-section-number">9.22</span> <code>shutdown()</code></a><ul><li><a href="man-pages.html#synopsis-21">Synopsis</a></li><li><a href="man-pages.html#description-21">Description</a></li><li><a href="man-pages.html#return-value-21">Return Value</a></li><li><a href="man-pages.html#example-21">Example</a></li><li><a href="man-pages.html#see-also-20">See Also</a></li></ul></li><li><a href="man-pages.html#socketman"><span class="toc-section-number">9.23</span> <code>socket()</code></a><ul><li><a href="man-pages.html#synopsis-22">Synopsis</a></li><li><a href="man-pages.html#description-22">Description</a></li><li><a href="man-pages.html#return-value-22">Return Value</a></li><li><a href="man-pages.html#example-22">Example</a></li><li><a href="man-pages.html#see-also-21">See Also</a></li></ul></li><li><a href="man-pages.html#structsockaddrman"><span class="toc-section-number">9.24</span> <code>struct sockaddr</code> and pals</a><ul><li><a href="man-pages.html#synopsis-23">Synopsis</a></li><li><a href="man-pages.html#description-23">Description</a></li><li><a href="man-pages.html#example-23">Example</a></li><li><a href="man-pages.html#see-also-22">See Also</a></li></ul></li></ul></li><li><a href="더-많은-참고문헌.html#더-많은-참고문헌"><span class="toc-section-number">10</span> 더 많은 참고문헌</a><ul><li><a href="더-많은-참고문헌.html#books"><span class="toc-section-number">10.1</span> 책들</a></li><li><a href="더-많은-참고문헌.html#웹-참고문헌"><span class="toc-section-number">10.2</span> 웹 참고문헌</a></li><li><a href="더-많은-참고문헌.html#rfcs"><span class="toc-section-number">10.3</span> RFCs</a></li></ul></li></ul>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="도입부.html#도입부" id="toc-도입부"><span class="toc-section-number">1</span> 도입부</a>
+<ul>
+<li><a href="도입부.html#읽는이에게" id="toc-읽는이에게"><span class="toc-section-number">1.1</span> 읽는이에게</a></li>
+<li><a href="도입부.html#실행환경과-컴파일러" id="toc-실행환경과-컴파일러"><span class="toc-section-number">1.2</span> 실행환경과 컴파일러</a></li>
+<li><a href="도입부.html#공식-홈페이지와-책-구매" id="toc-공식-홈페이지와-책-구매"><span class="toc-section-number">1.3</span> 공식 홈페이지와 책 구매</a></li>
+<li><a href="도입부.html#solaris" id="toc-solaris"><span class="toc-section-number">1.4</span> Solaris/SunOS/illumos 프로그래머들을 위한 노트</a></li>
+<li><a href="도입부.html#windows" id="toc-windows"><span class="toc-section-number">1.5</span> Windows 프로그래머들을 위한 노트</a></li>
+<li><a href="도입부.html#이메일-정책" id="toc-이메일-정책"><span class="toc-section-number">1.6</span> 이메일 정책</a></li>
+<li><a href="도입부.html#미러링" id="toc-미러링"><span class="toc-section-number">1.7</span> 미러링</a></li>
+<li><a href="도입부.html#note-for-translators-번역자를-위한-노트" id="toc-note-for-translators-번역자를-위한-노트"><span class="toc-section-number">1.8</span> Note for Translators 번역자를 위한 노트</a></li>
+<li><a href="도입부.html#legal" id="toc-legal"><span class="toc-section-number">1.9</span> Copyright, Distribution, and Legal</a></li>
+<li><a href="도입부.html#헌사" id="toc-헌사"><span class="toc-section-number">1.10</span> 헌사</a></li>
+<li><a href="도입부.html#출판-정보" id="toc-출판-정보"><span class="toc-section-number">1.11</span> 출판 정보</a></li>
+<li><a href="도입부.html#translators-note-2023" id="toc-translators-note-2023"><span class="toc-section-number">1.12</span> 옮긴이의 말: 2023년 번역, 원문 3.1.5 기반 한국어판</a></li>
+<li><a href="도입부.html#translators-note-2026" id="toc-translators-note-2026"><span class="toc-section-number">1.13</span> 옮긴이의 말: 2026년 개정, 원문 3.3.2 기반 한국어판</a></li>
+</ul></li>
+<li><a href="소켓이란-무엇인가.html#소켓이란-무엇인가" id="toc-소켓이란-무엇인가"><span class="toc-section-number">2</span> 소켓이란 무엇인가?</a>
+<ul>
+<li><a href="소켓이란-무엇인가.html#두-종류의-인터넷-소켓" id="toc-두-종류의-인터넷-소켓"><span class="toc-section-number">2.1</span> 두 종류의 인터넷 소켓</a></li>
+<li><a href="소켓이란-무엇인가.html#lowlevel" id="toc-lowlevel"><span class="toc-section-number">2.2</span> 저수준 넌센스와 네트워크 이론</a></li>
+</ul></li>
+<li><a href="ip-주소-구조체들-데이터-처리munging.html#ip-주소-구조체들-데이터-처리munging" id="toc-ip-주소-구조체들-데이터-처리munging"><span class="toc-section-number">3</span> IP 주소, <code>구조체</code>들, 데이터 처리(Munging)</a>
+<ul>
+<li><a href="ip-주소-구조체들-데이터-처리munging.html#ip-주소-4판과-6판버전4와-버전6" id="toc-ip-주소-4판과-6판버전4와-버전6"><span class="toc-section-number">3.1</span> IP 주소, 4판과 6판(버전4와 버전6)</a>
+<ul>
+<li><a href="ip-주소-구조체들-데이터-처리munging.html#subnets서브넷-또는-부분망" id="toc-subnets서브넷-또는-부분망"><span class="toc-section-number">3.1.1</span> Subnets(서브넷 또는 부분망)</a></li>
+<li><a href="ip-주소-구조체들-데이터-처리munging.html#포트-번호" id="toc-포트-번호"><span class="toc-section-number">3.1.2</span> 포트 번호</a></li>
+</ul></li>
+<li><a href="ip-주소-구조체들-데이터-처리munging.html#바이트-순서" id="toc-바이트-순서"><span class="toc-section-number">3.2</span> 바이트 순서</a></li>
+<li><a href="ip-주소-구조체들-데이터-처리munging.html#structs" id="toc-structs"><span class="toc-section-number">3.3</span> <code>struct</code>들</a></li>
+<li><a href="ip-주소-구조체들-데이터-처리munging.html#ip-주소-파트-2" id="toc-ip-주소-파트-2"><span class="toc-section-number">3.4</span> IP 주소, 파트 2</a>
+<ul>
+<li><a href="ip-주소-구조체들-데이터-처리munging.html#사설또는-분리된-망" id="toc-사설또는-분리된-망"><span class="toc-section-number">3.4.1</span> 사설(또는 분리된) 망</a></li>
+</ul></li>
+</ul></li>
+<li><a href="ipv4에서-ipv6으로-넘어가기.html#ipv4에서-ipv6으로-넘어가기" id="toc-ipv4에서-ipv6으로-넘어가기"><span class="toc-section-number">4</span> IPv4에서 IPv6으로 넘어가기</a></li>
+<li><a href="시스템-콜이-아니면-죽음을.html#시스템-콜이-아니면-죽음을" id="toc-시스템-콜이-아니면-죽음을"><span class="toc-section-number">5</span> 시스템 콜이 아니면 죽음을</a>
+<ul>
+<li><a href="시스템-콜이-아니면-죽음을.html#getaddrinfo발사-준비" id="toc-getaddrinfo발사-준비"><span class="toc-section-number">5.1</span> <code>getaddrinfo()</code>—발사 준비!</a></li>
+<li><a href="시스템-콜이-아니면-죽음을.html#socket" id="toc-socket"><span class="toc-section-number">5.2</span> <code>socket()</code>—파일 설명자를 받아오자!</a></li>
+<li><a href="시스템-콜이-아니면-죽음을.html#bind" id="toc-bind"><span class="toc-section-number">5.3</span> <code>bind()</code>—나는 어떤 포트에 있나요?</a></li>
+<li><a href="시스템-콜이-아니면-죽음을.html#connect" id="toc-connect"><span class="toc-section-number">5.4</span> <code>connect()</code>—거기 안녕!</a></li>
+<li><a href="시스템-콜이-아니면-죽음을.html#listen" id="toc-listen"><span class="toc-section-number">5.5</span> <code>listen()</code>—누가 연락 좀 해줄래요?</a></li>
+<li><a href="시스템-콜이-아니면-죽음을.html#accept3490-포트에-접속해주셔서-감사합니다." id="toc-accept3490-포트에-접속해주셔서-감사합니다."><span class="toc-section-number">5.6</span> <code>accept()</code>—“3490 포트에 접속해주셔서 감사합니다.”</a></li>
+<li><a href="시스템-콜이-아니면-죽음을.html#sendrecv" id="toc-sendrecv"><span class="toc-section-number">5.7</span> <code>send()</code>와 <code>recv()</code>—말 좀 해봐요!</a></li>
+<li><a href="시스템-콜이-아니면-죽음을.html#sendtorecv" id="toc-sendtorecv"><span class="toc-section-number">5.8</span> <code>sendto()</code>와 <code>recvfrom()</code>—DGRAM 방식으로 말해 봐요</a></li>
+<li><a href="시스템-콜이-아니면-죽음을.html#close와-shutdown이제-그만-가" id="toc-close와-shutdown이제-그만-가"><span class="toc-section-number">5.9</span> <code>close()</code>와 <code>shutdown()</code>—이제 그만 가!</a></li>
+<li><a href="시스템-콜이-아니면-죽음을.html#getpeername누구세요" id="toc-getpeername누구세요"><span class="toc-section-number">5.10</span> <code>getpeername()</code>—누구세요?</a></li>
+<li><a href="시스템-콜이-아니면-죽음을.html#gethostname나는-누구인가" id="toc-gethostname나는-누구인가"><span class="toc-section-number">5.11</span> <code>gethostname()</code>—나는 누구인가?</a></li>
+</ul></li>
+<li><a href="클라이언트-서버-배경지식.html#클라이언트-서버-배경지식" id="toc-클라이언트-서버-배경지식"><span class="toc-section-number">6</span> 클라이언트-서버 배경지식</a>
+<ul>
+<li><a href="클라이언트-서버-배경지식.html#단순한-스트림-서버" id="toc-단순한-스트림-서버"><span class="toc-section-number">6.1</span> 단순한 스트림 서버</a></li>
+<li><a href="클라이언트-서버-배경지식.html#단순한-스트림-클라이언트" id="toc-단순한-스트림-클라이언트"><span class="toc-section-number">6.2</span> 단순한 스트림 클라이언트</a></li>
+<li><a href="클라이언트-서버-배경지식.html#datagram" id="toc-datagram"><span class="toc-section-number">6.3</span> 데이터그램 소켓</a></li>
+</ul></li>
+<li><a href="약간-더-고급스러운-기술.html#약간-더-고급스러운-기술" id="toc-약간-더-고급스러운-기술"><span class="toc-section-number">7</span> 약간 더 고급스러운 기술</a>
+<ul>
+<li><a href="약간-더-고급스러운-기술.html#blocking" id="toc-blocking"><span class="toc-section-number">7.1</span> 블로킹</a></li>
+<li><a href="약간-더-고급스러운-기술.html#poll" id="toc-poll"><span class="toc-section-number">7.2</span> <code>poll()</code>—동기 입출력 다중화</a></li>
+<li><a href="약간-더-고급스러운-기술.html#select" id="toc-select"><span class="toc-section-number">7.3</span> <code>select()</code>—동기화된 I/O 멀티플렉싱, 예전 방식</a></li>
+<li><a href="약간-더-고급스러운-기술.html#sendall" id="toc-sendall"><span class="toc-section-number">7.4</span> 부분적인 <code>send()</code> 처리하기</a></li>
+<li><a href="약간-더-고급스러운-기술.html#serialization" id="toc-serialization"><span class="toc-section-number">7.5</span> 직렬화—데이터를 포장하는 방법</a></li>
+<li><a href="약간-더-고급스러운-기술.html#sonofdataencap" id="toc-sonofdataencap"><span class="toc-section-number">7.6</span> 망할 데이터 캡슐화</a></li>
+<li><a href="약간-더-고급스러운-기술.html#브로드캐스트broadcast-패킷-hello-world" id="toc-브로드캐스트broadcast-패킷-hello-world"><span class="toc-section-number">7.7</span> 브로드캐스트(Broadcast) 패킷 — Hello, World!</a></li>
+</ul></li>
+<li><a href="일반적인-질문들.html#일반적인-질문들" id="toc-일반적인-질문들"><span class="toc-section-number">8</span> 일반적인 질문들</a></li>
+<li><a href="맨페이지.html#맨페이지" id="toc-맨페이지"><span class="toc-section-number">9</span> 맨페이지</a>
+<ul>
+<li><a href="맨페이지.html#acceptman" id="toc-acceptman"><span class="toc-section-number">9.1</span> <code>accept()</code></a></li>
+<li><a href="맨페이지.html#bindman" id="toc-bindman"><span class="toc-section-number">9.2</span> <code>bind()</code></a></li>
+<li><a href="맨페이지.html#connectman" id="toc-connectman"><span class="toc-section-number">9.3</span> <code>connect()</code></a></li>
+<li><a href="맨페이지.html#closeman" id="toc-closeman"><span class="toc-section-number">9.4</span> <code>close()</code></a></li>
+<li><a href="맨페이지.html#getaddrinfoman" id="toc-getaddrinfoman"><span class="toc-section-number">9.5</span> <code>getaddrinfo()</code>, <code>freeaddrinfo()</code>, <code>gai_strerror()</code></a></li>
+<li><a href="맨페이지.html#gethostnameman" id="toc-gethostnameman"><span class="toc-section-number">9.6</span> <code>gethostname()</code></a></li>
+<li><a href="맨페이지.html#gethostbynameman" id="toc-gethostbynameman"><span class="toc-section-number">9.7</span> <code>gethostbyname()</code>, <code>gethostbyaddr()</code></a></li>
+<li><a href="맨페이지.html#getnameinfoman" id="toc-getnameinfoman"><span class="toc-section-number">9.8</span> <code>getnameinfo()</code></a></li>
+<li><a href="맨페이지.html#getpeernameman" id="toc-getpeernameman"><span class="toc-section-number">9.9</span> <code>getpeername()</code></a></li>
+<li><a href="맨페이지.html#errnoman" id="toc-errnoman"><span class="toc-section-number">9.10</span> <code>errno</code></a></li>
+<li><a href="맨페이지.html#fcntlman" id="toc-fcntlman"><span class="toc-section-number">9.11</span> <code>fcntl()</code></a></li>
+<li><a href="맨페이지.html#htonsman" id="toc-htonsman"><span class="toc-section-number">9.12</span> <code>htons()</code>, <code>htonl()</code>, <code>ntohs()</code>, <code>ntohl()</code></a></li>
+<li><a href="맨페이지.html#inet_ntoaman" id="toc-inet_ntoaman"><span class="toc-section-number">9.13</span> <code>inet_ntoa()</code>, <code>inet_aton()</code>, <code>inet_addr</code></a></li>
+<li><a href="맨페이지.html#inet_ntopman" id="toc-inet_ntopman"><span class="toc-section-number">9.14</span> <code>inet_ntop()</code>, <code>inet_pton()</code></a></li>
+<li><a href="맨페이지.html#listenman" id="toc-listenman"><span class="toc-section-number">9.15</span> <code>listen()</code></a></li>
+<li><a href="맨페이지.html#perrorman" id="toc-perrorman"><span class="toc-section-number">9.16</span> <code>perror()</code>, <code>strerror()</code></a></li>
+<li><a href="맨페이지.html#pollman" id="toc-pollman"><span class="toc-section-number">9.17</span> <code>poll()</code></a></li>
+<li><a href="맨페이지.html#recvman" id="toc-recvman"><span class="toc-section-number">9.18</span> <code>recv()</code>, <code>recvfrom()</code></a></li>
+<li><a href="맨페이지.html#selectman" id="toc-selectman"><span class="toc-section-number">9.19</span> <code>select()</code></a></li>
+<li><a href="맨페이지.html#setsockoptman" id="toc-setsockoptman"><span class="toc-section-number">9.20</span> <code>setsockopt()</code>, <code>getsockopt()</code></a></li>
+<li><a href="맨페이지.html#sendman" id="toc-sendman"><span class="toc-section-number">9.21</span> <code>send()</code>, <code>sendto()</code></a></li>
+<li><a href="맨페이지.html#shutdownman" id="toc-shutdownman"><span class="toc-section-number">9.22</span> <code>shutdown()</code></a></li>
+<li><a href="맨페이지.html#socketman" id="toc-socketman"><span class="toc-section-number">9.23</span> <code>socket()</code></a></li>
+<li><a href="맨페이지.html#structsockaddrman" id="toc-structsockaddrman"><span class="toc-section-number">9.24</span> <code>struct sockaddr</code>와 친구들</a></li>
+</ul></li>
+<li><a href="더-많은-참고문헌.html#더-많은-참고문헌" id="toc-더-많은-참고문헌"><span class="toc-section-number">10</span> 더 많은 참고문헌</a>
+<ul>
+<li><a href="더-많은-참고문헌.html#books" id="toc-books"><span class="toc-section-number">10.1</span> 책들</a></li>
+<li><a href="더-많은-참고문헌.html#웹-참고문헌" id="toc-웹-참고문헌"><span class="toc-section-number">10.2</span> 웹 참고문헌</a></li>
+<li><a href="더-많은-참고문헌.html#rfcs" id="toc-rfcs"><span class="toc-section-number">10.3</span> RFCs</a></li>
+</ul></li>
+</ul>
 </nav>
+<!-- BG_NEW_CHAPTER -->
 <!--
 Beej's Guide to Network Programming book source
 
 # vim: ts=4:sw=4:nosi:et:tw=72
---><!--
+-->
+<!--
     History:
 
     2.3.2:        socket man page
@@ -227,21 +1187,27 @@ Beej's Guide to Network Programming book source
     3.1.3:      Fix freeaddrinfo memleak
     3.1.4:      Fix accept example header files
     3.1.5:      Fix dgram AF_UNSPEC
---><!-- prevent hyphenation of the following words: --><!--
+-->
+<!-- prevent hyphenation of the following words: -->
+<!--
 Don't know how to make this work with underscores. I love
 you, Knuth, but... daaahm.
 
 \hyphenation{gai_strerr}
---><!--
+-->
+<!--
 \hyphenation{inet_ntoa}
 \hyphenation{inet_aton}
 \hyphenation{inet_addr}
 \hyphenation{inet_ntop}
 \hyphenation{inet_pton}
---><!--
+-->
+<!--
 \hyphenation{sockaddr_in}
 \hyphenation{in_addr}
 \hyphenation{sockaddr_in6}
 \hyphenation{in6_addr}
---><hr></body>
+-->
+<!-- BG_NEW_CHAPTER -->
+<hr><div style="text-align:center"><span style="visibility: hidden"><a href="" rel="prev">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="도입부.html" rel="next">Next</a></span></div></body>
 </html>
