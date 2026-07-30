@@ -1020,13 +1020,13 @@
 <p>(다가오는 IPv4의 종말과 어둠을 모두에게 경고한 것 외에도 <a href="https://en.wikipedia.org/wiki/Vint_Cerf">Vint Cerf</a><a href="더-많은-참고문헌.html#fn14" class="footnote-ref" id="fnref14" role="doc-noteref"><sup>14</sup></a>는 인터넷의 아버지로 아주 잘 알려져 있습니다. 그래서 저는 그의 판단에 반기를 들 수가 없습니다.)</p>
 <p>주소가 고갈된다니 이게 가능한 일일까요? 32비트 IPv4 주소는 수십억 개인데 정말로 가능한지 의문일 겁니다. 정말로 세상에 수십억 개의 컴퓨터가 있을까요?</p>
 <p>있습니다.</p>
-<p>여기에 더해서, 컴퓨터가 정말 적던 초기에는 모두가 수십억은 불가능할 정도로 큰 수라고 생각했습니다. 그래서 일부 큰 조직에 관대하게도 수백만 개의 IP 주소를 할당해 주었습니다. (그런 식으로 많은 IP 주소를 할당받은 조직의 이름을 몇 개 대자면 Xerox, MIT, Ford, HP, IBM, GE, AT&amp;T, 그리고 애플(Apple)이라고 하는 작은 회사도 있었습니다.)</p>
+<p>여기에 더해서, 컴퓨터가 정말 적던 초기에는 모두가 10억은 불가능할 정도로 큰 수라고 생각했습니다. 그래서 일부 큰 조직에 관대하게도 수백만 개의 IP 주소를 할당해 주었습니다. (그런 식으로 많은 IP 주소를 할당받은 조직의 이름을 몇 개 대자면 Xerox, MIT, Ford, HP, IBM, GE, AT&amp;T, 그리고 애플(Apple)이라고 하는 작은 회사도 있었습니다.)</p>
 <p>사실 몇몇 임시방편이 없었다면 IP 주소는 예전에 다 떨어졌을 것입니다.</p>
 <p>그러나 우리는 모든 사람, 모든 컴퓨터, 모든 계산기, 모든 전화기, 모든 주차 정산기, 모든 강아지(강아지들에게도 IP 주소가 필요하겠지요)에게 IP 주소가 있는 시대를 살고 있습니다.</p>
 <p>그리고 그렇게 해서 IPv6이 태어났습니다. 그리고 Vint Cerf는 아마도 불사의 존재이겠지만(그의 물리적 형체가 사라져야 한다면 그는 이미 Internet2의 깊은 곳에서 일종의 초인공지능 <a href="https://en.wikipedia.org/wiki/ELIZA">ELIZA</a><a href="더-많은-참고문헌.html#fn15" class="footnote-ref" id="fnref15" role="doc-noteref"><sup>15</sup></a> 프로그램 같은 모습으로 존재하고 있을 것입니다.), 다시 한 번 다음 버전의 인터넷 프로토콜에서 주소가 부족해서 그가 “내가 말했지”라는 식으로 이야기하는 것을 듣고 싶어 할 사람은 없습니다.</p>
 <p>이게 무슨 의미냐고요?</p>
 <p>우리에게 <em>아주</em> 많은 주소가 필요하다는 뜻입니다. 두 배도 아니고, 십억 배도 아니고, 천조 배도 아니고, <em>7양 9천 자(역자 주 : 양은 10의 28승을 의미하는 수 단위)</em> 배가 필요합니다.</p>
-<p>“Beej, 그게 사실인가요? 저에게는 큰 수를 신뢰하지 않을 많은 이유가 있습니다.”라고 말씀하실 것입니다. 사실 32비트와 128비트 사이에는 그다지 큰 차이가 없어 보일지도 모르겠습니다. 96비트가 더 있을 뿐이니까요. 하지만 우리는 지금 거듭제곱에 대해서 생각해야 합니다. 32비트가 대략 40억 개의 숫자들을 의미합니다. 128비트는 대략 11업 (역자 주 : 1업은 10의 76승을 의미)입니다. (정확히는 2의 128승입니다) 그것은 이 우주의 모든 별마다 IPv4 인터넷이 백만 개씩 있는 것과 비슷합니다.</p>
+<p>“Beej, 그게 사실인가요? 저에게는 큰 수를 못 믿을 만한 이유가 많습니다.”라고 말씀하실 것입니다. 사실 32비트와 128비트 사이에는 그다지 큰 차이가 없어 보일지도 모르겠습니다. 96비트가 더 있을 뿐이니까요. 하지만 우리는 지금 거듭제곱에 대해서 생각해야 합니다. 32비트가 대략 40억 개의 숫자들을 의미합니다. 128비트는 대략 340간 (역자 주 : 간은 10의 36승을 의미하는 수 단위) 개입니다. (정확히는 2의 128승입니다) 그것은 이 우주의 모든 별마다 IPv4 인터넷이 백만 개씩 있는 것과 비슷합니다.</p>
 <p>IPv4의 점과 숫자 표기는 잊어버리세요. 이제 우리에겐 콜론으로 구별하는 2바이트 조각으로 구성되는 16진수 표기법이 있습니다. 예시는 아래와 같습니다.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb7-1"><a href="ip-주소-구조체들-데이터-처리munging.html#cb7-1" aria-hidden="true" tabindex="-1"></a>2001:0db8:c9d2:aee5:73e3:934a:a5ae:9551</span></code></pre></div>
 <p>그게 다가 아닙니다! 대부분의 경우에 여러분은 0이 아주 많이 들어있는 주소를 가지게 될 것입니다. 그리고 그 0들을 두 개의 콜론 사이에 압축해서 넣을 수 있습니다. 또한 각각의 바이트 쌍의 앞에 오는 0은 생략할 수 있습니다. 예를 들어 아래의 각 주소 쌍은 동일한 의미입니다.</p>
@@ -1044,7 +1044,7 @@
 <p>사실 너무 재미있다고 할 수 있는데, IPv6의 제작자들이 수조, 수조 개의 주소를 거리낌 없이 잘라내어 예약된 주소로 지정했기 때문입니다. 그러나 우리에게는 그러고도 너무 많은 주소가 남아 있어서 남은 주소를 세기도 귀찮을 정도입니다. 아직도 은하계의 모든 남녀노소, 강아지, 주차 정산기에 배정할 주소가 남아 있습니다. 은하계의 모든 행성에 주차 정산기가 있다는 것은 확실합니다. 저를 믿으세요.</p>
 <h3 data-number="3.1.1" id="subnets서브넷-또는-부분망"><span class="header-section-number">3.1.1</span> Subnets(서브넷 또는 부분망)</h3>
 <p>관리적인 측면에서 때때로 “IP 주소의 이 비트까지의 첫 부분은 <em>네트워크 부분</em> 이고 나머지는 <em>호스트 부분</em>”이라고 칭하는 것이 편할 때가 있습니다.</p>
-<p>예를 들어 IPv4 주소에서 <code>192.0.2.12</code>를 가지고 있다면 우리는 첫 3바이트가 네트워크 주소이고 마지막 바이트가 호스트 주소라고 말할 수 있습니다. 조금 다르게 말하면 <code>192.0.2.0</code> 네트워크에 있는 호스트 <code>12</code>에 대해서 말한다고 할 수 있습니다. (네트워크 부분에서 우리가 호스트 바이트를 0으로 바꾼 것에 주목하세요.)</p>
+<p>예를 들어 IPv4 주소에서 <code>192.0.2.12</code>를 가지고 있다면 우리는 첫 3바이트가 네트워크 주소이고 마지막 바이트가 호스트 주소라고 말할 수 있습니다. 조금 다르게 말하면 <code>192.0.2.0</code> 네트워크에 있는 호스트 <code>12</code>에 대해서 말한다고 할 수 있습니다. (호스트 부분이었던 바이트를 0으로 바꾼 것에 주목하세요.)</p>
 <p>더 오래된 정보를 알려드리겠습니다! 고대에는 이 서브넷에 “클래스”가 있었습니다. 각각 주소의 첫 번째, 두 번째, 세 번째 바이트까지가 네트워크 부분임을 의미했습니다. 여러분이 네트워크 부분에 1바이트를 받고 호스트 부분에 3바이트를 받을 정도로 운이 좋다면 여러분의 네트워크에 24비트 규모(대략 천육백만)의 호스트를 가질 수 있었습니다. 이것이 “클래스 A” 네트워크입니다. 반대쪽 끝을 “클래스 C”라고 했습니다. 여기에서는 3바이트가 네트워크 부분이고 1바이트가 호스트입니다. (256개의 호스트이고, 예약된 주소 때문에 몇 개를 더 빼야 합니다.)</p>
 <p>그래서 보시다시피, 클래스 A는 몇 개 없고, 클래스 C는 엄청나게 많았으며, 클래스 B는 중간 정도였습니다.</p>
 <p>IP 주소의 네트워크 부분은 <em>넷마스크</em>라는 것으로 표시되는데, IP 주소에서 네트워크 번호를 얻어내기 위해서 넷마스크와 비트 단위 AND 연산을 합니다. 넷마스크는 대체로 <code>255.255.255.0</code>처럼 보입니다. (예를 들어 넷마스크가 저렇고 여러분의 IP가 <code>192.0.2.12</code>라면 네트워크는 <code>192.0.2.12</code> AND <code>255.255.255.0</code>이고 결과는 <code>192.0.2.0</code>입니다.)</p>
@@ -1120,7 +1120,7 @@
 <span id="cb10-7"><a href="ip-주소-구조체들-데이터-처리munging.html#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">struct</span> sockaddr <span class="op">*</span>ai_addr<span class="op">;</span>      <span class="co">// sockaddr_in 또는 _in6 구조체</span></span>
 <span id="cb10-8"><a href="ip-주소-구조체들-데이터-처리munging.html#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span>            <span class="op">*</span>ai_canonname<span class="op">;</span> <span class="co">// 완전한 정규화된 호스트 이름</span></span>
 <span id="cb10-9"><a href="ip-주소-구조체들-데이터-처리munging.html#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-10"><a href="ip-주소-구조체들-데이터-처리munging.html#cb10-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">struct</span> addrinfo <span class="op">*</span>ai_next<span class="op">;</span>      <span class="co">// linked list, next node</span></span>
+<span id="cb10-10"><a href="ip-주소-구조체들-데이터-처리munging.html#cb10-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">struct</span> addrinfo <span class="op">*</span>ai_next<span class="op">;</span>      <span class="co">// 연결 리스트의 다음 노드</span></span>
 <span id="cb10-11"><a href="ip-주소-구조체들-데이터-처리munging.html#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div>
 <p>이 구조체에 내용을 조금 채워 넣은 후에 <code>getaddrinfo()</code>를 호출할 것입니다. 이 함수는 여러분에게 필요한 모든 것들로 채워진, 이 구조체의 링크드 리스트를 반환할 것입니다.</p>
 <p><code>ai_family</code> 필드에서 IPv4나 IPv6을 강제할 수 있고 무엇이든 상관없다면 <code>AF_UNSPEC</code> 으로 둘 수 있습니다. 이것은 여러분의 코드가 IP 버전에 무관해지도록 해 주는 좋은 기능입니다.</p>
@@ -1137,7 +1137,7 @@
 <p><code>sa_family</code>는 몇 가지 것들 중 하나가 될 수 있는데, 우리가 이 문서에서 하는 모든 일에 대해서는 <code>AF_INET</code> (IPv4) 이나 <code>AF_INET6</code> (IPv6)가 될 것입니다. <code>sa_data</code>는 소켓을 위한 목적지 주소와 포트 번호가 담겨 있습니다. 여기에 주소를 직접 적어 넣는 일은 지루하고 불편합니다.</p>
 <p><code>struct sockaddr</code>을 상대하기 위해서 프로그래머들은 IPv4를 위한 병렬적인 구조체인 <code>struct sockaddr_in</code> (“Internet”의 “in”)을 만들었습니다.</p>
 <p>그리고 <em>이것이 중요한 부분입니다</em>: <code>struct sockaddr_in</code>에 대한 포인터는 <code>struct sockaddr</code>에 대한 포인터로 형변환될 수 있고 그 반대도 가능합니다. 그래서 <code>connect()</code>가 <code>struct sockaddr*</code>을 원하더라도 <code>struct sockaddr_in</code>을 사용할 수 있고 마지막에 형변환만 하면 되는 것입니다!</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb12-1"><a href="ip-주소-구조체들-데이터-처리munging.html#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">// (IPv4 only--see struct sockaddr_in6 for IPv6)</span></span>
+<div class="sourceCode" id="cb12"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb12-1"><a href="ip-주소-구조체들-데이터-처리munging.html#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">// IPv4 전용입니다. IPv6은 struct sockaddr_in6를 참고하세요.</span></span>
 <span id="cb12-2"><a href="ip-주소-구조체들-데이터-처리munging.html#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-3"><a href="ip-주소-구조체들-데이터-처리munging.html#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> sockaddr_in <span class="op">{</span></span>
 <span id="cb12-4"><a href="ip-주소-구조체들-데이터-처리munging.html#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">short</span> <span class="dt">int</span>          sin_family<span class="op">;</span>  <span class="co">// 주소 계열, AF_INET</span></span>
@@ -1146,7 +1146,7 @@
 <span id="cb12-7"><a href="ip-주소-구조체들-데이터-처리munging.html#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">unsigned</span> <span class="dt">char</span>      sin_zero<span class="op">[</span><span class="dv">8</span><span class="op">];</span> <span class="co">// sockaddr 구조체와 같은 크기</span></span>
 <span id="cb12-8"><a href="ip-주소-구조체들-데이터-처리munging.html#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div>
 <p>이 구조체는 소켓 주소의 요소들을 참조하는 일을 쉽게 해 줍니다. <code>sin_zero</code> (<code>struct sockaddr</code>과 길이를 맞추기 위해서 덧대진 것)은 <code>memset()</code>을 이용해서 0으로 설정되어야 함을 기억하세요. 또한 <code>sin_family</code>는 <code>struct sockaddr</code>의 <code>sa_family</code>에 대응되며 “<code>AF_INET</code>”으로 설정되어야 함을 기억하세요. 마지막으로 <code>sin_port</code>는 반드시 <em>네트워크 바이트 순서</em> 로 기록해야 함을 기억하세요. ( <code>htons()</code>를 써야 한다는 의미입니다.)</p>
-<p>더 깊게 파고들어 봅시다. <code>struct in_addr</code>에는 <code>sin_addr</code> 필드가 있습니다. 저것이 무엇일까요? 지나치게 과장할 필요는 없지만 저것은 지금껏 있었던 가장 무서운 공용체 (역자 주 : 하나의 메모리 구역을 서로 다른 데이터 타입처럼 읽고 쓸 수 있게 해 주는 C 언어의 기능) 중 하나입니다.</p>
+<p>더 깊게 파고들어 봅시다. <code>sin_addr</code> 필드가 <code>struct in_addr</code> 타입이라는 것을 볼 수 있습니다. 저것이 무엇일까요? 지나치게 과장할 필요는 없지만 저것은 지금껏 있었던 가장 무서운 공용체 (역자 주 : 하나의 메모리 구역을 서로 다른 데이터 타입처럼 읽고 쓸 수 있게 해 주는 C 언어의 기능) 중 하나입니다.</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb13-1"><a href="ip-주소-구조체들-데이터-처리munging.html#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">// (IPv4 전용--IPv6을 위해서는 in6_addr 구조체를 참조하세요)</span></span>
 <span id="cb13-2"><a href="ip-주소-구조체들-데이터-처리munging.html#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb13-3"><a href="ip-주소-구조체들-데이터-처리munging.html#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co">// 인터넷 주소 (역사적인 이유로 존재하는 구조체)</span></span>
@@ -1181,7 +1181,7 @@
 <span id="cb15-8"><a href="ip-주소-구조체들-데이터-처리munging.html#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div>
 <p>중요한 것은 여러분이 <code>ss_family</code> 필드에서 주소 계열을 볼 수 있다는 사실입니다. 그것이 <code>AF_INET</code> 또는 <code>AF_INET6</code>인지 확인하세요(IPv4 또는 IPv6인지 확인하기 위해서). 그 뒤 필요하다면 <code>struct sockaddr_in</code> 또는 <code>struct sockaddr_in6</code>으로 형변환할 수 있을 것입니다.</p>
 <h2 data-number="3.4" id="ip-주소-파트-2"><span class="header-section-number">3.4</span> IP 주소, 파트 2</h2>
-<p>여러분에게는 다행스럽게도, IP 주소를 다룰 수 있게 해 주는 많은 함수가 있습니다. 손으로 직접 종류를 알아내고 <code>long</code>에 <code>&lt;&lt;</code>연산자로 값을 채워 넣을 필요가 없습니다. (역자 주 : <code>&lt;&lt;</code>은 비트 옮기기 연산자이며 큰 메모리 영역에 작은 값을 집어넣고자 할 때 흔히 사용합니다.)</p>
+<p>여러분에게는 다행스럽게도, IP 주소를 다룰 수 있게 해 주는 많은 함수가 있습니다. 손으로 직접 값을 계산해서 <code>long</code>에 <code>&lt;&lt;</code>연산자로 밀어 넣을 필요가 없습니다. (역자 주 : <code>&lt;&lt;</code>은 비트 옮기기 연산자이며 큰 메모리 영역에 작은 값을 집어넣고자 할 때 흔히 사용합니다.)</p>
 <p>우선 여러분이 <code>struct sockaddr_in ina</code>를 가지고 있다고 합시다. 그리고 저장하고 싶은 두 개의 주소, “<code>10.12.110.57</code>”와 “<code>2001:db8:63b3:1::3490</code>” 가 있다고 합시다. 여러분이 사용해야 하는 함수는 <code>inet_pton()</code> 입니다. 이것은 숫자와 점 표기법으로 적힌 IP 주소를 여러분이 <code>AF_INET</code> 또는 <code>AF_INET6</code>를 지정하는 것에 따라서 <code>struct in_addr</code> 또는 <code>struct in6_addr</code>으로 변환합니다. (“<code>pton</code>”는 “presentation to network”(역자 주 : 표현에서 네트워크로)의 약어이며 쉽게 기억하고 싶다면 “printable to network”라고 해도 됩니다.) IPv4와 IPv6에 대해서는 아래와 같이 변환할 수 있습니다:</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb16-1"><a href="ip-주소-구조체들-데이터-처리munging.html#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> sockaddr_in sa<span class="op">;</span>   <span class="co">// IPv4</span></span>
 <span id="cb16-2"><a href="ip-주소-구조체들-데이터-처리munging.html#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> sockaddr_in6 sa6<span class="op">;</span> <span class="co">// IPv6</span></span>
