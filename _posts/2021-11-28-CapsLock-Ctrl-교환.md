@@ -2,6 +2,7 @@
 layout: post
 title: "CapsLock과 Left Ctrl키의 교환 설정(윈도우)"
 date: 2021-11-28 04:01:00 +0900
+last_modified_at: 2026-07-30 23:35:00 +0900
 categories: windows
 tags: Windows CapsLock Ctrl
 # parent: "글"
@@ -46,6 +47,10 @@ Windows Registry Editor Version 5.00 //이 파일이 윈도우 레지스트리 �
 첨부파일 3은 CapsLock을 LeftCtrl로 바꾸는 점은 같지만 LeftCtrl을 RightCtrl로 바꾼다. 그런데 이 설정을 적용할 경우 한영/한자키가 따로 없는 키보드 종류를 사용한다면 RightCtrl이 실제로는 IME Kanji(한자키)로 변환되어 인식되는 문제가 있다. 이것은 PowerToys의 Keyboard Manager를 써서 IME Kanji키를 다시 RightCtrl키로 변환하도록 설정하면 해결된다. 또 CapsLock키가 없는 문제는 하단의 새로 만든 RightCtrl과 Tab을 같이 누르면 되도록 설정하면 된다. 첨부파일 3의 내용을 지우고자 할 때에도 첨부파일 2를 사용하면 된다.
 
 첨부파일 4는 스캔코드를 참조할 수 있는 Microsoft의 문서이다. 문서의 스캔코드 목록에 나오는 Scan 1을 보면 되고, 문서를 보면 레지스트리 파일의 스캔코드는 작은 바이트가 먼저 제시되는 리틀엔디안임을 알 수 있다.
+
+# 2026-07-30 추가
+
+위에 적은 모든 내용들을 종합해서, 좀 더 사용하기 쉬운 레지스트리 파일 생성기까지 담은 <https://nocapslock.com>을 만들었다. 운영체제 별 안내가 있으니 참고해보시면 좋겠다.
 
 # 첨부파일 목록
 
