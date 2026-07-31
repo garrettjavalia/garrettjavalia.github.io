@@ -985,15 +985,34 @@
       max-width: inherit;
   }
   </style><link rel="stylesheet" as="style" crossorigin="None" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
-  <link rel="stylesheet" href="fonts/yeomil-mono/yeomilmono.css" />
   <!-- Korean translation font override -->
   <style type="text/css">
+  @font-face {
+      font-family: "D2Coding";
+      src: url("fonts/d2coding/ttf/D2Coding-Regular.ttf") format("truetype");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+  }
+
+  @font-face {
+      font-family: "D2Coding";
+      src: url("fonts/d2coding/ttf/D2Coding-Bold.ttf") format("truetype");
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+  }
+
   body {
       font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
   }
 
   pre, code, kbd, samp {
-      font-family: "Yeomil Mono", Menlo, Monaco, Consolas, "Lucida Console", monospace;
+      font-family: "D2Coding", Menlo, Monaco, Consolas, "Lucida Console", monospace;
+  }
+
+  pre.sourceCode {
+      width: fit-content;
   }
   </style>
   <!-- Korean HTML head additions. -->
@@ -1008,7 +1027,7 @@
   </script>
 </head>
 <body>
-<div style="text-align:center"><span><a href="약간-더-고급스러운-기술.html" rel="prev">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="맨페이지.html" rel="next">Next</a></span></div><hr>
+<div style="text-align:center"><span><a href="약간-더-고급스러운-기술.html" rel="prev">이전</a> | </span><a href="index.html">목차</a><span> | <a href="맨페이지.html" rel="next">다음</a></span></div><hr>
 <h1 data-number="8" id="일반적인-질문들"><span class="header-section-number">8</span> 일반적인 질문들</h1>
 <p><strong>이 헤더 파일들은 어디서 찾을 수 있을까요?</strong></p>
 <p> 여러분의 시스템에 헤더 파일이 없다면 아마도 그것이 필요하지 않을 것입니다. 사용 중인 플랫폼의 설명서를 참고하세요. Windows를 위해 작업하고 있다면 <code>#include &lt;winsock.h&gt;</code>만 하면 됩니다.</p>
@@ -1043,63 +1062,63 @@
 <p>시그널은 블로킹 중인 시스템 콜이 <code>errno</code>를 <code>EINTR</code>로 설정하고 <code>-1</code>을 반환하게 만듭니다. <code>sigaction()</code>으로 시그널 핸들러를 설정하면 <code>SA_RESTART</code> 플래그를 설정할 수 있는데 이것은 중단된 시스템 콜을 다시 시작하게 해 줄 것입니다.</p>
 <p>물론 이런 방식이 늘 작동하는 것은 아닙니다.</p>
 <p>제가 선호하는 해결책은 <code>goto</code>문을 쓰는 방법입니다. 이것이 교수님들을 아주 짜증나게 할 수 있다는 것도 잘 알 테니, 한번 해 보세요!</p>
-<div class="sourceCode" id="cb79"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb79-1"><a href="일반적인-질문들.html#cb79-1"></a>select_restart<span class="op">:</span></span>
-<span id="cb79-2"><a href="일반적인-질문들.html#cb79-2"></a><span class="cf">if</span> <span class="op">((</span>err <span class="op">=</span> select<span class="op">(</span>fdmax<span class="op">+</span><span class="dv">1</span><span class="op">,</span> <span class="op">&amp;</span>readfds<span class="op">,</span> NULL<span class="op">,</span> NULL<span class="op">,</span> NULL<span class="op">))</span> <span class="op">==</span> <span class="op">-</span><span class="dv">1</span><span class="op">)</span> <span class="op">{</span></span>
-<span id="cb79-3"><a href="일반적인-질문들.html#cb79-3"></a>    <span class="cf">if</span> <span class="op">(</span>errno <span class="op">==</span> EINTR<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb79-4"><a href="일반적인-질문들.html#cb79-4"></a>        <span class="co">// 어떤 시그널이 우리에게 인터럽트를 걸었습니다. 그러니 재시작합니다</span></span>
-<span id="cb79-5"><a href="일반적인-질문들.html#cb79-5"></a>        <span class="cf">goto</span> select_restart<span class="op">;</span></span>
-<span id="cb79-6"><a href="일반적인-질문들.html#cb79-6"></a>    <span class="op">}</span></span>
-<span id="cb79-7"><a href="일반적인-질문들.html#cb79-7"></a>    <span class="co">// 진짜 오류는 여기서 처리합니다</span></span>
-<span id="cb79-8"><a href="일반적인-질문들.html#cb79-8"></a>    perror<span class="op">(</span><span class="st">&quot;select&quot;</span><span class="op">);</span></span>
-<span id="cb79-9"><a href="일반적인-질문들.html#cb79-9"></a><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb78"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb78-1"><a href="일반적인-질문들.html#cb78-1"></a>select_restart<span class="op">:</span></span>
+<span id="cb78-2"><a href="일반적인-질문들.html#cb78-2"></a><span class="cf">if</span> <span class="op">((</span>err <span class="op">=</span> select<span class="op">(</span>fdmax<span class="op">+</span><span class="dv">1</span><span class="op">,</span> <span class="op">&amp;</span>readfds<span class="op">,</span> NULL<span class="op">,</span> NULL<span class="op">,</span> NULL<span class="op">))</span> <span class="op">==</span> <span class="op">-</span><span class="dv">1</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb78-3"><a href="일반적인-질문들.html#cb78-3"></a>    <span class="cf">if</span> <span class="op">(</span>errno <span class="op">==</span> EINTR<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb78-4"><a href="일반적인-질문들.html#cb78-4"></a>        <span class="co">// 어떤 시그널이 우리에게 인터럽트를 걸었습니다. 그러니 재시작합니다</span></span>
+<span id="cb78-5"><a href="일반적인-질문들.html#cb78-5"></a>        <span class="cf">goto</span> select_restart<span class="op">;</span></span>
+<span id="cb78-6"><a href="일반적인-질문들.html#cb78-6"></a>    <span class="op">}</span></span>
+<span id="cb78-7"><a href="일반적인-질문들.html#cb78-7"></a>    <span class="co">// 진짜 오류는 여기서 처리합니다</span></span>
+<span id="cb78-8"><a href="일반적인-질문들.html#cb78-8"></a>    perror<span class="op">(</span><span class="st">&quot;select&quot;</span><span class="op">);</span></span>
+<span id="cb78-9"><a href="일반적인-질문들.html#cb78-9"></a><span class="op">}</span></span></code></pre></div>
 <p>물론 여기에서 <code>goto</code>를 쓸 <em>필요</em>는 없습니다. 다른 구조로 제어할 수도 있습니다. 그러나 저는 이 경우 <code>goto</code> 문이 사실 더 깔끔하다고 생각합니다.</p>
 <p><strong><code>recv()</code> 호출에 시간 제한을 적용하려면 어떻게 해야 하나요?</strong></p>
 <p> <a href="약간-더-고급스러운-기술.html#select"><code>select()</code></a>를 사용하세요! <code>select()</code>는 읽어들이려는 소켓 설명자에 시간 제한 매개변수를 지정할 수 있게 해 줍니다. 아니면 모든 기능을 아래와 같이 하나의 함수에 감쌀 수 있습니다.</p>
-<div class="sourceCode" id="cb80"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb80-1"><a href="일반적인-질문들.html#cb80-1"></a><span class="pp">#include </span><span class="im">&lt;unistd.h&gt;</span></span>
-<span id="cb80-2"><a href="일반적인-질문들.html#cb80-2"></a><span class="pp">#include </span><span class="im">&lt;sys/time.h&gt;</span></span>
-<span id="cb80-3"><a href="일반적인-질문들.html#cb80-3"></a><span class="pp">#include </span><span class="im">&lt;sys/types.h&gt;</span></span>
-<span id="cb80-4"><a href="일반적인-질문들.html#cb80-4"></a><span class="pp">#include </span><span class="im">&lt;sys/socket.h&gt;</span></span>
-<span id="cb80-5"><a href="일반적인-질문들.html#cb80-5"></a></span>
-<span id="cb80-6"><a href="일반적인-질문들.html#cb80-6"></a><span class="dt">int</span> recvtimeout<span class="op">(</span><span class="dt">int</span> s<span class="op">,</span> <span class="dt">char</span> <span class="op">*</span>buf<span class="op">,</span> <span class="dt">int</span> len<span class="op">,</span> <span class="dt">int</span> timeout<span class="op">)</span></span>
-<span id="cb80-7"><a href="일반적인-질문들.html#cb80-7"></a><span class="op">{</span></span>
-<span id="cb80-8"><a href="일반적인-질문들.html#cb80-8"></a>    fd_set fds<span class="op">;</span></span>
-<span id="cb80-9"><a href="일반적인-질문들.html#cb80-9"></a>    <span class="dt">int</span> n<span class="op">;</span></span>
-<span id="cb80-10"><a href="일반적인-질문들.html#cb80-10"></a>    <span class="kw">struct</span> timeval tv<span class="op">;</span></span>
-<span id="cb80-11"><a href="일반적인-질문들.html#cb80-11"></a></span>
-<span id="cb80-12"><a href="일반적인-질문들.html#cb80-12"></a>    <span class="co">// 파일 설명자 집합을 설정합니다</span></span>
-<span id="cb80-13"><a href="일반적인-질문들.html#cb80-13"></a>    FD_ZERO<span class="op">(&amp;</span>fds<span class="op">);</span></span>
-<span id="cb80-14"><a href="일반적인-질문들.html#cb80-14"></a>    FD_SET<span class="op">(</span>s<span class="op">,</span> <span class="op">&amp;</span>fds<span class="op">);</span></span>
-<span id="cb80-15"><a href="일반적인-질문들.html#cb80-15"></a></span>
-<span id="cb80-16"><a href="일반적인-질문들.html#cb80-16"></a>    <span class="co">// 시간 제한을 위한 struct timeval을 설정합니다</span></span>
-<span id="cb80-17"><a href="일반적인-질문들.html#cb80-17"></a>    tv<span class="op">.</span>tv_sec <span class="op">=</span> timeout<span class="op">;</span></span>
-<span id="cb80-18"><a href="일반적인-질문들.html#cb80-18"></a>    tv<span class="op">.</span>tv_usec <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
-<span id="cb80-19"><a href="일반적인-질문들.html#cb80-19"></a></span>
-<span id="cb80-20"><a href="일반적인-질문들.html#cb80-20"></a>    <span class="co">// 시간이 초과되거나 데이터를 받을 때까지 기다립니다</span></span>
-<span id="cb80-21"><a href="일반적인-질문들.html#cb80-21"></a>    n <span class="op">=</span> select<span class="op">(</span>s<span class="op">+</span><span class="dv">1</span><span class="op">,</span> <span class="op">&amp;</span>fds<span class="op">,</span> NULL<span class="op">,</span> NULL<span class="op">,</span> <span class="op">&amp;</span>tv<span class="op">);</span></span>
-<span id="cb80-22"><a href="일반적인-질문들.html#cb80-22"></a>    <span class="cf">if</span> <span class="op">(</span>n <span class="op">==</span> <span class="dv">0</span><span class="op">)</span> <span class="cf">return</span> <span class="op">-</span><span class="dv">2</span><span class="op">;</span> <span class="co">// 시간 초과!</span></span>
-<span id="cb80-23"><a href="일반적인-질문들.html#cb80-23"></a>    <span class="cf">if</span> <span class="op">(</span>n <span class="op">==</span> <span class="op">-</span><span class="dv">1</span><span class="op">)</span> <span class="cf">return</span> <span class="op">-</span><span class="dv">1</span><span class="op">;</span> <span class="co">// 오류</span></span>
-<span id="cb80-24"><a href="일반적인-질문들.html#cb80-24"></a></span>
-<span id="cb80-25"><a href="일반적인-질문들.html#cb80-25"></a>    <span class="co">// 여기에 데이터가 있어야 하므로 일반 recv()를 수행합니다</span></span>
-<span id="cb80-26"><a href="일반적인-질문들.html#cb80-26"></a>    <span class="cf">return</span> recv<span class="op">(</span>s<span class="op">,</span> buf<span class="op">,</span> len<span class="op">,</span> <span class="dv">0</span><span class="op">);</span></span>
-<span id="cb80-27"><a href="일반적인-질문들.html#cb80-27"></a><span class="op">}</span></span>
-<span id="cb80-28"><a href="일반적인-질문들.html#cb80-28"></a><span class="op">.</span></span>
-<span id="cb80-29"><a href="일반적인-질문들.html#cb80-29"></a><span class="op">.</span></span>
-<span id="cb80-30"><a href="일반적인-질문들.html#cb80-30"></a><span class="op">.</span></span>
-<span id="cb80-31"><a href="일반적인-질문들.html#cb80-31"></a><span class="co">// recvtimeout() 호출 예시</span></span>
-<span id="cb80-32"><a href="일반적인-질문들.html#cb80-32"></a>n <span class="op">=</span> recvtimeout<span class="op">(</span>s<span class="op">,</span> buf<span class="op">,</span> <span class="kw">sizeof</span> buf<span class="op">,</span> <span class="dv">10</span><span class="op">);</span> <span class="co">// 10초 제한 시간</span></span>
-<span id="cb80-33"><a href="일반적인-질문들.html#cb80-33"></a></span>
-<span id="cb80-34"><a href="일반적인-질문들.html#cb80-34"></a><span class="cf">if</span> <span class="op">(</span>n <span class="op">==</span> <span class="op">-</span><span class="dv">1</span><span class="op">)</span> <span class="op">{</span></span>
-<span id="cb80-35"><a href="일반적인-질문들.html#cb80-35"></a>    <span class="co">// 오류가 발생했습니다</span></span>
-<span id="cb80-36"><a href="일반적인-질문들.html#cb80-36"></a>    perror<span class="op">(</span><span class="st">&quot;recvtimeout&quot;</span><span class="op">);</span></span>
-<span id="cb80-37"><a href="일반적인-질문들.html#cb80-37"></a><span class="op">}</span></span>
-<span id="cb80-38"><a href="일반적인-질문들.html#cb80-38"></a><span class="cf">else</span> <span class="cf">if</span> <span class="op">(</span>n <span class="op">==</span> <span class="op">-</span><span class="dv">2</span><span class="op">)</span> <span class="op">{</span></span>
-<span id="cb80-39"><a href="일반적인-질문들.html#cb80-39"></a>    <span class="co">// 시간이 초과되었습니다</span></span>
-<span id="cb80-40"><a href="일반적인-질문들.html#cb80-40"></a><span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
-<span id="cb80-41"><a href="일반적인-질문들.html#cb80-41"></a>    <span class="co">// buf에 데이터가 들어 있습니다</span></span>
-<span id="cb80-42"><a href="일반적인-질문들.html#cb80-42"></a><span class="op">}</span></span>
-<span id="cb80-43"><a href="일반적인-질문들.html#cb80-43"></a><span class="op">.</span></span>
-<span id="cb80-44"><a href="일반적인-질문들.html#cb80-44"></a><span class="op">.</span></span>
-<span id="cb80-45"><a href="일반적인-질문들.html#cb80-45"></a><span class="op">.</span></span></code></pre></div>
+<div class="sourceCode" id="cb79"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb79-1"><a href="일반적인-질문들.html#cb79-1"></a><span class="pp">#include </span><span class="im">&lt;unistd.h&gt;</span></span>
+<span id="cb79-2"><a href="일반적인-질문들.html#cb79-2"></a><span class="pp">#include </span><span class="im">&lt;sys/time.h&gt;</span></span>
+<span id="cb79-3"><a href="일반적인-질문들.html#cb79-3"></a><span class="pp">#include </span><span class="im">&lt;sys/types.h&gt;</span></span>
+<span id="cb79-4"><a href="일반적인-질문들.html#cb79-4"></a><span class="pp">#include </span><span class="im">&lt;sys/socket.h&gt;</span></span>
+<span id="cb79-5"><a href="일반적인-질문들.html#cb79-5"></a></span>
+<span id="cb79-6"><a href="일반적인-질문들.html#cb79-6"></a><span class="dt">int</span> recvtimeout<span class="op">(</span><span class="dt">int</span> s<span class="op">,</span> <span class="dt">char</span> <span class="op">*</span>buf<span class="op">,</span> <span class="dt">int</span> len<span class="op">,</span> <span class="dt">int</span> timeout<span class="op">)</span></span>
+<span id="cb79-7"><a href="일반적인-질문들.html#cb79-7"></a><span class="op">{</span></span>
+<span id="cb79-8"><a href="일반적인-질문들.html#cb79-8"></a>    fd_set fds<span class="op">;</span></span>
+<span id="cb79-9"><a href="일반적인-질문들.html#cb79-9"></a>    <span class="dt">int</span> n<span class="op">;</span></span>
+<span id="cb79-10"><a href="일반적인-질문들.html#cb79-10"></a>    <span class="kw">struct</span> timeval tv<span class="op">;</span></span>
+<span id="cb79-11"><a href="일반적인-질문들.html#cb79-11"></a></span>
+<span id="cb79-12"><a href="일반적인-질문들.html#cb79-12"></a>    <span class="co">// 파일 설명자 집합을 설정합니다</span></span>
+<span id="cb79-13"><a href="일반적인-질문들.html#cb79-13"></a>    FD_ZERO<span class="op">(&amp;</span>fds<span class="op">);</span></span>
+<span id="cb79-14"><a href="일반적인-질문들.html#cb79-14"></a>    FD_SET<span class="op">(</span>s<span class="op">,</span> <span class="op">&amp;</span>fds<span class="op">);</span></span>
+<span id="cb79-15"><a href="일반적인-질문들.html#cb79-15"></a></span>
+<span id="cb79-16"><a href="일반적인-질문들.html#cb79-16"></a>    <span class="co">// 시간 제한을 위한 struct timeval을 설정합니다</span></span>
+<span id="cb79-17"><a href="일반적인-질문들.html#cb79-17"></a>    tv<span class="op">.</span>tv_sec <span class="op">=</span> timeout<span class="op">;</span></span>
+<span id="cb79-18"><a href="일반적인-질문들.html#cb79-18"></a>    tv<span class="op">.</span>tv_usec <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb79-19"><a href="일반적인-질문들.html#cb79-19"></a></span>
+<span id="cb79-20"><a href="일반적인-질문들.html#cb79-20"></a>    <span class="co">// 시간이 초과되거나 데이터를 받을 때까지 기다립니다</span></span>
+<span id="cb79-21"><a href="일반적인-질문들.html#cb79-21"></a>    n <span class="op">=</span> select<span class="op">(</span>s<span class="op">+</span><span class="dv">1</span><span class="op">,</span> <span class="op">&amp;</span>fds<span class="op">,</span> NULL<span class="op">,</span> NULL<span class="op">,</span> <span class="op">&amp;</span>tv<span class="op">);</span></span>
+<span id="cb79-22"><a href="일반적인-질문들.html#cb79-22"></a>    <span class="cf">if</span> <span class="op">(</span>n <span class="op">==</span> <span class="dv">0</span><span class="op">)</span> <span class="cf">return</span> <span class="op">-</span><span class="dv">2</span><span class="op">;</span> <span class="co">// 시간 초과!</span></span>
+<span id="cb79-23"><a href="일반적인-질문들.html#cb79-23"></a>    <span class="cf">if</span> <span class="op">(</span>n <span class="op">==</span> <span class="op">-</span><span class="dv">1</span><span class="op">)</span> <span class="cf">return</span> <span class="op">-</span><span class="dv">1</span><span class="op">;</span> <span class="co">// 오류</span></span>
+<span id="cb79-24"><a href="일반적인-질문들.html#cb79-24"></a></span>
+<span id="cb79-25"><a href="일반적인-질문들.html#cb79-25"></a>    <span class="co">// 여기에 데이터가 있어야 하므로 일반 recv()를 수행합니다</span></span>
+<span id="cb79-26"><a href="일반적인-질문들.html#cb79-26"></a>    <span class="cf">return</span> recv<span class="op">(</span>s<span class="op">,</span> buf<span class="op">,</span> len<span class="op">,</span> <span class="dv">0</span><span class="op">);</span></span>
+<span id="cb79-27"><a href="일반적인-질문들.html#cb79-27"></a><span class="op">}</span></span>
+<span id="cb79-28"><a href="일반적인-질문들.html#cb79-28"></a><span class="op">.</span></span>
+<span id="cb79-29"><a href="일반적인-질문들.html#cb79-29"></a><span class="op">.</span></span>
+<span id="cb79-30"><a href="일반적인-질문들.html#cb79-30"></a><span class="op">.</span></span>
+<span id="cb79-31"><a href="일반적인-질문들.html#cb79-31"></a><span class="co">// recvtimeout() 호출 예시</span></span>
+<span id="cb79-32"><a href="일반적인-질문들.html#cb79-32"></a>n <span class="op">=</span> recvtimeout<span class="op">(</span>s<span class="op">,</span> buf<span class="op">,</span> <span class="kw">sizeof</span> buf<span class="op">,</span> <span class="dv">10</span><span class="op">);</span> <span class="co">// 10초 제한 시간</span></span>
+<span id="cb79-33"><a href="일반적인-질문들.html#cb79-33"></a></span>
+<span id="cb79-34"><a href="일반적인-질문들.html#cb79-34"></a><span class="cf">if</span> <span class="op">(</span>n <span class="op">==</span> <span class="op">-</span><span class="dv">1</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb79-35"><a href="일반적인-질문들.html#cb79-35"></a>    <span class="co">// 오류가 발생했습니다</span></span>
+<span id="cb79-36"><a href="일반적인-질문들.html#cb79-36"></a>    perror<span class="op">(</span><span class="st">&quot;recvtimeout&quot;</span><span class="op">);</span></span>
+<span id="cb79-37"><a href="일반적인-질문들.html#cb79-37"></a><span class="op">}</span></span>
+<span id="cb79-38"><a href="일반적인-질문들.html#cb79-38"></a><span class="cf">else</span> <span class="cf">if</span> <span class="op">(</span>n <span class="op">==</span> <span class="op">-</span><span class="dv">2</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb79-39"><a href="일반적인-질문들.html#cb79-39"></a>    <span class="co">// 시간이 초과되었습니다</span></span>
+<span id="cb79-40"><a href="일반적인-질문들.html#cb79-40"></a><span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb79-41"><a href="일반적인-질문들.html#cb79-41"></a>    <span class="co">// buf에 데이터가 들어 있습니다</span></span>
+<span id="cb79-42"><a href="일반적인-질문들.html#cb79-42"></a><span class="op">}</span></span>
+<span id="cb79-43"><a href="일반적인-질문들.html#cb79-43"></a><span class="op">.</span></span>
+<span id="cb79-44"><a href="일반적인-질문들.html#cb79-44"></a><span class="op">.</span></span>
+<span id="cb79-45"><a href="일반적인-질문들.html#cb79-45"></a><span class="op">.</span></span></code></pre></div>
 <p> <code>recvtimeout()</code>이 시간 초과 상황에서 <code>-2</code>를 돌려준다는 점에 주목하세요. 왜 <code>0</code>이 아닌지 궁금한가요? <code>recv()</code>가 원격지 연결이 닫혔을 때 <code>0</code>을 돌려준다는 점을 떠올려봅시다. 그러니 그 값은 쓸 수가 없고, <code>-1</code>은 “오류”를 의미합니다. 그래서 저는 시간 초과를 가리키는 값으로 <code>-2</code>를 썼습니다.</p>
 <p><strong>소켓에 데이터를 보내기 전에 암호화하거나 압축하려면 어떻게 해야 하나요?</strong></p>
 <p>데이터를 암호화하기 위한 간편한 방법 중 하나는 SSL(secure sockets layer)를 사용하는 것입니다. 그러나 그것은 이 안내서의 범위를 벗어납니다. (더 많은 정보가 필요하면 <a href="https://www.openssl.org/">OpenSSL 프로젝트</a><a href="더-많은-참고문헌.html#fn47" class="footnote-ref" id="fnref47" role="doc-noteref"><sup>47</sup></a>를 확인하세요.)</p>
@@ -1138,10 +1157,10 @@
 </ol>
 <p> <em>주의하세요!</em> 클라이언트가 말하는 것을 서버가 실행한다는 것은 원격 셸 접근 권한을 주는 것과 비슷한 일이고, 사람들이 서버에 접속할 때 여러분의 계정으로 무엇이든 할 수 있다는 의미입니다. 위의 예제에서 클라이언트가 “<code>rm -rf ~</code>”를 보내면 어떻게 될까요? 여러분의 계정이 가진 모든 것을 삭제할 것입니다!</p>
 <p>그러니 여러분이 현명하다면 안전하다고 확신하는 몇 개의 유틸리티, 예를 들어 <code>foobar</code> 외의 것을 클라이언트가 실행하지 못하도록 하는 것이 좋습니다.</p>
-<div class="sourceCode" id="cb81"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb81-1"><a href="일반적인-질문들.html#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(!</span>strncmp<span class="op">(</span>str<span class="op">,</span> <span class="st">&quot;foobar&quot;</span><span class="op">,</span> <span class="dv">6</span><span class="op">))</span> <span class="op">{</span></span>
-<span id="cb81-2"><a href="일반적인-질문들.html#cb81-2" aria-hidden="true" tabindex="-1"></a>    sprintf<span class="op">(</span>sysstr<span class="op">,</span> <span class="st">&quot;</span><span class="sc">%s</span><span class="st"> &gt; /tmp/server.out&quot;</span><span class="op">,</span> str<span class="op">);</span></span>
-<span id="cb81-3"><a href="일반적인-질문들.html#cb81-3" aria-hidden="true" tabindex="-1"></a>    system<span class="op">(</span>sysstr<span class="op">);</span></span>
-<span id="cb81-4"><a href="일반적인-질문들.html#cb81-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb80"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb80-1"><a href="일반적인-질문들.html#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(!</span>strncmp<span class="op">(</span>str<span class="op">,</span> <span class="st">&quot;foobar&quot;</span><span class="op">,</span> <span class="dv">6</span><span class="op">))</span> <span class="op">{</span></span>
+<span id="cb80-2"><a href="일반적인-질문들.html#cb80-2" aria-hidden="true" tabindex="-1"></a>    sprintf<span class="op">(</span>sysstr<span class="op">,</span> <span class="st">&quot;</span><span class="sc">%s</span><span class="st"> &gt; /tmp/server.out&quot;</span><span class="op">,</span> str<span class="op">);</span></span>
+<span id="cb80-3"><a href="일반적인-질문들.html#cb80-3" aria-hidden="true" tabindex="-1"></a>    system<span class="op">(</span>sysstr<span class="op">);</span></span>
+<span id="cb80-4"><a href="일반적인-질문들.html#cb80-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p>그러나 불행히도 이것만으로는 여전히 위험합니다. 클라이언트가 “<code>foobar; rm -rf ~</code>” 를 입력한다면 어떻게 될까요? 가장 안전한 방식은 명령의 매개변수에 들어가는 숫자나 영문자가 아닌 모든 문자(필요하다면 공백 문자도) 앞에 이스케이프(“<code>\</code>”) 문자를 붙이는 것입니다.</p>
 <p>보시다시피 보안은 클라이언트가 보낸 것을 서버가 실행할 때에 큰 문제가 됩니다.</p>
 <p><strong>제가 꽤 큰 데이터를 보내는데 <code>recv()</code>를 해보면 한 번에 536바이트나 1460바이트 씩만 받아옵니다. 그러나 이것을 로컬 장치에서 실행하면 한 번에 모든 데이터를 받아옵니다. 왜 이런 것인가요?</strong></p>
@@ -1170,5 +1189,5 @@
 <p>만약 포트가 이미 사용 중이라면 <code>bind()</code>를 시도할 때 “Address already in use” 오류가 발생할 것입니다. 다른 포트를 고르세요. (여러분의 소프트웨어의 사용자가 설정 파일이나 명령줄 스위치로 대체 포트를 지정할 수 있게 하는 것이 좋습니다.)</p>
 <p>인터넷 할당 번호 관리 기관(the Internet Assigned Numbers Authority, IANA) 이 관리하는 <a href="https://www.iana.org/assignments/port-numbers">공식 포트 번호</a><a href="더-많은-참고문헌.html#fn49" class="footnote-ref" id="fnref49" role="doc-noteref"><sup>49</sup></a> 가 있습니다. (1023보다 큰) 어떤 번호가 저 목록에 있다고 해서 그 포트를 쓸 수 없는 것은 아닙니다. 예를 들어 Id Software의 DOOM은 “mdqs”(그게 무엇이든) 와 같은 포트를 씁니다. 중요한 것은 <em>같은 장치</em>의 누구도 여러분이 그 포트를 쓰고 싶을 때 그 포트를 쓰고 있지 않으면 된다는 것입니다.</p>
 <!-- BG_NEW_CHAPTER -->
-<hr><div style="text-align:center"><span><a href="약간-더-고급스러운-기술.html" rel="prev">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="맨페이지.html" rel="next">Next</a></span></div></body>
+<hr><div style="text-align:center"><span><a href="약간-더-고급스러운-기술.html" rel="prev">이전</a> | </span><a href="index.html">목차</a><span> | <a href="맨페이지.html" rel="next">다음</a></span></div></body>
 </html>

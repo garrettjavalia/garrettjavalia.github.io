@@ -978,15 +978,34 @@
 
   </style>
   <link rel="stylesheet" as="style" crossorigin="None" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
-  <link rel="stylesheet" href="fonts/yeomil-mono/yeomilmono.css" />
   <!-- Korean translation font override -->
   <style type="text/css">
+  @font-face {
+      font-family: "D2Coding";
+      src: url("fonts/d2coding/ttf/D2Coding-Regular.ttf") format("truetype");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+  }
+
+  @font-face {
+      font-family: "D2Coding";
+      src: url("fonts/d2coding/ttf/D2Coding-Bold.ttf") format("truetype");
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+  }
+
   body {
       font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
   }
 
   pre, code, kbd, samp {
-      font-family: "Yeomil Mono", Menlo, Monaco, Consolas, "Lucida Console", monospace;
+      font-family: "D2Coding", Menlo, Monaco, Consolas, "Lucida Console", monospace;
+  }
+
+  pre.sourceCode {
+      width: fit-content;
   }
   </style>
   <!-- Korean HTML head additions. -->
@@ -1001,7 +1020,7 @@
   </script>
 </head>
 <body>
-<div style="text-align:center"><span><a href="ipv4에서-ipv6으로-넘어가기.html" rel="prev">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="클라이언트-서버-배경지식.html" rel="next">Next</a></span></div><hr>
+<div style="text-align:center"><span><a href="ipv4에서-ipv6으로-넘어가기.html" rel="prev">이전</a> | </span><a href="index.html">목차</a><span> | <a href="클라이언트-서버-배경지식.html" rel="next">다음</a></span></div><hr>
 <h1 data-number="5" id="시스템-콜이-아니면-죽음을"><span class="header-section-number">5</span> 시스템 콜이 아니면 죽음을</h1>
 <p>이 절에서 우리는 유닉스 장치나 기타 소켓 API를 지원하는 다른 장치(BSD, 윈도우, 리눅스, 맥, 여러분이 가진 다른 장치)에서 네트워크 기능에 접근할 수 있게 해 주는 시스템 호출(System Call)과 기타 라이브러리 호출 (Library Call)에 대해서 다룰 것입니다. 이런 함수 중 하나를 호출하면 커널이 넘겨받고 여러분을 위해 모든 일을 자동으로 마법같이 처리합니다.</p>
 <p>대부분의 사람들이 어려워하는 점은 이 함수들을 어떤 순서로 호출해야 하는가 입니다. 이미 찾아보셨겠지만 그런 쪽으로는 <code>man</code>페이지는 아무 쓸모도 없습니다. 그 끔찍한 상황을 해결하기 위해 시스템 콜들을 <em>정확히</em>(대략) 여러분의 프로그램에서 호출해야 하는 순서 그대로 아래에 이어지는 절들에 제시했습니다.</p>
@@ -1416,5 +1435,5 @@ IP addresses for ipv6.example.com:
 <p>인수들은 단순합니다. <code>hostname</code>은 함수가 반환하는 호스트 이름을 담을 char 배열에 대한 포인터입니다. <code>size</code>는 <code>hostname</code> 배열의 바이트 단위 길이입니다.</p>
 <p>함수는 성공적인 완료 후에 <code>0</code>을 반환하고, 오류에 대해서는 흔히 그렇듯 <code>errno</code>를 설정하고 <code>-1</code>을 반환합니다.</p>
 <!-- BG_NEW_CHAPTER -->
-<hr><div style="text-align:center"><span><a href="ipv4에서-ipv6으로-넘어가기.html" rel="prev">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="클라이언트-서버-배경지식.html" rel="next">Next</a></span></div></body>
+<hr><div style="text-align:center"><span><a href="ipv4에서-ipv6으로-넘어가기.html" rel="prev">이전</a> | </span><a href="index.html">목차</a><span> | <a href="클라이언트-서버-배경지식.html" rel="next">다음</a></span></div></body>
 </html>

@@ -985,15 +985,34 @@
       max-width: inherit;
   }
   </style><link rel="stylesheet" as="style" crossorigin="None" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
-  <link rel="stylesheet" href="fonts/yeomil-mono/yeomilmono.css" />
   <!-- Korean translation font override -->
   <style type="text/css">
+  @font-face {
+      font-family: "D2Coding";
+      src: url("fonts/d2coding/ttf/D2Coding-Regular.ttf") format("truetype");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+  }
+
+  @font-face {
+      font-family: "D2Coding";
+      src: url("fonts/d2coding/ttf/D2Coding-Bold.ttf") format("truetype");
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+  }
+
   body {
       font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
   }
 
   pre, code, kbd, samp {
-      font-family: "Yeomil Mono", Menlo, Monaco, Consolas, "Lucida Console", monospace;
+      font-family: "D2Coding", Menlo, Monaco, Consolas, "Lucida Console", monospace;
+  }
+
+  pre.sourceCode {
+      width: fit-content;
   }
   </style>
   <!-- Korean HTML head additions. -->
@@ -1008,7 +1027,7 @@
   </script>
 </head>
 <body>
-<div style="text-align:center"><span><a href="맨페이지.html" rel="prev">Prev</a> | </span><a href="index.html">Contents</a><span style="visibility: hidden"> | <a href="" rel="next">Next</a></span></div><hr>
+<div style="text-align:center"><span><a href="맨페이지.html" rel="prev">이전</a> | </span><a href="index.html">목차</a><span style="visibility: hidden"> | <a href="" rel="next">다음</a></span></div><hr>
 <h1 data-number="10" id="더-많은-참고문헌"><span class="header-section-number">10</span> 더 많은 참고문헌</h1>
 <p>여기까지 왔고, 이제 더 많은 것을 원하시나요? 이 모든 것에 대해 더 배우려면 어디로 가야 할까요?</p>
 <h2 data-number="10.1" id="books"><span class="header-section-number">10.1</span> 책들</h2>
@@ -1076,13 +1095,13 @@
 <li id="fn11"><p>https://tools.ietf.org/html/rfc791<a href="소켓이란-무엇인가.html#fnref11" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn12"><p>https://tools.ietf.org/html/rfc768<a href="소켓이란-무엇인가.html#fnref12" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn13"><p>https://tools.ietf.org/html/rfc791<a href="소켓이란-무엇인가.html#fnref13" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn14"><p>https://en.wikipedia.org/wiki/Vint_Cerf<a href="ip-주소-구조체들-데이터-처리munging.html#fnref14" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn15"><p>https://en.wikipedia.org/wiki/ELIZA<a href="ip-주소-구조체들-데이터-처리munging.html#fnref15" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn16"><p>https://www.iana.org/assignments/port-numbers<a href="ip-주소-구조체들-데이터-처리munging.html#fnref16" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn17"><p>https://en.wikipedia.org/wiki/Doom_%281993_video_game%29<a href="ip-주소-구조체들-데이터-처리munging.html#fnref17" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn18"><p>https://en.wikipedia.org/wiki/Wilford_Brimley<a href="ip-주소-구조체들-데이터-처리munging.html#fnref18" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn19"><p>https://tools.ietf.org/html/rfc1918<a href="ip-주소-구조체들-데이터-처리munging.html#fnref19" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn20"><p>https://tools.ietf.org/html/rfc4193<a href="ip-주소-구조체들-데이터-처리munging.html#fnref20" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn14"><p>https://en.wikipedia.org/wiki/Vint_Cerf<a href="ip-주소-struct들-데이터-처리munging.html#fnref14" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn15"><p>https://en.wikipedia.org/wiki/ELIZA<a href="ip-주소-struct들-데이터-처리munging.html#fnref15" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn16"><p>https://www.iana.org/assignments/port-numbers<a href="ip-주소-struct들-데이터-처리munging.html#fnref16" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn17"><p>https://en.wikipedia.org/wiki/Doom_%281993_video_game%29<a href="ip-주소-struct들-데이터-처리munging.html#fnref17" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn18"><p>https://en.wikipedia.org/wiki/Wilford_Brimley<a href="ip-주소-struct들-데이터-처리munging.html#fnref18" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn19"><p>https://tools.ietf.org/html/rfc1918<a href="ip-주소-struct들-데이터-처리munging.html#fnref19" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn20"><p>https://tools.ietf.org/html/rfc4193<a href="ip-주소-struct들-데이터-처리munging.html#fnref20" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn21"><p>https://www.iana.org/assignments/port-numbers<a href="시스템-콜이-아니면-죽음을.html#fnref21" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn22"><p>../source/examples/showip.c<a href="시스템-콜이-아니면-죽음을.html#fnref22" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn23"><p>https://tools.ietf.org/html/rfc1413<a href="시스템-콜이-아니면-죽음을.html#fnref23" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
@@ -1160,5 +1179,5 @@
 </ol>
 </section>
 </body>
-<hr><div style="text-align:center"><span><a href="맨페이지.html" rel="prev">Prev</a> | </span><a href="index.html">Contents</a><span style="visibility: hidden"> | <a href="" rel="next">Next</a></span></div></body>
+<hr><div style="text-align:center"><span><a href="맨페이지.html" rel="prev">이전</a> | </span><a href="index.html">목차</a><span style="visibility: hidden"> | <a href="" rel="next">다음</a></span></div></body>
 </html>
