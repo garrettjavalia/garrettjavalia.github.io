@@ -1032,18 +1032,19 @@
 <p></p>
 <p>클라이언트-서버에 대해 이야기할 차례입니다. 통신망에 있는 거의 모든 것은 클라이언트 프로세스가 서버 프로세스와 이야기하거나 그 반대로 동작합니다. <code>telnet</code>을 예로 들어봅시다. 여러분이 텔넷(클라이언트)로 원격지 호스트의 23번 포트에 접속할 때 그 호스트의 프로그램(<code>telnetd</code>라고 불리는 서버)이 살아납니다. 그 프로그램이 들어오는 텔넷 요청을 처리하고 여러분에게 로그인 프롬프트를 띄워주는 등의 일을 처리합니다.</p>
 <figure>
-<embed src="cs.svg" title="[클라이언트- 서버 상호작용 도표]" />
-<figcaption aria-hidden="true">클라이언트 - 서버 상호작용</figcaption>
+<embed src="cs.svg" title="[클라이언트-서버 상호작용 도표]" />
+<figcaption aria-hidden="true">클라이언트-서버 상호작용</figcaption>
 </figure>
 <p>위의 도표에 클라이언트와 서버의 정보 교환이 정리되어 있습니다.</p>
 <p>클라이언트-서버 쌍은 <code>SOCK_STREAM</code>이나 <code>SOCK_DGRAM</code> 또는 다른 어떤 방식이라도 사용할 수 있음을 기억하세요. (둘이 같은 방식으로 말하기만 한다면) 클라이언트-서버 쌍의 좋은 예시는 <code>telnet</code>/<code>telnetd</code>, <code>ftp</code>/<code>ftpd</code> 또는 <code>Firefox</code>/<code>Apache</code> 입니다. 여러분이 <code>ftp</code>를 쓸 때마다 여러분의 요청을 받아들이는 원격지 프로그램인 <code>ftpd</code>가 있습니다.</p>
-<p>흔히 한 대의 장치에는 오직 하나의 서버만이 있을 것이며 그 서버는 <code>fork()</code> 를 통해서 여러 클라이언트를 처리할 것입니다. (역자 주 : 한 대의 장치에서 여러 개의 서버를 실행하는 많은 방법이 있지만 이 문서의 초판은 90년대에 작성되었습니다.) 기본적인 과정은 아래와 같습니다. 서버가 연결을 기다리고, <code>accept()</code>한 후, 요청을 처리할 자식 프로세스를 <code>fork()</code>합니다. 이것이 다음 절에서 우리의 예제 서버가 하는 일입니다.</p>
+<p>흔히 한 대의 컴퓨터에는 서버가 하나뿐이고, 그 서버는 <code>fork()</code>를 통해 여러 클라이언트를 처리합니다. 기본적인 과정은 아래와 같습니다. 서버가 연결을 기다리고, <code>accept()</code>한 후, 요청을 처리할 자식 프로세스를 <code>fork()</code>합니다. 이것이 다음 절에서 우리의 예제 서버가 하는 일입니다.</p>
 <h2 data-number="6.1" id="단순한-스트림-서버"><span class="header-section-number">6.1</span> 단순한 스트림 서버</h2>
 <p></p>
 <p>이 서버가 하는 일은 스트림 연결에 “<code>Hello, world!</code>”을 전송하는 것뿐입니다. 이 서버를 시험하기 위해서 할 일은 하나의 창에서 이것을 실행한 후 다른 창에서 텔넷에 아래 명령어로 접속하는 일뿐입니다.</p>
 <pre><code>$ telnet remotehostname 3490</code></pre>
-<p><code>remotehostname</code>은 여러분이 서버를 실행하는 장치의 이름입니다.</p>
-<p><a href="../source/examples/server.c">서버 코드</a><a href="더-많은-참고문헌.html#fn24" class="footnote-ref" id="fnref24" role="doc-noteref"><sup>24</sup></a>:</p>
+<p>(역자 주: 최신 macOS에는 <code>telnet</code>이 기본 포함되지 않습니다. Debian과 Fedora 등의 Linux 배포판에서는 패키지로 계속 제공됩니다. <code>telnet</code>을 쓸 수 없다면 이 책에 포함된 <a href="../source/examples/telnot.c"><code>telnot</code> 예제</a><a href="더-많은-참고문헌.html#fn24" class="footnote-ref" id="fnref24" role="doc-noteref"><sup>24</sup></a>를 컴파일해 데모에 사용할 수 있습니다.)</p>
+<p><code>remotehostname</code>은 서버를 실행하는 컴퓨터의 이름입니다.</p>
+<p><a href="../source/examples/server.c">서버 코드</a><a href="더-많은-참고문헌.html#fn25" class="footnote-ref" id="fnref25" role="doc-noteref"><sup>25</sup></a>:</p>
 <div class="sourceCode" id="cb47"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb47-1"><a href="클라이언트-서버-배경지식.html#cb47-1"></a><span class="co">/*</span></span>
 <span id="cb47-2"><a href="클라이언트-서버-배경지식.html#cb47-2"></a><span class="co">** server.c -- a stream socket server demo</span></span>
 <span id="cb47-3"><a href="클라이언트-서버-배경지식.html#cb47-3"></a><span class="co">*/</span></span>
@@ -1078,7 +1079,7 @@
 <span id="cb47-32"><a href="클라이언트-서버-배경지식.html#cb47-32"></a><span class="op">}</span></span>
 <span id="cb47-33"><a href="클라이언트-서버-배경지식.html#cb47-33"></a></span>
 <span id="cb47-34"><a href="클라이언트-서버-배경지식.html#cb47-34"></a></span>
-<span id="cb47-35"><a href="클라이언트-서버-배경지식.html#cb47-35"></a><span class="co">// IPv4 또는 IPv6 sockaddr을 얻습니다.</span></span>
+<span id="cb47-35"><a href="클라이언트-서버-배경지식.html#cb47-35"></a><span class="co">// IPv4 또는 IPv6 주소를 가져옵니다.</span></span>
 <span id="cb47-36"><a href="클라이언트-서버-배경지식.html#cb47-36"></a><span class="dt">void</span> <span class="op">*</span>get_in_addr<span class="op">(</span><span class="kw">struct</span> sockaddr <span class="op">*</span>sa<span class="op">)</span></span>
 <span id="cb47-37"><a href="클라이언트-서버-배경지식.html#cb47-37"></a><span class="op">{</span></span>
 <span id="cb47-38"><a href="클라이언트-서버-배경지식.html#cb47-38"></a>    <span class="cf">if</span> <span class="op">(</span>sa<span class="op">-&gt;</span>sa_family <span class="op">==</span> AF_INET<span class="op">)</span> <span class="op">{</span></span>
@@ -1093,7 +1094,7 @@
 <span id="cb47-47"><a href="클라이언트-서버-배경지식.html#cb47-47"></a>    <span class="co">// sockfd에서 대기하고 들어오는 연결은 new_fd에 저장</span></span>
 <span id="cb47-48"><a href="클라이언트-서버-배경지식.html#cb47-48"></a>    <span class="dt">int</span> sockfd<span class="op">,</span> new_fd<span class="op">;</span></span>
 <span id="cb47-49"><a href="클라이언트-서버-배경지식.html#cb47-49"></a>    <span class="kw">struct</span> addrinfo hints<span class="op">,</span> <span class="op">*</span>servinfo<span class="op">,</span> <span class="op">*</span>p<span class="op">;</span></span>
-<span id="cb47-50"><a href="클라이언트-서버-배경지식.html#cb47-50"></a>    <span class="kw">struct</span> sockaddr_storage their_addr<span class="op">;</span> <span class="co">// 접속자의 주소 정보</span></span>
+<span id="cb47-50"><a href="클라이언트-서버-배경지식.html#cb47-50"></a>    <span class="kw">struct</span> sockaddr_storage their_addr<span class="op">;</span> <span class="co">// 접속한 쪽의 주소 정보</span></span>
 <span id="cb47-51"><a href="클라이언트-서버-배경지식.html#cb47-51"></a>    socklen_t sin_size<span class="op">;</span></span>
 <span id="cb47-52"><a href="클라이언트-서버-배경지식.html#cb47-52"></a>    <span class="kw">struct</span> sigaction sa<span class="op">;</span></span>
 <span id="cb47-53"><a href="클라이언트-서버-배경지식.html#cb47-53"></a>    <span class="dt">int</span> yes<span class="op">=</span><span class="dv">1</span><span class="op">;</span></span>
@@ -1103,14 +1104,14 @@
 <span id="cb47-57"><a href="클라이언트-서버-배경지식.html#cb47-57"></a>    memset<span class="op">(&amp;</span>hints<span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="kw">sizeof</span> hints<span class="op">);</span></span>
 <span id="cb47-58"><a href="클라이언트-서버-배경지식.html#cb47-58"></a>    hints<span class="op">.</span>ai_family <span class="op">=</span> AF_INET<span class="op">;</span></span>
 <span id="cb47-59"><a href="클라이언트-서버-배경지식.html#cb47-59"></a>    hints<span class="op">.</span>ai_socktype <span class="op">=</span> SOCK_STREAM<span class="op">;</span></span>
-<span id="cb47-60"><a href="클라이언트-서버-배경지식.html#cb47-60"></a>    hints<span class="op">.</span>ai_flags <span class="op">=</span> AI_PASSIVE<span class="op">;</span> <span class="co">// 내 IP를 씁니다</span></span>
+<span id="cb47-60"><a href="클라이언트-서버-배경지식.html#cb47-60"></a>    hints<span class="op">.</span>ai_flags <span class="op">=</span> AI_PASSIVE<span class="op">;</span> <span class="co">// bind()에 쓸 와일드카드 주소를 요청합니다</span></span>
 <span id="cb47-61"><a href="클라이언트-서버-배경지식.html#cb47-61"></a></span>
 <span id="cb47-62"><a href="클라이언트-서버-배경지식.html#cb47-62"></a>    <span class="cf">if</span> <span class="op">((</span>rv <span class="op">=</span> getaddrinfo<span class="op">(</span>NULL<span class="op">,</span> PORT<span class="op">,</span> <span class="op">&amp;</span>hints<span class="op">,</span> <span class="op">&amp;</span>servinfo<span class="op">))</span> <span class="op">!=</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
 <span id="cb47-63"><a href="클라이언트-서버-배경지식.html#cb47-63"></a>        fprintf<span class="op">(</span>stderr<span class="op">,</span> <span class="st">&quot;getaddrinfo: </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> gai_strerror<span class="op">(</span>rv<span class="op">));</span></span>
 <span id="cb47-64"><a href="클라이언트-서버-배경지식.html#cb47-64"></a>        <span class="cf">return</span> <span class="dv">1</span><span class="op">;</span></span>
 <span id="cb47-65"><a href="클라이언트-서버-배경지식.html#cb47-65"></a>    <span class="op">}</span></span>
 <span id="cb47-66"><a href="클라이언트-서버-배경지식.html#cb47-66"></a></span>
-<span id="cb47-67"><a href="클라이언트-서버-배경지식.html#cb47-67"></a>    <span class="co">// 모든 결과를 조회하고 쓸 수 있는 첫 번째 것을 사용</span></span>
+<span id="cb47-67"><a href="클라이언트-서버-배경지식.html#cb47-67"></a>    <span class="co">// 모든 결과를 순회해 사용할 수 있는 첫 번째 결과에 바인드합니다</span></span>
 <span id="cb47-68"><a href="클라이언트-서버-배경지식.html#cb47-68"></a>    <span class="cf">for</span><span class="op">(</span>p <span class="op">=</span> servinfo<span class="op">;</span> p <span class="op">!=</span> NULL<span class="op">;</span> p <span class="op">=</span> p<span class="op">-&gt;</span>ai_next<span class="op">)</span> <span class="op">{</span></span>
 <span id="cb47-69"><a href="클라이언트-서버-배경지식.html#cb47-69"></a>        <span class="cf">if</span> <span class="op">((</span>sockfd <span class="op">=</span> socket<span class="op">(</span>p<span class="op">-&gt;</span>ai_family<span class="op">,</span> p<span class="op">-&gt;</span>ai_socktype<span class="op">,</span></span>
 <span id="cb47-70"><a href="클라이언트-서버-배경지식.html#cb47-70"></a>                p<span class="op">-&gt;</span>ai_protocol<span class="op">))</span> <span class="op">==</span> <span class="op">-</span><span class="dv">1</span><span class="op">)</span> <span class="op">{</span></span>
@@ -1188,7 +1189,7 @@
 <h2 data-number="6.2" id="단순한-스트림-클라이언트"><span class="header-section-number">6.2</span> 단순한 스트림 클라이언트</h2>
 <p></p>
 <p>이 녀석은 서버보다도 더 쉽습니다. 이 클라이언트가 하는 일은 여러분이 명령줄에 지정한 호스트의 3490번 포트로 접속하는 것입니다. 그리고 서버가 보낸 문자열을 받습니다.</p>
-<p><a href="../source/examples/client.c">클라이언트 소스</a><a href="더-많은-참고문헌.html#fn25" class="footnote-ref" id="fnref25" role="doc-noteref"><sup>25</sup></a>:</p>
+<p><a href="../source/examples/client.c">클라이언트 소스</a><a href="더-많은-참고문헌.html#fn26" class="footnote-ref" id="fnref26" role="doc-noteref"><sup>26</sup></a>:</p>
 <div class="sourceCode" id="cb48"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb48-1"><a href="클라이언트-서버-배경지식.html#cb48-1"></a><span class="co">/*</span></span>
 <span id="cb48-2"><a href="클라이언트-서버-배경지식.html#cb48-2"></a><span class="co">** client.c -- 스트림 소켓 클라이언트의 예시</span></span>
 <span id="cb48-3"><a href="클라이언트-서버-배경지식.html#cb48-3"></a><span class="co">*/</span></span>
@@ -1241,7 +1242,7 @@
 <span id="cb48-50"><a href="클라이언트-서버-배경지식.html#cb48-50"></a>        <span class="cf">return</span> <span class="dv">1</span><span class="op">;</span></span>
 <span id="cb48-51"><a href="클라이언트-서버-배경지식.html#cb48-51"></a>    <span class="op">}</span></span>
 <span id="cb48-52"><a href="클라이언트-서버-배경지식.html#cb48-52"></a></span>
-<span id="cb48-53"><a href="클라이언트-서버-배경지식.html#cb48-53"></a>    <span class="co">// 모든 결과를 순회하면서 쓸 수 있는 첫 번째 것을 사용합니다</span></span>
+<span id="cb48-53"><a href="클라이언트-서버-배경지식.html#cb48-53"></a>    <span class="co">// 모든 결과를 순회해 연결할 수 있는 첫 번째 결과를 사용합니다</span></span>
 <span id="cb48-54"><a href="클라이언트-서버-배경지식.html#cb48-54"></a>    <span class="cf">for</span><span class="op">(</span>p <span class="op">=</span> servinfo<span class="op">;</span> p <span class="op">!=</span> NULL<span class="op">;</span> p <span class="op">=</span> p<span class="op">-&gt;</span>ai_next<span class="op">)</span> <span class="op">{</span></span>
 <span id="cb48-55"><a href="클라이언트-서버-배경지식.html#cb48-55"></a>        <span class="cf">if</span> <span class="op">((</span>sockfd <span class="op">=</span> socket<span class="op">(</span>p<span class="op">-&gt;</span>ai_family<span class="op">,</span> p<span class="op">-&gt;</span>ai_socktype<span class="op">,</span></span>
 <span id="cb48-56"><a href="클라이언트-서버-배경지식.html#cb48-56"></a>                p<span class="op">-&gt;</span>ai_protocol<span class="op">))</span> <span class="op">==</span> <span class="op">-</span><span class="dv">1</span><span class="op">)</span> <span class="op">{</span></span>
@@ -1293,9 +1294,9 @@
 <h2 data-number="6.3" id="datagram"><span class="header-section-number">6.3</span> 데이터그램 소켓</h2>
 <p></p>
 <p>위에서 <code>sendto()</code>와 <code>recvfrom()</code>에 대해 논의할 때 UDP 데이터그램 소켓의 기본에 대해서 이미 알아보았습니다. 그러므로 바로 두 개의 예제 프로그램을 제시하겠습니다. <code>talker.c</code>와 <code>listener.c</code>입니다.</p>
-<p><code>listener</code>는 장치에서 포트 4950으로 들어오는 패킷을 대기합니다. <code>talker</code>는 지정한 장치의 해당 포트로 사용자가 명령줄에 입력한 내용을 담은 패킷을 보냅니다.</p>
-<p>데이터그램 소켓은 연결이 없고 패킷을 허공에 던진 뒤 성공 여부는 신경 쓰지 않기 때문에 클라이언트와 서버에 IPv6을 사용하도록 명시할 것입니다. 이렇게 하면 서버가 IPv6에서 리스닝하고 클라이언트가 IPv4에서 발송해서 데이터를 받을 수 없는 상황을 피할 수 있을 것입니다. (우리의 TCP 스트림 소켓 세상에서도 이런 불일치가 발생할 수 있지만 <code>connect()</code>에서 하나의 주소 계열에 대해 오류가 발생하면 다른 주소 계열로 다시 시도하게 됩니다.)</p>
-<p>여기에 <a href="../source/examples/listener.c"><code>listener.c</code>의 소스 코드가 있습니다.</a><a href="더-많은-참고문헌.html#fn26" class="footnote-ref" id="fnref26" role="doc-noteref"><sup>26</sup></a>:</p>
+<p><code>listener</code>는 한 컴퓨터에서 포트 4950으로 들어오는 패킷을 기다립니다. <code>talker</code>는 지정한 컴퓨터의 해당 포트로 사용자가 명령줄에 입력한 내용을 담은 패킷을 보냅니다.</p>
+<p>데이터그램 소켓은 연결이 없고 패킷을 허공에 던진 뒤 성공 여부는 신경 쓰지 않기 때문에 클라이언트와 서버에 IPv6을 사용하도록 명시할 것입니다. 이렇게 하면 서버는 IPv6로 리스닝하는데 클라이언트는 IPv4로 전송하여, 서버가 데이터를 받지 못하는 상황을 피할 수 있을 것입니다. (우리의 TCP 스트림 소켓 세상에서도 이런 불일치가 발생할 수 있지만 <code>connect()</code>에서 하나의 주소 계열에 대해 오류가 발생하면 다른 주소 계열로 다시 시도하게 됩니다.)</p>
+<p>여기에 <a href="../source/examples/listener.c"><code>listener.c</code>의 소스 코드가 있습니다.</a><a href="더-많은-참고문헌.html#fn27" class="footnote-ref" id="fnref27" role="doc-noteref"><sup>27</sup></a>:</p>
 <div class="sourceCode" id="cb49"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb49-1"><a href="클라이언트-서버-배경지식.html#cb49-1"></a><span class="co">/*</span></span>
 <span id="cb49-2"><a href="클라이언트-서버-배경지식.html#cb49-2"></a><span class="co">** listener.c -- 데이터그램 소켓 &quot;서버&quot;의 예시</span></span>
 <span id="cb49-3"><a href="클라이언트-서버-배경지식.html#cb49-3"></a><span class="co">*/</span></span>
@@ -1315,7 +1316,7 @@
 <span id="cb49-17"><a href="클라이언트-서버-배경지식.html#cb49-17"></a></span>
 <span id="cb49-18"><a href="클라이언트-서버-배경지식.html#cb49-18"></a><span class="pp">#define MAXBUFLEN </span><span class="dv">100</span></span>
 <span id="cb49-19"><a href="클라이언트-서버-배경지식.html#cb49-19"></a></span>
-<span id="cb49-20"><a href="클라이언트-서버-배경지식.html#cb49-20"></a><span class="co">// IPv4 또는 IPv6 sockaddr을 얻습니다:</span></span>
+<span id="cb49-20"><a href="클라이언트-서버-배경지식.html#cb49-20"></a><span class="co">// IPv4 또는 IPv6 주소를 가져옵니다:</span></span>
 <span id="cb49-21"><a href="클라이언트-서버-배경지식.html#cb49-21"></a><span class="dt">void</span> <span class="op">*</span>get_in_addr<span class="op">(</span><span class="kw">struct</span> sockaddr <span class="op">*</span>sa<span class="op">)</span></span>
 <span id="cb49-22"><a href="클라이언트-서버-배경지식.html#cb49-22"></a><span class="op">{</span></span>
 <span id="cb49-23"><a href="클라이언트-서버-배경지식.html#cb49-23"></a>    <span class="cf">if</span> <span class="op">(</span>sa<span class="op">-&gt;</span>sa_family <span class="op">==</span> AF_INET<span class="op">)</span> <span class="op">{</span></span>
@@ -1339,7 +1340,7 @@
 <span id="cb49-41"><a href="클라이언트-서버-배경지식.html#cb49-41"></a>    memset<span class="op">(&amp;</span>hints<span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="kw">sizeof</span> hints<span class="op">);</span></span>
 <span id="cb49-42"><a href="클라이언트-서버-배경지식.html#cb49-42"></a>    hints<span class="op">.</span>ai_family <span class="op">=</span> AF_INET6<span class="op">;</span> <span class="co">// IPv4를 쓰려면 AF_INET으로 설정합니다</span></span>
 <span id="cb49-43"><a href="클라이언트-서버-배경지식.html#cb49-43"></a>    hints<span class="op">.</span>ai_socktype <span class="op">=</span> SOCK_DGRAM<span class="op">;</span></span>
-<span id="cb49-44"><a href="클라이언트-서버-배경지식.html#cb49-44"></a>    hints<span class="op">.</span>ai_flags <span class="op">=</span> AI_PASSIVE<span class="op">;</span> <span class="co">// 내 주소를 씁니다</span></span>
+<span id="cb49-44"><a href="클라이언트-서버-배경지식.html#cb49-44"></a>    hints<span class="op">.</span>ai_flags <span class="op">=</span> AI_PASSIVE<span class="op">;</span> <span class="co">// bind()에 쓸 와일드카드 주소를 요청합니다</span></span>
 <span id="cb49-45"><a href="클라이언트-서버-배경지식.html#cb49-45"></a></span>
 <span id="cb49-46"><a href="클라이언트-서버-배경지식.html#cb49-46"></a>    <span class="cf">if</span> <span class="op">((</span>rv <span class="op">=</span> getaddrinfo<span class="op">(</span>NULL<span class="op">,</span> MYPORT<span class="op">,</span> <span class="op">&amp;</span>hints<span class="op">,</span> <span class="op">&amp;</span>servinfo<span class="op">))</span> <span class="op">!=</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
 <span id="cb49-47"><a href="클라이언트-서버-배경지식.html#cb49-47"></a>        fprintf<span class="op">(</span>stderr<span class="op">,</span> <span class="st">&quot;getaddrinfo: </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> gai_strerror<span class="op">(</span>rv<span class="op">));</span></span>
@@ -1394,7 +1395,7 @@
 <p><code>getaddrinfo()</code>에서 우리가 마침내 <code>SOCK_DGRAM</code>을 사용한다는 것에 주목하세요. 또한, <code>listen()</code>과 <code>accept()</code>가 필요하지 않다는 점도 기억하세요. 이것이 연결 없는 데이터그램 소켓을 사용할 때의 장점 중 하나입니다.</p>
 <p></p>
 <p></p>
-<p>다음으로 <a href="../source/examples/talker.c"><code>talker.c</code>의 소스 코드</a><a href="더-많은-참고문헌.html#fn27" class="footnote-ref" id="fnref27" role="doc-noteref"><sup>27</sup></a>입니다.</p>
+<p>다음으로 <a href="../source/examples/talker.c"><code>talker.c</code>의 소스 코드</a><a href="더-많은-참고문헌.html#fn28" class="footnote-ref" id="fnref28" role="doc-noteref"><sup>28</sup></a>입니다.</p>
 <div class="sourceCode" id="cb50"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb50-1"><a href="클라이언트-서버-배경지식.html#cb50-1"></a><span class="co">/*</span></span>
 <span id="cb50-2"><a href="클라이언트-서버-배경지식.html#cb50-2"></a><span class="co">** talker.c -- 데이터그램 &quot;클라이언트&quot;의 예시</span></span>
 <span id="cb50-3"><a href="클라이언트-서버-배경지식.html#cb50-3"></a><span class="co">*/</span></span>

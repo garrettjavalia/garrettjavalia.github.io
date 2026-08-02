@@ -1043,7 +1043,7 @@
 <li>여러분의 시스템에 있는 특정 함수에 대해서는 함수 매개변수가 다를 수 있습니다.</li>
 </ul>
 <p>진짜 정보를 원한다면 <code>man whatever</code>를 입력해서 여러분의 로컬 유닉스 맨페이지를 참고하세요. “whatever”는 예를 들자면 “<code>accept</code>”처럼 여러분이 큰 관심을 갖는 사안입니다. (마이크로소프트 비주얼 스튜디오도 그들의 도움말 부분에 이것과 유사한 것을 가지고 있다고 생각합니다. 그러나 “man”이 “help”보다 1바이트 더 간결하므로 더 좋습니다. 이번에도 유닉스가 이겼습니다!)</p>
-<p>그래서 이 정보들에 흠이 있다면 애초에 안내서에 첨부한 이유는 무엇이냐고요? 말하자면 몇 가지 이유가 있습니다. 그러나 그 중 가장 좋은 이유는 바로 (a) 이 버전들은 네트워크 프로그래밍을 위해 특별히 재구성되었고 원본보다 이해하기 쉬우며 (b) 이 버전들에는 예제가 있다는 것입니다!</p>
+<p>그래서 이 정보에 흠이 있다면 애초에 안내서에 첨부한 이유는 무엇이냐고요? 말하자면 몇 가지 이유가 있습니다. 그러나 그 중 가장 좋은 이유는 바로 (a) 이 버전들은 네트워크 프로그래밍을 위해 특별히 재구성되었고 원본보다 이해하기 쉬우며 (b) 이 버전들에는 예제가 있다는 것입니다!</p>
 <p>예제 이야기가 나왔으니 더 이야기하자면 코드의 길이가 너무 길어지는 점을 염려해서 오류 검사 코드를 모두 넣지는 않았습니다. 그러나 여러분은 여러분의 시스템 콜이 100% 성공할 것이라고 가정하지 않는 이상 오류 확인을 언제나 해야 합니다. 그리고 사실 그런 확신이 있어도 검사를 하는 것이 좋습니다!</p>
 <p></p>
 <hr />
@@ -1080,11 +1080,11 @@
 </tr>
 <tr class="odd">
 <td><code>addrlen</code></td>
-<td><code>addr</code> 매개변수로 반환된 구조체의 <code>sizeof()</code> 값으로 채워집니다. <code>addr</code>로 넘긴 타입이 <code>struct sockaddr_in</code>이고 그 타입이 돌아온다고 확신할 수 있다면 안전하게 무시할 수 있습니다.</td>
+<td>호출 전에는 <code>addr</code>가 가리키는 버퍼의 크기를 넣고, 호출 뒤에는 실제 피어 주소의 길이가 저장됩니다. 피어 주소가 필요 없다면 <code>addr</code>와 <code>addrlen</code>을 모두 <code>NULL</code>로 넘길 수 있습니다.</td>
 </tr>
 </tbody>
 </table>
-<p><code>accept()</code>는 보통 블록됩니다. 미리 <code>select()</code>를 사용해서 리스닝 소켓 설명자가 “읽을 준비”가 되었는지 살펴볼 수 있습니다. 그렇다면 <code>accept()</code>될 새 연결이 기다리고 있다는 뜻입니다! 야호! 다른 방법으로는 <code>fcntl()</code>을 사용해서 리스닝 소켓에 <code>O_NONBLOCK</code> 플래그를 설정할 수도 있습니다. 그러면 이 소켓은 블록되지 않고, 대신 <code>errno</code>를 <code>EWOULDBLOCK</code>으로 설정한 채 <code>-1</code>을 반환하게 됩니다.</p>
+<p><code>accept()</code>는 보통 블록됩니다. 미리 <code>select()</code>를 사용해서 리스닝 소켓 설명자가 “읽을 준비”가 되었는지 살펴볼 수 있습니다. 그렇다면 <code>accept()</code>가 받을 새 연결이 기다리고 있다는 뜻입니다! 야호! 다른 방법으로는 <code>fcntl()</code>을 사용해서 리스닝 소켓에 <code>O_NONBLOCK</code> 플래그를 설정할 수도 있습니다. 그러면 이 소켓은 블록되지 않고, 대신 <code>errno</code>를 <code>EWOULDBLOCK</code>으로 설정한 채 <code>-1</code>을 반환하게 됩니다.</p>
 <p><code>accept()</code>가 반환하는 소켓 설명자는 원격 호스트에 연결되어 열린 상태인 진짜 소켓 설명자입니다. 사용이 끝나면 <code>close()</code>해야 합니다.</p>
 <h3 class="unnumbered unlisted" id="반환값">반환값</h3>
 <p><code>accept()</code>는 새로 연결된 소켓 설명자를 반환합니다. 오류가 발생하면 <code>-1</code>을 반환하고 <code>errno</code>를 적절히 설정합니다.</p>
@@ -1094,12 +1094,12 @@
 <span id="cb82-3"><a href="맨페이지.html#cb82-3"></a><span class="kw">struct</span> addrinfo hints<span class="op">,</span> <span class="op">*</span>res<span class="op">;</span></span>
 <span id="cb82-4"><a href="맨페이지.html#cb82-4"></a><span class="dt">int</span> sockfd<span class="op">,</span> new_fd<span class="op">;</span></span>
 <span id="cb82-5"><a href="맨페이지.html#cb82-5"></a></span>
-<span id="cb82-6"><a href="맨페이지.html#cb82-6"></a><span class="co">// 먼저 getaddrinfo()로 주소 구조체들을 불러옵니다:</span></span>
+<span id="cb82-6"><a href="맨페이지.html#cb82-6"></a><span class="co">// 먼저 getaddrinfo()로 주소 구조체 목록을 가져옵니다:</span></span>
 <span id="cb82-7"><a href="맨페이지.html#cb82-7"></a></span>
 <span id="cb82-8"><a href="맨페이지.html#cb82-8"></a>memset<span class="op">(&amp;</span>hints<span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="kw">sizeof</span> hints<span class="op">);</span></span>
 <span id="cb82-9"><a href="맨페이지.html#cb82-9"></a>hints<span class="op">.</span>ai_family <span class="op">=</span> AF_UNSPEC<span class="op">;</span>  <span class="co">// IPv4와 IPv6 어느 쪽이든 사용</span></span>
 <span id="cb82-10"><a href="맨페이지.html#cb82-10"></a>hints<span class="op">.</span>ai_socktype <span class="op">=</span> SOCK_STREAM<span class="op">;</span></span>
-<span id="cb82-11"><a href="맨페이지.html#cb82-11"></a>hints<span class="op">.</span>ai_flags <span class="op">=</span> AI_PASSIVE<span class="op">;</span>     <span class="co">// 내 IP를 대신 채웁니다</span></span>
+<span id="cb82-11"><a href="맨페이지.html#cb82-11"></a>hints<span class="op">.</span>ai_flags <span class="op">=</span> AI_PASSIVE<span class="op">;</span>     <span class="co">// bind()에 쓸 와일드카드 주소를 요청합니다</span></span>
 <span id="cb82-12"><a href="맨페이지.html#cb82-12"></a></span>
 <span id="cb82-13"><a href="맨페이지.html#cb82-13"></a>getaddrinfo<span class="op">(</span>NULL<span class="op">,</span> MYPORT<span class="op">,</span> <span class="op">&amp;</span>hints<span class="op">,</span> <span class="op">&amp;</span>res<span class="op">);</span></span>
 <span id="cb82-14"><a href="맨페이지.html#cb82-14"></a></span>
@@ -1127,11 +1127,11 @@
 <span id="cb83-3"><a href="맨페이지.html#cb83-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb83-4"><a href="맨페이지.html#cb83-4" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> bind<span class="op">(</span><span class="dt">int</span> sockfd<span class="op">,</span> <span class="kw">struct</span> sockaddr <span class="op">*</span>my_addr<span class="op">,</span> socklen_t addrlen<span class="op">);</span></span></code></pre></div>
 <h3 class="unnumbered unlisted" id="설명-1">설명</h3>
-<p>원격 장치가 여러분의 서버 프로그램에 연결하려면 두 가지 정보가 필요합니다. IP 주소와 포트 번호입니다. <code>bind()</code> 호출은 바로 그 일을 할 수 있게 해 줍니다.</p>
-<p>먼저 <code>getaddrinfo()</code>를 호출해서 목적지 주소와 포트 정보가 담긴 <code>struct sockaddr</code>를 불러옵니다. 그런 다음 <code>socket()</code>을 호출해서 소켓 설명자를 얻고, 그 소켓과 주소를 <code>bind()</code>에 넘깁니다. 그러면 IP 주소와 포트가 마법처럼(진짜 마법으로) 소켓에 묶입니다!</p>
-<p>여러분의 IP 주소를 모르거나, 장치에 IP 주소가 하나뿐임을 알고 있거나, 그 장치의 어떤 IP 주소가 쓰이든 신경 쓰지 않는다면 <code>getaddrinfo()</code>의 <code>hints</code> 매개변수에 <code>AI_PASSIVE</code> 플래그를 넘기면 됩니다. 이 플래그는 <code>struct sockaddr</code>의 IP 주소 부분에 특별한 값을 채워 넣는데, 그 값은 <code>bind()</code>에게 이 호스트의 IP 주소를 자동으로 채우라고 알려줍니다.</p>
-<p>뭐라고요? 현재 호스트 주소를 자동으로 채우게 만들려면 <code>struct sockaddr</code>의 IP 주소에 어떤 특별한 값을 넣어야 하느냐고요? 알려드리겠습니다. 하지만 이것은 여러분이 <code>struct sockaddr</code>를 손으로 직접 채우는 경우에만 해당합니다. 그렇지 않다면 위에서 말한 대로 <code>getaddrinfo()</code>의 결과를 쓰세요. IPv4에서는 <code>struct sockaddr_in</code> 구조체의 <code>sin_addr.s_addr</code> 필드를 <code>INADDR_ANY</code>로 설정합니다. IPv6에서는 <code>struct sockaddr_in6</code> 구조체의 <code>sin6_addr</code> 필드에 전역 변수 <code>in6addr_any</code>를 대입합니다. 또는 새 <code>struct in6_addr</code>를 선언하는 중이라면 <code>IN6ADDR_ANY_INIT</code>으로 초기화할 수 있습니다.</p>
-<p>마지막으로 <code>addrlen</code> 매개변수는 <code>sizeof my_addr</code>로 설정되어야 합니다.</p>
+<p>원격 호스트가 여러분의 서버 프로그램에 연결하려면 두 가지 정보가 필요합니다. IP 주소와 포트 번호입니다. <code>bind()</code> 호출은 바로 그 일을 할 수 있게 해 줍니다.</p>
+<p>먼저 <code>getaddrinfo()</code>를 호출해서 로컬 주소와 포트 정보가 담긴 <code>struct sockaddr</code>를 불러옵니다. 그런 다음 <code>socket()</code>을 호출해서 소켓 설명자를 얻고, 그 소켓과 주소를 <code>bind()</code>에 넘깁니다. 그러면 IP 주소와 포트가 마법처럼(진짜 마법으로) 소켓에 묶입니다!</p>
+<p>특정 로컬 IP 주소를 지정하지 않고 서버를 설정하려면 <code>getaddrinfo()</code>의 <code>hints</code> 매개변수에 <code>AI_PASSIVE</code> 플래그를 넣고 첫 번째 인수에는 <code>NULL</code>을 넘기면 됩니다. 그러면 결과 <code>struct sockaddr</code>의 IP 주소 부분에는 <code>bind()</code>에 쓸 와일드카드 값이 들어갑니다.</p>
+<p>뭐라고요? 모든 로컬 인터페이스에 바인드하려면 <code>struct sockaddr</code>의 IP 주소에 어떤 특별한 값을 넣어야 하느냐고요? 알려드리겠습니다. 하지만 이것은 여러분이 <code>struct sockaddr</code>를 손으로 직접 채우는 경우에만 해당합니다. 그렇지 않다면 위에서 말한 대로 <code>getaddrinfo()</code>의 결과를 쓰세요. IPv4에서는 <code>struct sockaddr_in</code> 구조체의 <code>sin_addr.s_addr</code> 필드를 <code>INADDR_ANY</code>로 설정합니다. IPv6에서는 <code>struct sockaddr_in6</code> 구조체의 <code>sin6_addr</code> 필드에 전역 변수 <code>in6addr_any</code>를 대입합니다. 또는 새 <code>struct in6_addr</code>를 선언하는 중이라면 <code>IN6ADDR_ANY_INIT</code>으로 초기화할 수 있습니다.</p>
+<p>마지막으로 <code>addrlen</code> 매개변수는 <code>my_addr</code>가 가리키는 주소 구조체의 크기로 설정되어야 합니다. 예를 들어 IPv4 주소 구조체라면 <code>sizeof(struct sockaddr_in)</code>을 사용할 수 있습니다.</p>
 <h3 class="unnumbered unlisted" id="반환값-1">반환값</h3>
 <p>성공하면 0을 반환합니다. 오류가 발생하면 <code>-1</code>을 반환하고 <code>errno</code>를 적절히 설정합니다.</p>
 <h3 class="unnumbered unlisted" id="예제-1">예제</h3>
@@ -1140,12 +1140,12 @@
 <span id="cb84-3"><a href="맨페이지.html#cb84-3"></a><span class="kw">struct</span> addrinfo hints<span class="op">,</span> <span class="op">*</span>res<span class="op">;</span></span>
 <span id="cb84-4"><a href="맨페이지.html#cb84-4"></a><span class="dt">int</span> sockfd<span class="op">;</span></span>
 <span id="cb84-5"><a href="맨페이지.html#cb84-5"></a></span>
-<span id="cb84-6"><a href="맨페이지.html#cb84-6"></a><span class="co">// 먼저 getaddrinfo()로 주소 구조체들을 불러옵니다:</span></span>
+<span id="cb84-6"><a href="맨페이지.html#cb84-6"></a><span class="co">// 먼저 getaddrinfo()로 주소 구조체 목록을 가져옵니다:</span></span>
 <span id="cb84-7"><a href="맨페이지.html#cb84-7"></a></span>
 <span id="cb84-8"><a href="맨페이지.html#cb84-8"></a>memset<span class="op">(&amp;</span>hints<span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="kw">sizeof</span> hints<span class="op">);</span></span>
 <span id="cb84-9"><a href="맨페이지.html#cb84-9"></a>hints<span class="op">.</span>ai_family <span class="op">=</span> AF_UNSPEC<span class="op">;</span>  <span class="co">// IPv4와 IPv6 어느 쪽이든 사용</span></span>
 <span id="cb84-10"><a href="맨페이지.html#cb84-10"></a>hints<span class="op">.</span>ai_socktype <span class="op">=</span> SOCK_STREAM<span class="op">;</span></span>
-<span id="cb84-11"><a href="맨페이지.html#cb84-11"></a>hints<span class="op">.</span>ai_flags <span class="op">=</span> AI_PASSIVE<span class="op">;</span>     <span class="co">// 내 IP를 대신 채웁니다</span></span>
+<span id="cb84-11"><a href="맨페이지.html#cb84-11"></a>hints<span class="op">.</span>ai_flags <span class="op">=</span> AI_PASSIVE<span class="op">;</span>     <span class="co">// bind()에 쓸 와일드카드 주소를 요청합니다</span></span>
 <span id="cb84-12"><a href="맨페이지.html#cb84-12"></a></span>
 <span id="cb84-13"><a href="맨페이지.html#cb84-13"></a>getaddrinfo<span class="op">(</span>NULL<span class="op">,</span> <span class="st">&quot;3490&quot;</span><span class="op">,</span> <span class="op">&amp;</span>hints<span class="op">,</span> <span class="op">&amp;</span>res<span class="op">);</span></span>
 <span id="cb84-14"><a href="맨페이지.html#cb84-14"></a></span>
@@ -1168,7 +1168,7 @@
 <span id="cb85-9"><a href="맨페이지.html#cb85-9"></a><span class="co">// IP 주소를 지정할 수도 있고:</span></span>
 <span id="cb85-10"><a href="맨페이지.html#cb85-10"></a>inet_pton<span class="op">(</span>AF_INET<span class="op">,</span> <span class="st">&quot;63.161.169.137&quot;</span><span class="op">,</span> <span class="op">&amp;(</span>myaddr<span class="op">.</span>sin_addr<span class="op">));</span></span>
 <span id="cb85-11"><a href="맨페이지.html#cb85-11"></a></span>
-<span id="cb85-12"><a href="맨페이지.html#cb85-12"></a><span class="co">// 자동으로 고르게 할 수도 있습니다:</span></span>
+<span id="cb85-12"><a href="맨페이지.html#cb85-12"></a><span class="co">// 모든 로컬 IPv4 인터페이스에서 받도록 설정할 수도 있습니다:</span></span>
 <span id="cb85-13"><a href="맨페이지.html#cb85-13"></a>myaddr<span class="op">.</span>sin_addr<span class="op">.</span>s_addr <span class="op">=</span> INADDR_ANY<span class="op">;</span></span>
 <span id="cb85-14"><a href="맨페이지.html#cb85-14"></a></span>
 <span id="cb85-15"><a href="맨페이지.html#cb85-15"></a>s <span class="op">=</span> socket<span class="op">(</span>PF_INET<span class="op">,</span> SOCK_STREAM<span class="op">,</span> <span class="dv">0</span><span class="op">);</span></span>
@@ -1199,7 +1199,7 @@
 <span id="cb87-3"><a href="맨페이지.html#cb87-3"></a><span class="kw">struct</span> addrinfo hints<span class="op">,</span> <span class="op">*</span>res<span class="op">;</span></span>
 <span id="cb87-4"><a href="맨페이지.html#cb87-4"></a><span class="dt">int</span> sockfd<span class="op">;</span></span>
 <span id="cb87-5"><a href="맨페이지.html#cb87-5"></a></span>
-<span id="cb87-6"><a href="맨페이지.html#cb87-6"></a><span class="co">// 먼저 getaddrinfo()로 주소 구조체들을 불러옵니다:</span></span>
+<span id="cb87-6"><a href="맨페이지.html#cb87-6"></a><span class="co">// 먼저 getaddrinfo()로 주소 구조체 목록을 가져옵니다:</span></span>
 <span id="cb87-7"><a href="맨페이지.html#cb87-7"></a></span>
 <span id="cb87-8"><a href="맨페이지.html#cb87-8"></a>memset<span class="op">(&amp;</span>hints<span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="kw">sizeof</span> hints<span class="op">);</span></span>
 <span id="cb87-9"><a href="맨페이지.html#cb87-9"></a>hints<span class="op">.</span>ai_family <span class="op">=</span> AF_UNSPEC<span class="op">;</span>  <span class="co">// IPv4와 IPv6 어느 쪽이든 사용</span></span>
@@ -1273,15 +1273,15 @@
 <h3 class="unnumbered unlisted" id="설명-4">설명</h3>
 <p><code>getaddrinfo()</code>는 특정 호스트 이름에 대한 정보(예를 들면 IP 주소)를 반환하고, 그 지저분한 세부사항(IPv4인지 IPv6인지 같은 것)을 알아서 처리해 <code>struct sockaddr</code>를 채워 주는 훌륭한 함수입니다. 이 함수는 오래된 <code>gethostbyname()</code>과 <code>getservbyname()</code>을 대체합니다. 아래 설명에는 조금 겁먹을 만큼 많은 정보가 있지만, 실제 사용법은 꽤 단순합니다. 예제를 먼저 살펴보는 것도 좋습니다.</p>
 <p>관심 있는 호스트 이름은 <code>nodename</code> 매개변수에 들어갑니다. 주소는 “www.example.com” 같은 호스트 이름일 수도 있고, 문자열로 넘긴 IPv4 또는 IPv6 주소일 수도 있습니다. <code>AI_PASSIVE</code> 플래그를 사용한다면(아래를 보세요) 이 매개변수는 <code>NULL</code>일 수도 있습니다.</p>
-<p><code>servname</code> 매개변수는 기본적으로 포트 번호입니다. 포트 번호(“80”처럼 문자열로 넘깁니다)일 수도 있고, “http”, “tftp”, “smtp”, “pop” 같은 서비스 이름일 수도 있습니다. 잘 알려진 서비스 이름은 <a href="https://www.iana.org/assignments/port-numbers">IANA 포트 목록</a><a href="더-많은-참고문헌.html#fn50" class="footnote-ref" id="fnref50" role="doc-noteref"><sup>50</sup></a>이나 여러분의 <code>/etc/services</code> 파일에서 찾을 수 있습니다.</p>
+<p><code>servname</code> 매개변수는 기본적으로 포트 번호입니다. 포트 번호(“80”처럼 문자열로 넘깁니다)일 수도 있고, “http”, “tftp”, “smtp”, “pop” 같은 서비스 이름일 수도 있습니다. 잘 알려진 서비스 이름은 <a href="https://www.iana.org/assignments/port-numbers">IANA 포트 목록</a><a href="더-많은-참고문헌.html#fn51" class="footnote-ref" id="fnref51" role="doc-noteref"><sup>51</sup></a>이나 여러분의 <code>/etc/services</code> 파일에서 찾을 수 있습니다.</p>
 <p>마지막 입력 매개변수로는 <code>hints</code>가 있습니다. 사실상 여기에서 <code>getaddrinfo()</code> 함수가 무엇을 할지 정합니다. 사용하기 전에 <code>memset()</code>으로 구조체 전체를 0으로 비우세요. 사용 전에 설정해야 하는 필드들을 살펴봅시다.</p>
 <p><code>ai_flags</code>에는 여러 가지 값을 설정할 수 있지만, 여기 중요한 몇 가지가 있습니다. (여러 플래그는 <code>|</code> 연산자로 비트 OR해서 지정할 수 있습니다.) 전체 플래그 목록은 여러분의 맨페이지를 확인하세요.</p>
-<p><code>AI_CANONNAME</code>은 결과의 <code>ai_canonname</code>을 호스트의 정규(진짜) 이름으로 채우게 합니다. <code>AI_PASSIVE</code>는 결과의 IP 주소를 <code>INADDR_ANY</code>(IPv4) 또는 <code>in6addr_any</code>(IPv6)로 채우게 합니다. 그러면 나중에 <code>bind()</code>를 호출할 때 <code>struct sockaddr</code>의 IP 주소가 현재 호스트의 주소로 자동 채워집니다. 주소를 하드코딩하고 싶지 않은 서버 설정에 아주 좋습니다.</p>
-<p><code>AI_PASSIVE</code> 플래그를 사용한다면 <code>nodename</code>에 <code>NULL</code>을 넘길 수 있습니다. (<code>bind()</code>가 나중에 여러분 대신 채울 것이기 때문입니다.)</p>
+<p><code>AI_CANONNAME</code>은 결과의 <code>ai_canonname</code>을 호스트의 정규(진짜) 이름으로 채우게 합니다. 첫 번째 인수가 <code>NULL</code>일 때 <code>AI_PASSIVE</code>는 결과의 IP 주소를 <code>INADDR_ANY</code>(IPv4) 또는 <code>in6addr_any</code>(IPv6)로 채웁니다. 이 와일드카드 주소로 <code>bind()</code>하면 해당 주소 계열의 모든 로컬 인터페이스에서 그 포트로 들어오는 요청을 받을 수 있습니다. 주소를 하드코딩하고 싶지 않은 서버 설정에 아주 좋습니다.</p>
+<p><code>AI_PASSIVE</code> 플래그를 사용할 때 <code>nodename</code>에 <code>NULL</code>을 넘기면 위 와일드카드 주소를 얻습니다. 특정 <code>nodename</code>을 넘기면 그 주소를 해석하며 <code>AI_PASSIVE</code>는 영향을 주지 않습니다.</p>
 <p>입력 매개변수를 계속 보자면, <code>ai_family</code>는 아마 <code>AF_UNSPEC</code>으로 설정하고 싶을 것입니다. 이것은 <code>getaddrinfo()</code>에게 IPv4와 IPv6 주소를 모두 찾아보라고 말합니다. <code>AF_INET</code>이나 <code>AF_INET6</code>으로 둘 중 하나만 쓰게 제한할 수도 있습니다.</p>
 <p>다음으로 <code>socktype</code> 필드는 원하는 소켓의 종류에 따라 <code>SOCK_STREAM</code> 또는 <code>SOCK_DGRAM</code>으로 설정해야 합니다.</p>
 <p>마지막으로 프로토콜 종류를 자동 선택하게 하려면 <code>ai_protocol</code>은 그냥 <code>0</code>으로 두세요.</p>
-<p>이제 그 모든 내용을 채워 넣고 나면 <em>마침내</em> <code>getaddrinfo()</code>를 호출할 수 있습니다!</p>
+<p>이제 그 모든 내용을 채우고 나면 <em>마침내</em> <code>getaddrinfo()</code>를 호출할 수 있습니다!</p>
 <p>물론 재미는 여기서 시작됩니다. 이제 <code>res</code>는 <code>struct addrinfo</code>들의 연결 리스트를 가리키고, 여러분은 이 목록을 순회하면서 <code>hints</code>에 넘긴 조건과 맞는 모든 주소를 얻을 수 있습니다.</p>
 <p>어떤 이유로든 동작하지 않는 주소가 일부 나올 수 있으므로, Linux 맨페이지의 방식은 목록을 순회하면서 성공할 때까지 <code>socket()</code>과 <code>connect()</code>를 호출하는 것입니다. (<code>AI_PASSIVE</code> 플래그로 서버를 설정하는 중이라면 <code>connect()</code> 대신 <code>bind()</code>를 호출합니다.)</p>
 <p>마지막으로 연결 리스트를 다 썼다면 <code>freeaddrinfo()</code>를 호출해서 메모리를 해제해야 합니다. (그러지 않으면 메모리가 새고, 어떤 사람들은 화를 낼 것입니다.)</p>
@@ -1341,7 +1341,7 @@
 <span id="cb92-9"><a href="맨페이지.html#cb92-9"></a>memset<span class="op">(&amp;</span>hints<span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="kw">sizeof</span> hints<span class="op">);</span></span>
 <span id="cb92-10"><a href="맨페이지.html#cb92-10"></a>hints<span class="op">.</span>ai_family <span class="op">=</span> AF_UNSPEC<span class="op">;</span> <span class="co">// IPv6만 강제하려면 AF_INET6 사용</span></span>
 <span id="cb92-11"><a href="맨페이지.html#cb92-11"></a>hints<span class="op">.</span>ai_socktype <span class="op">=</span> SOCK_STREAM<span class="op">;</span></span>
-<span id="cb92-12"><a href="맨페이지.html#cb92-12"></a>hints<span class="op">.</span>ai_flags <span class="op">=</span> AI_PASSIVE<span class="op">;</span> <span class="co">// 내 IP 주소를 사용</span></span>
+<span id="cb92-12"><a href="맨페이지.html#cb92-12"></a>hints<span class="op">.</span>ai_flags <span class="op">=</span> AI_PASSIVE<span class="op">;</span> <span class="co">// bind()에 쓸 와일드카드 주소를 요청합니다</span></span>
 <span id="cb92-13"><a href="맨페이지.html#cb92-13"></a></span>
 <span id="cb92-14"><a href="맨페이지.html#cb92-14"></a><span class="cf">if</span> <span class="op">((</span>rv <span class="op">=</span> getaddrinfo<span class="op">(</span>NULL<span class="op">,</span> <span class="st">&quot;3490&quot;</span><span class="op">,</span> <span class="op">&amp;</span>hints<span class="op">,</span> <span class="op">&amp;</span>servinfo<span class="op">))</span> <span class="op">!=</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
 <span id="cb92-15"><a href="맨페이지.html#cb92-15"></a>    fprintf<span class="op">(</span>stderr<span class="op">,</span> <span class="st">&quot;getaddrinfo: </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> gai_strerror<span class="op">(</span>rv<span class="op">));</span></span>
@@ -1379,7 +1379,7 @@
 <p></p>
 <p>시스템의 이름을 반환합니다</p>
 <h3 class="unnumbered unlisted" id="개요-5">개요</h3>
-<div class="sourceCode" id="cb93"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb93-1"><a href="맨페이지.html#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;sys/unistd.h&gt;</span></span>
+<div class="sourceCode" id="cb93"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb93-1"><a href="맨페이지.html#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;unistd.h&gt;</span></span>
 <span id="cb93-2"><a href="맨페이지.html#cb93-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb93-3"><a href="맨페이지.html#cb93-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> gethostname<span class="op">(</span><span class="dt">char</span> <span class="op">*</span>name<span class="op">,</span> <span class="dt">size_t</span> len<span class="op">);</span></span></code></pre></div>
 <h3 class="unnumbered unlisted" id="설명-5">설명</h3>
@@ -1412,6 +1412,7 @@
 <p>(점과 숫자 형식의 IP 주소 문자열이 있고 그 호스트 이름을 찾고 싶다면, <code>AI_CANONNAME</code> 플래그와 함께 <code>getaddrinfo()</code>를 쓰는 편이 낫습니다.)</p>
 <p><code>gethostbyname()</code>은 “www.yahoo.com” 같은 문자열을 받아 IP 주소를 포함한 많은 정보가 들어 있는 <code>struct hostent</code>를 반환합니다. (다른 정보로는 공식 호스트 이름, 별칭 목록, 주소 타입, 주소 길이, 주소 목록이 있습니다. 사용법을 보고 나면 우리의 구체적인 목적에는 꽤 쉽게 쓸 수 있는 범용 구조체입니다.)</p>
 <p><code>gethostbyaddr()</code>는 <code>struct in_addr</code>나 <code>struct in6_addr</code>를 받아 그에 대응하는 호스트 이름이 있다면 가져옵니다. 그러니까 일종의 <code>gethostbyname()</code> 반대입니다. 매개변수를 보자면, <code>addr</code>은 <code>char*</code>이지만 실제로는 <code>struct in_addr</code>에 대한 포인터를 넘기고 싶을 것입니다. <code>len</code>은 <code>sizeof(struct in_addr)</code>이어야 하고, <code>type</code>은 <code>AF_INET</code>이어야 합니다.</p>
+<p>(역자 주: 위 함수 원형과 동작 설명은 오래된 BSD/POSIX 계열 표기입니다. 최신 구현에서는 함수 원형이 조금 다르고 IPv6도 지원하지만, 이 함수의 사용은 권장되지 않습니다.)</p>
 <p>그러면 반환되는 <code>struct hostent</code>는 무엇일까요? 여기에는 해당 호스트에 대한 정보를 담은 여러 필드가 있습니다.</p>
 <table>
 <colgroup>
@@ -1535,7 +1536,7 @@
 <span id="cb99-4"><a href="맨페이지.html#cb99-4"></a></span>
 <span id="cb99-5"><a href="맨페이지.html#cb99-5"></a><span class="co">// sa에 호스트와 포트에 대한 좋은 정보가 가득하다고 가정합니다...</span></span>
 <span id="cb99-6"><a href="맨페이지.html#cb99-6"></a></span>
-<span id="cb99-7"><a href="맨페이지.html#cb99-7"></a>getnameinfo<span class="op">(&amp;</span>sa<span class="op">,</span> <span class="kw">sizeof</span> sa<span class="op">,</span> host<span class="op">,</span> <span class="kw">sizeof</span> host<span class="op">,</span> service<span class="op">,</span></span>
+<span id="cb99-7"><a href="맨페이지.html#cb99-7"></a>getnameinfo<span class="op">((</span><span class="dt">const</span> <span class="kw">struct</span> sockaddr <span class="op">*)&amp;</span>sa<span class="op">,</span> <span class="kw">sizeof</span> sa<span class="op">,</span> host<span class="op">,</span> <span class="kw">sizeof</span> host<span class="op">,</span> service<span class="op">,</span></span>
 <span id="cb99-8"><a href="맨페이지.html#cb99-8"></a>            <span class="kw">sizeof</span> service<span class="op">,</span> <span class="dv">0</span><span class="op">);</span></span>
 <span id="cb99-9"><a href="맨페이지.html#cb99-9"></a></span>
 <span id="cb99-10"><a href="맨페이지.html#cb99-10"></a>printf<span class="op">(</span><span class="st">&quot;   host: </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> host<span class="op">);</span>    <span class="co">// 예: &quot;www.example.com&quot;</span></span>
@@ -1552,7 +1553,7 @@
 <span id="cb100-3"><a href="맨페이지.html#cb100-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> getpeername<span class="op">(</span><span class="dt">int</span> s<span class="op">,</span> <span class="kw">struct</span> sockaddr <span class="op">*</span>addr<span class="op">,</span> socklen_t <span class="op">*</span>len<span class="op">);</span></span></code></pre></div>
 <h3 class="unnumbered unlisted" id="설명-8">설명</h3>
 <p>원격 연결을 <code>accept()</code>했거나 서버에 <code>connect()</code>했다면, 여러분에게는 이제 _피어_라고 부르는 것이 생깁니다. 피어는 간단히 말해 여러분이 연결된 컴퓨터이며, IP 주소와 포트로 식별됩니다. 그래서…</p>
-<p><code>getpeername()</code>은 여러분이 연결된 장치에 대한 정보가 채워진 <code>struct sockaddr_in</code>을 그냥 반환합니다.</p>
+<p><code>getpeername()</code>은 여러분이 연결된 피어의 주소 정보를 <code>addr</code>이 가리키는 주소 구조체에 채웁니다.</p>
 <p>왜 “name”이라고 부를까요? 음, 이 안내서에서 사용하는 인터넷 소켓뿐 아니라 여러 종류의 소켓이 있기 때문에, “name”은 모든 경우를 포괄하는 괜찮은 일반 용어였습니다. 하지만 우리의 경우 피어의 “name”은 IP 주소와 포트입니다.</p>
 <p>이 함수는 결과 주소의 크기를 <code>len</code>에 반환하지만, 호출 전에는 <code>len</code>에 <code>addr</code>의 크기를 미리 넣어 두어야 합니다.</p>
 <h3 class="unnumbered unlisted" id="반환값-8">반환값</h3>
@@ -1605,7 +1606,7 @@
 <span id="cb103-4"><a href="맨페이지.html#cb103-4"></a><span class="op">}</span></span>
 <span id="cb103-5"><a href="맨페이지.html#cb103-5"></a></span>
 <span id="cb103-6"><a href="맨페이지.html#cb103-6"></a>tryagain<span class="op">:</span></span>
-<span id="cb103-7"><a href="맨페이지.html#cb103-7"></a><span class="cf">if</span> <span class="op">(</span>select<span class="op">(</span>n<span class="op">,</span> <span class="op">&amp;</span>readfds<span class="op">,</span> NULL<span class="op">,</span> NULL<span class="op">)</span> <span class="op">==</span> <span class="op">-</span><span class="dv">1</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb103-7"><a href="맨페이지.html#cb103-7"></a><span class="cf">if</span> <span class="op">(</span>select<span class="op">(</span>n<span class="op">,</span> <span class="op">&amp;</span>readfds<span class="op">,</span> NULL<span class="op">,</span> NULL<span class="op">,</span> NULL<span class="op">)</span> <span class="op">==</span> <span class="op">-</span><span class="dv">1</span><span class="op">)</span> <span class="op">{</span></span>
 <span id="cb103-8"><a href="맨페이지.html#cb103-8"></a>    <span class="co">// 오류가 발생했습니다!!</span></span>
 <span id="cb103-9"><a href="맨페이지.html#cb103-9"></a></span>
 <span id="cb103-10"><a href="맨페이지.html#cb103-10"></a>    <span class="co">// 단순히 인터럽트된 것뿐이라면 select() 호출을 다시 시작합니다:</span></span>
@@ -1622,13 +1623,13 @@
 <p></p>
 <p>소켓 설명자를 제어합니다</p>
 <h3 class="unnumbered unlisted" id="개요-10">개요</h3>
-<div class="sourceCode" id="cb104"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb104-1"><a href="맨페이지.html#cb104-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;sys/unistd.h&gt;</span></span>
-<span id="cb104-2"><a href="맨페이지.html#cb104-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;sys/fcntl.h&gt;</span></span>
+<div class="sourceCode" id="cb104"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb104-1"><a href="맨페이지.html#cb104-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;unistd.h&gt;</span></span>
+<span id="cb104-2"><a href="맨페이지.html#cb104-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;fcntl.h&gt;</span></span>
 <span id="cb104-3"><a href="맨페이지.html#cb104-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb104-4"><a href="맨페이지.html#cb104-4" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> fcntl<span class="op">(</span><span class="dt">int</span> s<span class="op">,</span> <span class="dt">int</span> cmd<span class="op">,</span> <span class="dt">long</span> arg<span class="op">);</span></span></code></pre></div>
 <h3 class="unnumbered unlisted" id="설명-10">설명</h3>
 <p>이 함수는 보통 파일 잠금이나 다른 파일 중심 작업에 사용되지만, 가끔 보거나 사용하게 될 소켓 관련 기능도 몇 가지 가지고 있습니다.</p>
-<p><code>s</code> 매개변수는 작업하려는 소켓 설명자입니다. <code>cmd</code>는 <code>F_SETFL</code>로 설정해야 하고, <code>arg</code>에는 아래 명령 중 하나가 올 수 있습니다. (말했듯이 <code>fcntl()</code>에는 제가 여기에서 드러낸 것보다 더 많은 기능이 있지만, 저는 소켓 중심으로 이야기하려고 합니다.)</p>
+<p><code>s</code> 매개변수는 작업하려는 소켓 설명자입니다. <code>cmd</code>는 <code>F_SETFL</code>로 설정해야 하고, <code>arg</code>에는 아래 파일 상태 플래그를 지정할 수 있습니다. (말했듯이 <code>fcntl()</code>에는 제가 여기에서 드러낸 것보다 더 많은 기능이 있지만, 저는 소켓 중심으로 이야기하려고 합니다.)</p>
 <table>
 <colgroup>
 <col style="width: 12%" />
@@ -1636,7 +1637,7 @@
 </colgroup>
 <thead>
 <tr class="header">
-<th><code>cmd</code></th>
+<th><code>arg</code></th>
 <th>설명</th>
 </tr>
 </thead>
@@ -1673,12 +1674,12 @@
 <span id="cb106-5"><a href="맨페이지.html#cb106-5" aria-hidden="true" tabindex="-1"></a><span class="dt">uint32_t</span> ntohl<span class="op">(</span><span class="dt">uint32_t</span> netlong<span class="op">);</span></span>
 <span id="cb106-6"><a href="맨페이지.html#cb106-6" aria-hidden="true" tabindex="-1"></a><span class="dt">uint16_t</span> ntohs<span class="op">(</span><span class="dt">uint16_t</span> netshort<span class="op">);</span></span></code></pre></div>
 <h3 class="unnumbered unlisted" id="설명-11">설명</h3>
-<p>여러분을 정말로 불행하게 만들기 위해, 서로 다른 컴퓨터들은 여러 바이트 정수(즉, <code>char</code>보다 큰 정수)를 내부적으로 서로 다른 바이트 순서로 사용합니다. 그 결과 Intel 장치에서 Mac으로(그 Mac들도 Intel 장치가 되기 전을 말합니다) 2바이트 <code>short int</code>를 <code>send()</code>하면, 한 컴퓨터가 숫자 <code>1</code>이라고 생각하는 것을 다른 컴퓨터는 <code>256</code>이라고 생각할 수 있고 그 반대도 가능합니다.</p>
-<p> 이 문제를 피하는 방법은 모두가 차이를 내려놓고 Motorola와 IBM이 옳았으며 Intel이 이상한 방식으로 했다는 데 동의한 뒤, 내보내기 전에 모두 바이트 순서를 “빅엔디언”으로 변환하는 것입니다. Intel은 “리틀엔디언” 장치이므로, 우리가 선호하는 바이트 순서를 “네트워크 바이트 순서”라고 부르는 편이 훨씬 정치적으로 올바릅니다. 그래서 이 함수들은 여러분의 네이티브 바이트 순서에서 네트워크 바이트 순서로, 그리고 그 반대로 변환합니다.</p>
-<p>(이 말은 Intel에서는 이 함수들이 모든 바이트를 뒤집고, PowerPC에서는 바이트가 이미 네트워크 바이트 순서이므로 아무 일도 하지 않는다는 뜻입니다. 하지만 누군가가 Intel 장치에서 빌드해도 올바르게 동작하기를 원할 수 있으므로, 여러분은 코드에서 늘 이 함수들을 사용해야 합니다.)</p>
+<p>여러분을 정말로 불행하게 만들기 위해, 서로 다른 컴퓨터들은 여러 바이트 정수(즉, <code>char</code>보다 큰 정수)를 내부적으로 서로 다른 바이트 순서로 사용합니다. 그 결과 Intel 컴퓨터에서 Mac으로(그 Mac들도 Intel 컴퓨터가 되기 전을 말합니다) 2바이트 <code>short int</code>를 <code>send()</code>하면, 한 컴퓨터가 숫자 <code>1</code>이라고 생각하는 것을 다른 컴퓨터는 <code>256</code>이라고 생각할 수 있고 그 반대도 가능합니다.</p>
+<p> 이 문제를 피하는 방법은 모두가 차이를 내려놓고 Motorola와 IBM이 옳았으며 Intel이 이상한 방식으로 했다는 데 동의한 뒤, 내보내기 전에 모두 바이트 순서를 “빅엔디언”으로 변환하는 것입니다. Intel은 “리틀엔디언” 시스템이므로, 우리가 선호하는 바이트 순서를 “네트워크 바이트 순서”라고 부르는 편이 훨씬 정치적으로 올바릅니다. 그래서 이 함수들은 여러분의 네이티브 바이트 순서에서 네트워크 바이트 순서로, 그리고 그 반대로 변환합니다.</p>
+<p>(이 말은 Intel에서는 이 함수들이 모든 바이트를 뒤집고, PowerPC에서는 바이트가 이미 네트워크 바이트 순서이므로 아무 일도 하지 않는다는 뜻입니다. 하지만 누군가가 Intel 시스템에서 빌드해도 올바르게 동작하기를 원할 수 있으므로, 여러분은 코드에서 늘 이 함수들을 사용해야 합니다.)</p>
 <p>여기에서 다루는 타입은 32비트(4바이트, 아마 <code>int</code>)와 16비트(2바이트, 거의 확실히 <code>short</code>) 숫자라는 점에 주목하세요.</p>
-<p>여러 시스템에는 64비트 변종이 있습니다. 사용할 수 있다면 <code>&lt;endian.h&gt;</code> 안의 <a href="https://man.archlinux.org/man/htobe64"><code>htobe64()</code></a><a href="더-많은-참고문헌.html#fn51" class="footnote-ref" id="fnref51" role="doc-noteref"><sup>51</sup></a> 함수와 그 친척들을 확인해 보세요. (MacOS에는 없는 것 같습니다.) 그리고 GCC에는 128비트까지 다루는 <a href="https://gcc.gnu.org/onlinedocs/gcc/Byte-Swapping-Builtins.html">바이트 스와핑 내장 함수</a><a href="더-많은-참고문헌.html#fn52" class="footnote-ref" id="fnref52" role="doc-noteref"><sup>52</sup></a>도 있습니다. <a href="../source/examples/htonll.c">아니면 직접 만들 수도 있습니다</a><a href="더-많은-참고문헌.html#fn53" class="footnote-ref" id="fnref53" role="doc-noteref"><sup>53</sup></a>. 단, 실제 스왑은 리틀엔디언 장치에서만 하세요!</p>
-<p>어쨌든 이 함수들이 동작하는 방식은 이렇습니다. 먼저 호스트(여러분 장치의) 바이트 순서에서 변환하는지, 아니면 네트워크 바이트 순서에서 변환하는지를 결정합니다. “host”라면 호출할 함수의 첫 글자는 “h”입니다. 그렇지 않으면 “network”의 “n”입니다. 함수 이름의 가운데는 언제나 “to”입니다. 하나에서 다른 하나로 변환하기 때문입니다. 그리고 끝에서 두 번째 글자는 무엇으로 변환하는지를 보여줍니다. 마지막 글자는 데이터의 크기로, short는 “s”, long은 “l”입니다. 그래서:</p>
+<p>여러 시스템에는 64비트 변종이 있습니다. 사용할 수 있다면 <code>&lt;endian.h&gt;</code> 안의 <a href="https://man.archlinux.org/man/htobe64"><code>htobe64()</code></a><a href="더-많은-참고문헌.html#fn52" class="footnote-ref" id="fnref52" role="doc-noteref"><sup>52</sup></a> 함수와 그 친척들을 확인해 보세요. (MacOS에는 없는 것 같습니다.) 그리고 GCC에는 128비트까지 다루는 <a href="https://gcc.gnu.org/onlinedocs/gcc/Byte-Swapping-Builtins.html">바이트 스와핑 내장 함수</a><a href="더-많은-참고문헌.html#fn53" class="footnote-ref" id="fnref53" role="doc-noteref"><sup>53</sup></a>도 있습니다. <a href="../source/examples/htonll.c">아니면 직접 만들 수도 있습니다</a><a href="더-많은-참고문헌.html#fn54" class="footnote-ref" id="fnref54" role="doc-noteref"><sup>54</sup></a>. 단, 실제 스왑은 리틀엔디언 시스템에서만 하세요!</p>
+<p>어쨌든 이 함수들이 동작하는 방식은 이렇습니다. 먼저 호스트(여러분 시스템의) 바이트 순서에서 변환하는지, 아니면 네트워크 바이트 순서에서 변환하는지를 결정합니다. “host”라면 호출할 함수의 첫 글자는 “h”입니다. 그렇지 않으면 “network”의 “n”입니다. 함수 이름의 가운데는 언제나 “to”입니다. 하나에서 다른 하나로 변환하기 때문입니다. 그리고 끝에서 두 번째 글자는 무엇으로 변환하는지를 보여줍니다. 마지막 글자는 데이터의 크기로, short는 “s”, long은 “l”입니다. 그래서:</p>
 <table>
 <thead>
 <tr class="header">
@@ -1737,7 +1738,7 @@
 <p><em>이 함수들은 IPv6을 처리하지 못하기 때문에 구식입니다! 대신 <a href="맨페이지.html#inet_ntopman"><code>inet_ntop()</code></a>이나 <a href="맨페이지.html#inet_ntopman"><code>inet_pton()</code></a>을 쓰세요! 여기 포함한 이유는 여전히 현장에서 발견될 수 있기 때문입니다.</em></p>
 <p>이 함수들은 모두 <code>struct in_addr</code>(아마 여러분의 <code>struct sockaddr_in</code>의 일부일 것입니다)에서 점과 숫자 형식의 문자열(예: “192.168.5.10”)로, 또는 그 반대로 변환합니다. 명령줄 같은 곳에서 IP 주소를 넘겨받았다면, <code>connect()</code> 등에 쓸 <code>struct in_addr</code>를 얻는 가장 쉬운 방법입니다. 더 강력한 기능이 필요하다면 <code>gethostbyname()</code> 같은 DNS 함수들을 시도하거나, 여러분 나라에서 _쿠데타_를 시도해 보세요.</p>
 <p><code>inet_ntoa()</code> 함수는 <code>struct in_addr</code> 안의 네트워크 주소를 점과 숫자 형식의 문자열로 변환합니다. “ntoa”의 “n”은 network를 뜻하고, “a”는 역사적인 이유로 ASCII를 뜻합니다. (그러니까 “Network To ASCII”입니다. “toa” 접미사에는 C 라이브러리에 <code>atoi()</code>라는 비슷한 친구가 있는데, 이것은 ASCII 문자열을 정수로 변환합니다.)</p>
-<p><code>inet_aton()</code> 함수는 그 반대로, 점과 숫자 문자열을 <code>in_addr_t</code>로 변환합니다. (<code>in_addr_t</code>는 여러분의 <code>struct in_addr</code> 안에 있는 <code>s_addr</code> 필드의 타입입니다.)</p>
+<p><code>inet_aton()</code> 함수는 그 반대로, 점과 숫자 문자열을 이진 IPv4 주소 형식으로 변환해 두 번째 인수로 전달한 <code>struct in_addr</code>에 저장합니다.</p>
 <p>마지막으로 <code>inet_addr()</code> 함수는 기본적으로 <code>inet_aton()</code>과 같은 일을 하는 더 오래된 함수입니다. 이론적으로는 구식이지만, 많이 보게 될 것이고 사용한다고 경찰이 잡으러 오지는 않을 것입니다.</p>
 <h3 class="unnumbered unlisted" id="반환값-12">반환값</h3>
 <p><code>inet_aton()</code>은 주소가 유효하면 0이 아닌 값을 반환하고, 주소가 유효하지 않으면 0을 반환합니다.</p>
@@ -1848,12 +1849,12 @@
 <div class="sourceCode" id="cb115"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb115-1"><a href="맨페이지.html#cb115-1"></a><span class="kw">struct</span> addrinfo hints<span class="op">,</span> <span class="op">*</span>res<span class="op">;</span></span>
 <span id="cb115-2"><a href="맨페이지.html#cb115-2"></a><span class="dt">int</span> sockfd<span class="op">;</span></span>
 <span id="cb115-3"><a href="맨페이지.html#cb115-3"></a></span>
-<span id="cb115-4"><a href="맨페이지.html#cb115-4"></a><span class="co">// 먼저 getaddrinfo()로 주소 구조체들을 불러옵니다:</span></span>
+<span id="cb115-4"><a href="맨페이지.html#cb115-4"></a><span class="co">// 먼저 getaddrinfo()로 주소 구조체 목록을 가져옵니다:</span></span>
 <span id="cb115-5"><a href="맨페이지.html#cb115-5"></a></span>
 <span id="cb115-6"><a href="맨페이지.html#cb115-6"></a>memset<span class="op">(&amp;</span>hints<span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="kw">sizeof</span> hints<span class="op">);</span></span>
 <span id="cb115-7"><a href="맨페이지.html#cb115-7"></a>hints<span class="op">.</span>ai_family <span class="op">=</span> AF_UNSPEC<span class="op">;</span>  <span class="co">// IPv4와 IPv6 어느 쪽이든 사용</span></span>
 <span id="cb115-8"><a href="맨페이지.html#cb115-8"></a>hints<span class="op">.</span>ai_socktype <span class="op">=</span> SOCK_STREAM<span class="op">;</span></span>
-<span id="cb115-9"><a href="맨페이지.html#cb115-9"></a>hints<span class="op">.</span>ai_flags <span class="op">=</span> AI_PASSIVE<span class="op">;</span>     <span class="co">// 내 IP를 대신 채웁니다</span></span>
+<span id="cb115-9"><a href="맨페이지.html#cb115-9"></a>hints<span class="op">.</span>ai_flags <span class="op">=</span> AI_PASSIVE<span class="op">;</span>     <span class="co">// bind()에 쓸 와일드카드 주소를 요청합니다</span></span>
 <span id="cb115-10"><a href="맨페이지.html#cb115-10"></a></span>
 <span id="cb115-11"><a href="맨페이지.html#cb115-11"></a>getaddrinfo<span class="op">(</span>NULL<span class="op">,</span> <span class="st">&quot;3490&quot;</span><span class="op">,</span> <span class="op">&amp;</span>hints<span class="op">,</span> <span class="op">&amp;</span>res<span class="op">);</span></span>
 <span id="cb115-12"><a href="맨페이지.html#cb115-12"></a></span>
@@ -1941,7 +1942,7 @@
 </tr>
 <tr class="even">
 <td><code>POLLOUT</code></td>
-<td>이 소켓에 블록 없이 데이터를 <code>send()</code>할 수 있으면 알려줍니다.</td>
+<td>이 소켓으로 대기하지 않고 데이터를 <code>send()</code>할 수 있으면 알려줍니다.</td>
 </tr>
 <tr class="odd">
 <td><code>POLLPRI</code></td>
@@ -2020,7 +2021,7 @@
 <span id="cb120-39"><a href="맨페이지.html#cb120-39"></a></span>
 <span id="cb120-40"><a href="맨페이지.html#cb120-40"></a>    <span class="co">// s2의 이벤트 확인:</span></span>
 <span id="cb120-41"><a href="맨페이지.html#cb120-41"></a>    <span class="cf">if</span> <span class="op">(</span>ufds<span class="op">[</span><span class="dv">1</span><span class="op">].</span>revents <span class="op">&amp;</span> POLLIN<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb120-42"><a href="맨페이지.html#cb120-42"></a>        recv<span class="op">(</span>s1<span class="op">,</span> buf2<span class="op">,</span> <span class="kw">sizeof</span> buf2<span class="op">,</span> <span class="dv">0</span><span class="op">);</span></span>
+<span id="cb120-42"><a href="맨페이지.html#cb120-42"></a>        recv<span class="op">(</span>s2<span class="op">,</span> buf2<span class="op">,</span> <span class="kw">sizeof</span> buf2<span class="op">,</span> <span class="dv">0</span><span class="op">);</span></span>
 <span id="cb120-43"><a href="맨페이지.html#cb120-43"></a>    <span class="op">}</span></span>
 <span id="cb120-44"><a href="맨페이지.html#cb120-44"></a><span class="op">}</span></span></code></pre></div>
 <h3 class="unnumbered unlisted" id="함께-보기-15">함께 보기</h3>
@@ -2039,7 +2040,7 @@
 <h3 class="unnumbered unlisted" id="설명-17">설명</h3>
 <p>소켓을 만들고 연결했다면, <code>recv()</code>(TCP <code>SOCK_STREAM</code> 소켓용)와 <code>recvfrom()</code>(UDP <code>SOCK_DGRAM</code> 소켓용)을 사용해서 원격 쪽에서 들어오는 데이터를 읽을 수 있습니다.</p>
 <p>두 함수 모두 소켓 설명자 <code>s</code>, 버퍼에 대한 포인터 <code>buf</code>, 버퍼의 바이트 단위 크기 <code>len</code>, 함수 동작을 제어하는 <code>flags</code> 집합을 받습니다.</p>
-<p>추가로 <code>recvfrom()</code>은 데이터가 어디에서 왔는지 알려줄 <code>struct sockaddr*</code>인 <code>from</code>을 받고, <code>fromlen</code>을 <code>struct sockaddr</code>의 크기로 채웁니다. (<code>fromlen</code>도 <code>from</code> 또는 <code>struct sockaddr</code>의 크기로 초기화해야 합니다.)</p>
+<p>추가로 <code>recvfrom()</code>은 데이터가 어디에서 왔는지 알려줄 <code>struct sockaddr*</code>인 <code>from</code>을 받습니다. <code>fromlen</code>에는 호출 전에 <code>from</code>이 가리키는 주소 구조체의 크기를 넣어야 하며, 호출 뒤에는 실제 송신자 주소 길이가 저장됩니다.</p>
 <p>그러면 이 함수에 넘길 수 있는 놀라운 플래그에는 무엇이 있을까요? 일부는 아래와 같습니다. 더 자세한 정보와 여러분 시스템에서 실제로 지원하는 값은 로컬 맨페이지를 확인하세요. 이 값들을 비트 OR하거나, 평범한 기본 <code>recv()</code>를 원한다면 <code>flags</code>를 그냥 <code>0</code>으로 설정하면 됩니다.</p>
 <table>
 <colgroup>
@@ -2112,15 +2113,15 @@
 <span id="cb123-20"><a href="맨페이지.html#cb123-20"></a><span class="co">// accept()는 필요 없습니다. 그냥 recvfrom()입니다:</span></span>
 <span id="cb123-21"><a href="맨페이지.html#cb123-21"></a></span>
 <span id="cb123-22"><a href="맨페이지.html#cb123-22"></a>fromlen <span class="op">=</span> <span class="kw">sizeof</span> addr<span class="op">;</span></span>
-<span id="cb123-23"><a href="맨페이지.html#cb123-23"></a>byte_count <span class="op">=</span> recvfrom<span class="op">(</span>sockfd<span class="op">,</span> buf<span class="op">,</span> <span class="kw">sizeof</span> buf<span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="op">&amp;</span>addr<span class="op">,</span> <span class="op">&amp;</span>fromlen<span class="op">);</span></span>
+<span id="cb123-23"><a href="맨페이지.html#cb123-23"></a>byte_count <span class="op">=</span> recvfrom<span class="op">(</span>sockfd<span class="op">,</span> buf<span class="op">,</span> <span class="kw">sizeof</span> buf<span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="op">(</span><span class="kw">struct</span> sockaddr <span class="op">*)&amp;</span>addr<span class="op">,</span> <span class="op">&amp;</span>fromlen<span class="op">);</span></span>
 <span id="cb123-24"><a href="맨페이지.html#cb123-24"></a></span>
-<span id="cb123-25"><a href="맨페이지.html#cb123-25"></a>printf<span class="op">(</span><span class="st">&quot;recv()&#39;d </span><span class="sc">%d</span><span class="st"> bytes of data in buf</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">,</span> byte_count<span class="op">);</span></span>
+<span id="cb123-25"><a href="맨페이지.html#cb123-25"></a>printf<span class="op">(</span><span class="st">&quot;recvfrom()&#39;d </span><span class="sc">%d</span><span class="st"> bytes of data in buf</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">,</span> byte_count<span class="op">);</span></span>
 <span id="cb123-26"><a href="맨페이지.html#cb123-26"></a>printf<span class="op">(</span><span class="st">&quot;from IP address </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span></span>
 <span id="cb123-27"><a href="맨페이지.html#cb123-27"></a>    inet_ntop<span class="op">(</span>addr<span class="op">.</span>ss_family<span class="op">,</span></span>
 <span id="cb123-28"><a href="맨페이지.html#cb123-28"></a>        addr<span class="op">.</span>ss_family <span class="op">==</span> AF_INET<span class="op">?</span></span>
-<span id="cb123-29"><a href="맨페이지.html#cb123-29"></a>            <span class="op">((</span><span class="kw">struct</span> sockaddr_in <span class="op">*)&amp;</span>addr<span class="op">)-&gt;</span>sin_addr<span class="op">:</span></span>
-<span id="cb123-30"><a href="맨페이지.html#cb123-30"></a>            <span class="op">((</span><span class="kw">struct</span> sockaddr_in6 <span class="op">*)&amp;</span>addr<span class="op">)-&gt;</span>sin6_addr<span class="op">,</span></span>
-<span id="cb123-31"><a href="맨페이지.html#cb123-31"></a>        ipstr<span class="op">,</span> <span class="kw">sizeof</span> ipstr<span class="op">);</span></span></code></pre></div>
+<span id="cb123-29"><a href="맨페이지.html#cb123-29"></a>            <span class="op">(</span><span class="dt">const</span> <span class="dt">void</span> <span class="op">*)&amp;((</span><span class="kw">struct</span> sockaddr_in <span class="op">*)&amp;</span>addr<span class="op">)-&gt;</span>sin_addr<span class="op">:</span></span>
+<span id="cb123-30"><a href="맨페이지.html#cb123-30"></a>            <span class="op">(</span><span class="dt">const</span> <span class="dt">void</span> <span class="op">*)&amp;((</span><span class="kw">struct</span> sockaddr_in6 <span class="op">*)&amp;</span>addr<span class="op">)-&gt;</span>sin6_addr<span class="op">,</span></span>
+<span id="cb123-31"><a href="맨페이지.html#cb123-31"></a>        ipstr<span class="op">,</span> <span class="kw">sizeof</span> ipstr<span class="op">));</span></span></code></pre></div>
 <h3 class="unnumbered unlisted" id="함께-보기-16">함께 보기</h3>
 <p><a href="맨페이지.html#sendman"><code>send()</code></a>, <a href="맨페이지.html#sendman"><code>sendto()</code></a>, <a href="맨페이지.html#selectman"><code>select()</code></a>, <a href="맨페이지.html#pollman"><code>poll()</code></a>, <a href="약간-더-고급스러운-기술.html#blocking">블로킹</a></p>
 <hr />
@@ -2138,7 +2139,7 @@
 <span id="cb124-8"><a href="맨페이지.html#cb124-8" aria-hidden="true" tabindex="-1"></a>FD_ISSET<span class="op">(</span><span class="dt">int</span> fd<span class="op">,</span> fd_set <span class="op">*</span>set<span class="op">);</span></span>
 <span id="cb124-9"><a href="맨페이지.html#cb124-9" aria-hidden="true" tabindex="-1"></a>FD_ZERO<span class="op">(</span>fd_set <span class="op">*</span>set<span class="op">);</span></span></code></pre></div>
 <h3 class="unnumbered unlisted" id="설명-18">설명</h3>
-<p><code>select()</code> 함수는 여러 소켓을 동시에 확인할 방법을 제공합니다. 각 소켓에 <code>recv()</code>할 데이터가 기다리고 있는지, 블록 없이 데이터를 <code>send()</code>할 수 있는지, 또는 어떤 예외가 발생했는지 확인할 수 있습니다.</p>
+<p><code>select()</code> 함수는 여러 소켓을 동시에 확인할 방법을 제공합니다. 각 소켓에 <code>recv()</code>할 데이터가 기다리고 있는지, 대기하지 않고 데이터를 <code>send()</code>할 수 있는지, 또는 어떤 예외가 발생했는지 확인할 수 있습니다.</p>
 <p>위의 <code>FD_SET()</code> 같은 매크로를 사용해서 소켓 설명자 집합을 채웁니다. 집합을 만들고 나면 아래 매개변수 중 하나로 함수에 넘깁니다. 집합 안의 소켓 중 어느 것이 데이터를 <code>recv()</code>할 준비가 되었는지 알고 싶다면 <code>readfds</code>, 어느 소켓에 데이터를 <code>send()</code>할 준비가 되었는지 알고 싶다면 <code>writefds</code>, 어느 소켓에서 예외(오류)가 발생했는지 알아야 한다면 <code>exceptfds</code>입니다. 이런 이벤트에 관심이 없다면 이 매개변수 중 일부 또는 전부가 <code>NULL</code>일 수 있습니다. <code>select()</code>가 반환된 뒤에는 집합의 값이 바뀌어 어떤 소켓이 읽기나 쓰기 준비가 되었는지, 어떤 소켓에 예외가 있는지를 보여줍니다.</p>
 <p>첫 번째 매개변수 <code>n</code>은 가장 큰 번호의 소켓 설명자(그냥 <code>int</code>라는 점을 기억하세요)에 1을 더한 값입니다.</p>
 <p>마지막에 있는 <code>struct timeval</code>인 <code>timeout</code>은 <code>select()</code>가 이 집합들을 얼마나 오래 확인할지 알려줍니다. 타임아웃이 지나거나 이벤트가 발생하면, 둘 중 먼저 일어난 시점에 반환합니다. <code>struct timeval</code>에는 두 필드가 있습니다. <code>tv_sec</code>은 초 단위 값이고, 여기에 마이크로초 단위 값인 <code>tv_usec</code>이 더해집니다. (1초는 1,000,000마이크로초입니다.)</p>
@@ -2173,11 +2174,11 @@
 </tr>
 </tbody>
 </table>
-<p>Linux 사용자를 위한 노트: Linux의 <code>select()</code>는 “읽을 준비가 됐다”고 반환했는데 실제로는 읽을 준비가 되어 있지 않아서, 뒤따르는 <code>read()</code> 호출이 블록되게 만들 수 있습니다. 수신 소켓에 <code>O_NONBLOCK</code> 플래그를 설정해서 이 경우 <code>EWOULDBLOCK</code> 오류가 나게 하고, 그 오류가 발생하면 무시하는 방식으로 이 버그를 우회할 수 있습니다. 소켓을 논블로킹으로 설정하는 방법은 <a href="맨페이지.html#fcntlman"><code>fcntl()</code> 맨페이지</a>를 참고하세요.</p>
+<p>Linux 사용자를 위한 노트: Linux의 <code>select()</code>는 “읽을 준비가 됐다”고 반환했는데 실제로는 읽을 준비가 되어 있지 않아서, 뒤따르는 <code>read()</code> 호출이 블록될 수 있습니다. 수신 소켓에 <code>O_NONBLOCK</code> 플래그를 설정해서 이 경우 <code>EWOULDBLOCK</code> 오류가 나게 하고, 그 오류가 발생하면 무시하는 방식으로 이 버그를 우회할 수 있습니다. 소켓을 논블로킹으로 설정하는 방법은 <a href="맨페이지.html#fcntlman"><code>fcntl()</code> 맨페이지</a>를 참고하세요.</p>
 <h3 class="unnumbered unlisted" id="반환값-18">반환값</h3>
 <p>성공하면 집합 안에서 준비된 설명자의 수를 반환합니다. 타임아웃에 도달했다면 <code>0</code>, 오류가 발생했다면 <code>-1</code>을 반환하고 <code>errno</code>를 적절히 설정합니다. 또한 어떤 소켓이 준비되었는지를 보여주도록 집합이 수정됩니다.</p>
 <h3 class="unnumbered unlisted" id="예제-18">예제</h3>
-<div class="sourceCode" id="cb125"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb125-1"><a href="맨페이지.html#cb125-1"></a><span class="dt">int</span> s1<span class="op">,</span> s2<span class="op">,</span> n<span class="op">;</span></span>
+<div class="sourceCode" id="cb125"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb125-1"><a href="맨페이지.html#cb125-1"></a><span class="dt">int</span> s1<span class="op">,</span> s2<span class="op">,</span> n<span class="op">,</span> rv<span class="op">;</span></span>
 <span id="cb125-2"><a href="맨페이지.html#cb125-2"></a>fd_set readfds<span class="op">;</span></span>
 <span id="cb125-3"><a href="맨페이지.html#cb125-3"></a><span class="kw">struct</span> timeval tv<span class="op">;</span></span>
 <span id="cb125-4"><a href="맨페이지.html#cb125-4"></a><span class="dt">char</span> buf1<span class="op">[</span><span class="dv">256</span><span class="op">],</span> buf2<span class="op">[</span><span class="dv">256</span><span class="op">];</span></span>
@@ -2234,7 +2235,7 @@
 <span id="cb126-7"><a href="맨페이지.html#cb126-7" aria-hidden="true" tabindex="-1"></a>               socklen_t optlen<span class="op">);</span></span></code></pre></div>
 <h3 class="unnumbered unlisted" id="설명-19">설명</h3>
 <p>소켓은 꽤 많이 설정할 수 있는 녀석입니다. 사실 너무 많이 설정할 수 있어서 여기에서 전부 다루지는 않을 것입니다. 어차피 시스템에 따라 달라질 가능성도 큽니다. 하지만 기본은 이야기하겠습니다.</p>
-<p>분명하겠지만, 이 함수들은 소켓의 특정 옵션을 얻고 설정합니다. Linux 장치에서는 모든 소켓 정보가 7번 섹션의 <code>socket</code> 맨페이지에 있습니다. (이 자료들을 모두 얻으려면 “<code>man 7 socket</code>”을 입력하세요.)</p>
+<p>분명하겠지만, 이 함수들은 소켓의 특정 옵션을 얻고 설정합니다. Linux 시스템에서는 모든 소켓 정보가 7번 섹션의 <code>socket</code> 맨페이지에 있습니다. (이 정보를 모두 얻으려면 “<code>man 7 socket</code>”을 입력하세요.)</p>
 <p>매개변수를 보자면 <code>s</code>는 이야기하고 있는 소켓이고, <code>level</code>은 <code>SOL_SOCKET</code>으로 설정해야 합니다. 그런 다음 <code>optname</code>을 관심 있는 이름으로 설정합니다. 다시 말하지만 모든 옵션은 맨페이지를 보세요. 여기에는 그중 재미있는 것 몇 가지가 있습니다:</p>
 <table>
 <colgroup>
@@ -2258,10 +2259,11 @@
 </tr>
 <tr class="odd">
 <td><code>SO_BROADCAST</code></td>
-<td>UDP 데이터그램(<code>SOCK_DGRAM</code>) 소켓이 브로드캐스트 주소로 오가는 패킷을 보내고 받을 수 있게 합니다. TCP 스트림 소켓에는 아무 일도, <em>아무 일도!!</em> 하지 않습니다! 하하하!</td>
+<td>UDP 데이터그램(<code>SOCK_DGRAM</code>) 소켓이 브로드캐스트 주소로 패킷을 보낼 수 있게 합니다. TCP 스트림 소켓에는 아무 일도, <em>아무 일도!!</em> 하지 않습니다! 하하하!</td>
 </tr>
 </tbody>
 </table>
+<p>(역자 주: <code>SO_BINDTODEVICE</code>는 Linux 전용 옵션입니다. 최근 Linux에서는 인터페이스 이름을 확인할 때 <code>ifconfig</code> 대신 <code>ip link</code>를 흔히 사용합니다.)</p>
 <p><code>optval</code> 매개변수는 보통 해당 값을 나타내는 <code>int</code>에 대한 포인터입니다. 불리언의 경우 0은 거짓이고 0이 아니면 참입니다. 여러분 시스템에서 다르지 않은 한, 이것은 절대적 사실입니다. 넘길 매개변수가 없다면 <code>optval</code>은 <code>NULL</code>일 수 있습니다.</p>
 <p>마지막 매개변수 <code>optlen</code>은 <code>optval</code>의 길이로 설정해야 합니다. 아마 <code>sizeof(int)</code>일 것이지만 옵션에 따라 달라집니다. <code>getsockopt()</code>의 경우 이것은 <code>socklen_t</code>에 대한 포인터이며, <code>optval</code>에 저장될 객체의 최대 크기를 지정한다는 점에 주목하세요. (버퍼 오버플로를 막기 위해서입니다.) 그리고 <code>getsockopt()</code>는 실제로 설정된 바이트 수를 반영하도록 <code>optlen</code> 값을 수정합니다.</p>
 <p><strong>경고</strong>: 일부 시스템(특히 Sun과 Windows)에서는 옵션이 <code>int</code>가 아니라 <code>char</code>일 수 있으며, 예를 들어 <code>int</code> 값 <code>1</code> 대신 문자 값 <code>'1'</code>로 설정됩니다. 다시 말하지만 더 자세한 정보는 “<code>man setsockopt</code>”와 “<code>man 7 socket</code>”으로 여러분의 맨페이지를 확인하세요!</p>
@@ -2269,7 +2271,7 @@
 <p>성공하면 0을 반환합니다. 오류가 발생하면 <code>-1</code>을 반환하고 <code>errno</code>를 적절히 설정합니다.</p>
 <h3 class="unnumbered unlisted" id="예제-19">예제</h3>
 <div class="sourceCode" id="cb127"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb127-1"><a href="맨페이지.html#cb127-1"></a><span class="dt">int</span> optval<span class="op">;</span></span>
-<span id="cb127-2"><a href="맨페이지.html#cb127-2"></a><span class="dt">int</span> optlen<span class="op">;</span></span>
+<span id="cb127-2"><a href="맨페이지.html#cb127-2"></a>socklen_t optlen <span class="op">=</span> <span class="kw">sizeof</span> optval<span class="op">;</span></span>
 <span id="cb127-3"><a href="맨페이지.html#cb127-3"></a><span class="dt">char</span> <span class="op">*</span>optval2<span class="op">;</span></span>
 <span id="cb127-4"><a href="맨페이지.html#cb127-4"></a></span>
 <span id="cb127-5"><a href="맨페이지.html#cb127-5"></a><span class="co">// 소켓의 SO_REUSEADDR을 참(1)으로 설정합니다:</span></span>
@@ -2283,7 +2285,7 @@
 <span id="cb127-13"><a href="맨페이지.html#cb127-13"></a><span class="co">// SO_BROADCAST 플래그가 설정되어 있는지 확인합니다:</span></span>
 <span id="cb127-14"><a href="맨페이지.html#cb127-14"></a>getsockopt<span class="op">(</span>s3<span class="op">,</span> SOL_SOCKET<span class="op">,</span> SO_BROADCAST<span class="op">,</span> <span class="op">&amp;</span>optval<span class="op">,</span> <span class="op">&amp;</span>optlen<span class="op">);</span></span>
 <span id="cb127-15"><a href="맨페이지.html#cb127-15"></a><span class="cf">if</span> <span class="op">(</span>optval <span class="op">!=</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
-<span id="cb127-16"><a href="맨페이지.html#cb127-16"></a>    print<span class="op">(</span><span class="st">&quot;SO_BROADCAST enabled on s3!</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb127-16"><a href="맨페이지.html#cb127-16"></a>    printf<span class="op">(</span><span class="st">&quot;SO_BROADCAST enabled on s3!</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
 <span id="cb127-17"><a href="맨페이지.html#cb127-17"></a><span class="op">}</span></span></code></pre></div>
 <h3 class="unnumbered unlisted" id="함께-보기-18">함께 보기</h3>
 <p><a href="맨페이지.html#fcntlman"><code>fcntl()</code></a></p>
@@ -2324,7 +2326,7 @@
 </tr>
 <tr class="odd">
 <td><code>MSG_DONTWAIT</code></td>
-<td>나가는 트래픽이 막혀 <code>send()</code>가 블록될 상황이면 <code>EAGAIN</code>을 반환하게 합니다. “이번 <code>send()</code>에 대해서만 논블로킹을 켠다”와 비슷합니다. 더 자세한 내용은 <a href="약간-더-고급스러운-기술.html#blocking">블로킹</a> 절을 보세요.</td>
+<td>나가는 트래픽이 막혀 <code>send()</code>가 대기하게 될 상황이면 <code>EAGAIN</code>을 반환하게 합니다. “이번 <code>send()</code>에 대해서만 논블로킹을 켠다”와 비슷합니다. 더 자세한 내용은 <a href="약간-더-고급스러운-기술.html#blocking">블로킹</a> 절을 보세요.</td>
 </tr>
 <tr class="even">
 <td><code>MSG_NOSIGNAL</code></td>
@@ -2404,7 +2406,7 @@
 <span id="cb132-4"><a href="맨페이지.html#cb132-4" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> socket<span class="op">(</span><span class="dt">int</span> domain<span class="op">,</span> <span class="dt">int</span> type<span class="op">,</span> <span class="dt">int</span> protocol<span class="op">);</span></span></code></pre></div>
 <h3 class="unnumbered unlisted" id="설명-22">설명</h3>
 <p>소켓다운 일을 할 때 사용할 수 있는 새 소켓 설명자를 반환합니다. 이것은 보통 소켓 프로그램을 작성하는 거대한 과정에서 첫 번째 호출이며, 그 결과를 이후 <code>listen()</code>, <code>bind()</code>, <code>accept()</code> 또는 여러 다른 함수 호출에 사용할 수 있습니다.</p>
-<p>일반적인 사용에서는 아래 예제처럼 <code>getaddrinfo()</code> 호출에서 이 매개변수들의 값을 얻습니다. 하지만 정말 원한다면 직접 채워 넣을 수도 있습니다.</p>
+<p>일반적인 사용에서는 아래 예제처럼 <code>getaddrinfo()</code> 호출에서 이 매개변수들의 값을 얻습니다. 하지만 정말 원한다면 직접 채울 수도 있습니다.</p>
 <table>
 <colgroup>
 <col style="width: 2%" />
@@ -2437,7 +2439,7 @@
 <div class="sourceCode" id="cb133"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb133-1"><a href="맨페이지.html#cb133-1"></a><span class="kw">struct</span> addrinfo hints<span class="op">,</span> <span class="op">*</span>res<span class="op">;</span></span>
 <span id="cb133-2"><a href="맨페이지.html#cb133-2"></a><span class="dt">int</span> sockfd<span class="op">;</span></span>
 <span id="cb133-3"><a href="맨페이지.html#cb133-3"></a></span>
-<span id="cb133-4"><a href="맨페이지.html#cb133-4"></a><span class="co">// 먼저 getaddrinfo()로 주소 구조체들을 불러옵니다:</span></span>
+<span id="cb133-4"><a href="맨페이지.html#cb133-4"></a><span class="co">// 먼저 getaddrinfo()로 주소 구조체 목록을 가져옵니다:</span></span>
 <span id="cb133-5"><a href="맨페이지.html#cb133-5"></a></span>
 <span id="cb133-6"><a href="맨페이지.html#cb133-6"></a>memset<span class="op">(&amp;</span>hints<span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="kw">sizeof</span> hints<span class="op">);</span></span>
 <span id="cb133-7"><a href="맨페이지.html#cb133-7"></a>hints<span class="op">.</span>ai_family <span class="op">=</span> AF_UNSPEC<span class="op">;</span>     <span class="co">// AF_INET, AF_INET6, 또는 AF_UNSPEC</span></span>
@@ -2468,7 +2470,7 @@
 <span id="cb134-12"><a href="맨페이지.html#cb134-12" aria-hidden="true" tabindex="-1"></a><span class="co">// IPv4 AF_INET 소켓:</span></span>
 <span id="cb134-13"><a href="맨페이지.html#cb134-13" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb134-14"><a href="맨페이지.html#cb134-14" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> sockaddr_in <span class="op">{</span></span>
-<span id="cb134-15"><a href="맨페이지.html#cb134-15" aria-hidden="true" tabindex="-1"></a>    <span class="dt">short</span>            sin_family<span class="op">;</span>   <span class="co">// 예: AF_INET, AF_INET6</span></span>
+<span id="cb134-15"><a href="맨페이지.html#cb134-15" aria-hidden="true" tabindex="-1"></a>    <span class="dt">short</span>            sin_family<span class="op">;</span>   <span class="co">// 예: AF_INET</span></span>
 <span id="cb134-16"><a href="맨페이지.html#cb134-16" aria-hidden="true" tabindex="-1"></a>    <span class="dt">unsigned</span> <span class="dt">short</span>   sin_port<span class="op">;</span>     <span class="co">// 예: htons(3490)</span></span>
 <span id="cb134-17"><a href="맨페이지.html#cb134-17" aria-hidden="true" tabindex="-1"></a>    <span class="kw">struct</span> in_addr   sin_addr<span class="op">;</span>     <span class="co">// 아래 struct in_addr를 보세요</span></span>
 <span id="cb134-18"><a href="맨페이지.html#cb134-18" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span>             sin_zero<span class="op">[</span><span class="dv">8</span><span class="op">];</span>  <span class="co">// 원한다면 0으로 만드세요</span></span>
